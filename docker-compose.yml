@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm i && npm run build -w packages --if-present && cd apps/api && npm start"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "${HOST_API_PORT}:8080"

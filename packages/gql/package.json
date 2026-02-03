@@ -1,0 +1,7 @@
+{
+  "name": "@mi_casa/gql",
+  "version": "0.1.0",
+  "files": [
+    "schema"
+  ]
+}
