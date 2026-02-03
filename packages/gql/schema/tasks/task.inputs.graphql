@@ -1,0 +1,7 @@
+input CreateTaskInput {
+  name: String!
+}
+
+input UpdateTaskInput {
+  status: TaskStatus!
+}

@@ -4,25 +4,13 @@ import { createServer } from 'http';
 import { Resolvers } from '@mi_casa/gql'
 import { config } from './config';
 import { AppContext } from './context';
+import { resolvers } from './resolvers';
 
 const typeDefs = readFileSync(require.resolve('@mi_casa/gql/schema.graphql'), 'utf8');
 
-const resolvers: Resolvers<AppContext> = {
-  Query: {
-    status() {
-      return {
-        version: config.VERSION ?? 'unknown'
-      }
-    }
-  },
-  Status: {
-    version: (parent) => parent.version
-  }
-}
-
 async function main() {
   const schema = createSchema<AppContext>({ typeDefs, resolvers });
-  const context = () => ({ version: config.VERSION ?? 'unknown' } satisfies AppContext);
+  const context = () => ({ version: config.VERSION ?? 'unknown', tasks: [] } satisfies AppContext);
   const yoga = createYoga<AppContext>({ schema, context });
   const server = createServer(yoga);
 

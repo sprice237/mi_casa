@@ -1,0 +1,5 @@
+enum TaskStatus {
+  READY_TO_BEGIN
+  IN_PROGRESS
+  COMPLETE
+}
