@@ -1,0 +1,5 @@
+fragment Task on Task {
+  id
+  name
+  status
+}

@@ -10,6 +10,7 @@ export default function Layout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer drawerContent={DrawerContent}>
         <Drawer.Screen name="(tabs)" options={{ headerTitle: title }} />
+        <Drawer.Screen name="Categories" options={{ headerTitle: 'Categories' }} />
       </Drawer>
     </GestureHandlerRootView>
   );
@@ -32,6 +33,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   return (
     <DrawerContentScrollView {...props}>
+      <DrawerItem
+        label="Home"
+        onPress={() => navigate('(tabs)')}
+      />
       <DrawerItem
         label="Categories"
         onPress={() => navigate('Categories')}

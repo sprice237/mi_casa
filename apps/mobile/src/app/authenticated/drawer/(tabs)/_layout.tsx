@@ -14,6 +14,14 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => <FontAwesome6 name="face-smile" size={24} color={focused ? 'blue' : 'black'} />,
         }}
       />
+      <Tabs.Screen
+        name="tasks"
+        options={{
+          headerShown: false,
+          title: 'Tasks',
+          tabBarIcon: ({ focused }) => <FontAwesome6 name="face-smile" size={24} color={focused ? 'blue' : 'black'} />,
+        }}
+      />
     </Tabs>
   );
 }

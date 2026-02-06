@@ -1,16 +1,15 @@
 import { readFileSync } from 'node:fs'
 import { createYoga, createSchema } from 'graphql-yoga';
 import { createServer } from 'http';
-import { Resolvers } from '@mi_casa/gql'
 import { config } from './config';
-import { AppContext } from './context';
+import { AppContext, initialContext } from './context';
 import { resolvers } from './resolvers';
 
 const typeDefs = readFileSync(require.resolve('@mi_casa/gql/schema.graphql'), 'utf8');
 
 async function main() {
   const schema = createSchema<AppContext>({ typeDefs, resolvers });
-  const context = () => ({ version: config.VERSION ?? 'unknown', tasks: [] } satisfies AppContext);
+  const context = () => initialContext;
   const yoga = createYoga<AppContext>({ schema, context });
   const server = createServer(yoga);
 

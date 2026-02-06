@@ -1,4 +1,5 @@
 extend type Mutation {
   createTask(input: CreateTaskInput!): Task!
   updateTask(taskId: ID!, input: UpdateTaskInput!): Task!
+  deleteTask(taskId: ID!): Boolean!
 }

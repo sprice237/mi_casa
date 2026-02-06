@@ -40,6 +40,17 @@ export const resolvers: Resolvers<AppContext> = {
       task.status = input.status;
       return task;
     },
+    deleteTask(_, { taskId }, { tasks }) {
+      const taskIndex = tasks.findIndex(t => t.id === taskId);
+
+      if (taskIndex < 0) {
+        throw new Error('not found');
+      }
+
+      tasks.splice(taskIndex, 1);
+
+      return true;
+    },
   },
   Status: {
     version: (parent) => parent.version
