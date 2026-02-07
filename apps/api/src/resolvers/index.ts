@@ -37,7 +37,12 @@ export const resolvers: Resolvers<AppContext> = {
         throw new Error('not found');
       }
 
-      task.status = input.status;
+      if (input.name !== null) {
+        task.name = input.name;
+      }
+      if (input.status !== null) {
+        task.status = input.status;
+      }
       return task;
     },
     deleteTask(_, { taskId }, { tasks }) {

@@ -1,15 +1,21 @@
 import { DimensionValue, Pressable, StyleSheet, Text, View } from 'react-native';
-import { ComponentProps } from 'react';
+import { useFlagState } from '$/util';
+import { CreateOrUpdateTaskModal } from './CreateOrUpdateTaskModal';
 
-type AddTaskButtonProps = { width?: DimensionValue, height?: DimensionValue } & ComponentProps<typeof Pressable>;
+type AddTaskButtonProps = { width?: DimensionValue, height?: DimensionValue };
 
 export const AddTaskButton = ({ width, height, ...props }: AddTaskButtonProps) => {
+  const { value: isModalVisible, setTrue: showModal, setFalse: hideModal } = useFlagState();
+
   return (
-    <Pressable {...props}>
-      <View style={[styles.action, { width, height }]}>
-        <Text>Add new task</Text>
-      </View>
-    </Pressable>
+    <>
+      {isModalVisible && <CreateOrUpdateTaskModal onClose={hideModal} />}
+      <Pressable onPress={showModal}>
+        <View style={[styles.action, { width, height }]}>
+          <Text>Add new task</Text>
+        </View>
+      </Pressable>
+    </>
   );
 }
 

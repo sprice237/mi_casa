@@ -1,27 +1,31 @@
 import { StyleSheet, View } from 'react-native';
 import { DeleteButton } from '../DeleteButton';
-import { EditButton } from '../EditButton';
+import { EditTaskButton } from '../EditButton';
 import { CompleteTaskButton } from '../CompleteTaskButton';
 import { FragmentType, getFragmentData, TaskFragmentDoc, UpdateTaskDocument, DeleteTaskDocument, TasksDocument } from '$/gql';
 import { StartTaskButton } from '../StartTaskButton';
 import { useMutation } from '@apollo/client/react';
+import { Dispatch } from 'react';
 
 type TaskListItemActionsProps = {
   itemWidth: number;
   task: FragmentType<typeof TaskFragmentDoc>;
+  onPress: Dispatch<void>
 };
 
-export const TaskListItemActions = ({ itemWidth, task: taskFragment }: TaskListItemActionsProps) => {
+export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: TaskListItemActionsProps) => {
   const task = getFragmentData(TaskFragmentDoc, taskFragment);
 
   const [updateTask] = useMutation(UpdateTaskDocument);
   const [deleteTask] = useMutation(DeleteTaskDocument);
 
   const doStartTask = () => {
+    onPress();
     updateTask({
       variables: {
         taskId: task.id,
         input: {
+          name: null,
           status: 'IN_PROGRESS'
         }
       }
@@ -29,10 +33,12 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment }: TaskListI
   }
 
   const doCompleteTask = () => {
+    onPress();
     updateTask({
       variables: {
         taskId: task.id,
         input: {
+          name: null,
           status: 'COMPLETE'
         }
       }
@@ -40,6 +46,7 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment }: TaskListI
   }
 
   const doDeleteTask = () => {
+    onPress();
     deleteTask({
       variables: {
         taskId: task.id,
@@ -47,9 +54,6 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment }: TaskListI
       refetchQueries: [TasksDocument]
     })
   }
-
-
-  const onUpdate = () => { };
 
   return (
     <View style={styles.container}>
@@ -62,7 +66,7 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment }: TaskListI
         )}
       </View>
       <View style={styles.actionsContainer}>
-        <EditButton height="100%" onPress={onUpdate} width={itemWidth} />
+        <EditTaskButton height="100%" onPress={onPress} task={taskFragment} width={itemWidth} />
         <DeleteButton height="100%" onPress={doDeleteTask} width={itemWidth} />
       </View>
     </View>

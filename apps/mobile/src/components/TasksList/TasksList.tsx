@@ -1,7 +1,7 @@
-import { CreateTaskDocument, TasksDocument } from '$/gql';
+import { getFragmentData, TaskFragmentDoc, TasksDocument } from '$/gql';
 import { ComponentProps } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { TaskListItem } from './TasksListItem';
 import { Border } from './Border';
@@ -16,18 +16,6 @@ export const TasksList = ({ ...props }: EntriesListProps) => {
   const { data, refetch, loading } = useQuery(TasksDocument);
   const tasks = data?.tasks;
 
-  const [createTask] = useMutation(CreateTaskDocument);
-
-  const doAddTask = () => {
-    createTask({
-      variables: {
-        input: {
-          name: 'New task'
-        }
-      },
-      refetchQueries: [TasksDocument]
-    })
-  }
 
   return (
     <View {...props} style={[props.style, styles.container]}>
@@ -36,12 +24,14 @@ export const TasksList = ({ ...props }: EntriesListProps) => {
         refreshing={loading}
         onRefresh={refetch}
         data={tasks}
+        keyExtractor={(taskFragment) => getFragmentData(TaskFragmentDoc, taskFragment).id}
         ItemSeparatorComponent={Border}
         renderItem={({ item: task }) => (
           <TaskListItem task={task} rowHeight={ROW_HEIGHT} />
         )}
-        renderHiddenItem={({ item: task }) => (
+        renderHiddenItem={({ item: task }, rowMap) => (
           <TaskListItemActions itemWidth={ROW_HEIGHT} task={task}
+            onPress={() => rowMap[getFragmentData(TaskFragmentDoc, task).id].closeRow()}
           />
         )}
         stopLeftSwipe={ROW_HEIGHT * TaskListItemActions.numLeftButtons}
@@ -50,7 +40,7 @@ export const TasksList = ({ ...props }: EntriesListProps) => {
         rightOpenValue={-ROW_HEIGHT * TaskListItemActions.numRightButtons}
         ListEmptyComponent={() => <View><Text>Empty</Text></View>}
       />
-      <AddTaskButton height={ROW_HEIGHT} onPress={doAddTask} />
+      <AddTaskButton height={ROW_HEIGHT} />
     </View>
   );
 };

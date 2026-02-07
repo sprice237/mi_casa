@@ -1,16 +1,26 @@
 import { DimensionValue, Pressable, StyleSheet, View } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
-import { ComponentProps } from 'react';
+import { FragmentType, TaskFragmentDoc } from '$/gql';
+import { useFlagState } from '$/util';
+import { CreateOrUpdateTaskModal } from './CreateOrUpdateTaskModal';
+import { Dispatch } from 'react';
 
-type EditButtonProps = { width?: DimensionValue, height?: DimensionValue } & ComponentProps<typeof Pressable>;
+type EditTaskButtonProps = { task: FragmentType<typeof TaskFragmentDoc>; width?: DimensionValue, height?: DimensionValue, onPress?: Dispatch<void> };
 
-export const EditButton = ({ width, height, ...props }: EditButtonProps) => {
+export const EditTaskButton = ({ task, width, height, onPress }: EditTaskButtonProps) => {
+  const { value: isModalVisible, setTrue: showModal, setFalse: hideModal } = useFlagState();
   return (
-    <Pressable {...props}>
-      <View style={[styles.action, { width, height }]}>
-        <Feather name='edit-2' size={25} color="white" />
-      </View>
-    </Pressable>
+    <>
+      {isModalVisible && <CreateOrUpdateTaskModal task={task} onClose={hideModal} />}
+      <Pressable onPress={() => {
+        showModal();
+        onPress?.();
+      }}>
+        <View style={[styles.action, { width, height }]}>
+          <Feather name='edit-2' size={25} color="white" />
+        </View>
+      </Pressable>
+    </>
   );
 }
 

@@ -7,8 +7,15 @@ const config: CodegenConfig = {
   schema: `${graphqlRootPath}/schema/**/*.graphql`,
   documents: [
     'src/gql/**/*.graphql',
-    'src/**/*.ts',
-    'src/**/*.tsx',
+
+    // don't include these files. including graphql directly in the source code seems like the trendy thing
+    // to do, but if there are compile errors in these files, the typed gql output gets obliterated, and so
+    // too does your code's awareness of the gql types. which means you get compile errors all over the place
+    // from gql types being missing. and if you have a watcher on, and you're working on a file, your types
+    // will randomly come and go as the watcher attempts to compile files that are halfway through typing.
+
+    // 'src/**/*.ts',
+    // 'src/**/*.tsx',
   ],
   ignoreNoDocuments: true,
   generates: {
