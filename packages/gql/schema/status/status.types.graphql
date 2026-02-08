@@ -1,3 +1,5 @@
 type Status {
   version: String!
+  data: Json!
+  currentDateTime: DateTime!
 }

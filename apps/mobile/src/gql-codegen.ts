@@ -25,9 +25,10 @@ const config: CodegenConfig = {
         avoidOptionals: true,
         enumsAsTypes: true,
         strictScalars: true,
-        // scalars: {
-        //   DateTime: 'Date'
-        // },
+        scalars: {
+          Json: 'unknown',
+          DateTime: 'Date'
+        },
         useTypeImports: true,
       },
       presetConfig: {

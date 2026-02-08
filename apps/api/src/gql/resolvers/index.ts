@@ -1,6 +1,7 @@
 import { statusQueryResolver, statusTypeResolver } from "./status";
 import { createTaskMutationResolver, deleteTaskMutationResolver, taskQueryResolver, tasksQueryResolver, taskTypeResolver, updateTaskMutationResolver } from "./tasks";
 import { AppResolvers } from './types';
+import { scalars } from "@mi_casa/gql";
 
 
 export const resolvers: AppResolvers = {
@@ -16,4 +17,6 @@ export const resolvers: AppResolvers = {
   },
   Status: statusTypeResolver,
   Task: taskTypeResolver,
+
+  ...scalars,
 }

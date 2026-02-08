@@ -22,5 +22,8 @@
     "@graphql-codegen/typescript-resolvers": "5.1.0",
     "@parcel/watcher": "2.5.1",
     "typescript": "5.3.3"
+  },
+  "dependencies": {
+    "graphql": "^16.12.0"
   }
 }

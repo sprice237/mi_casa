@@ -1,5 +1,7 @@
 query Status {
   status {
     version
+    data
+    currentDateTime
   }
 }

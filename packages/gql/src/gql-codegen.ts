@@ -12,12 +12,13 @@ const config: CodegenConfig = {
         immutableTypes: true,
         strictScalars: true,
         printFieldsOnNewLines: true,
-        // scalars: {
-        //   Date: 'Date',
-        //   DateTime: 'Date',
-        //   Decimal: 'Decimal',
-        //   Time: 'Date',
-        // }
+        scalars: {
+          Json: 'unknown',
+          //   Date: 'Date',
+          DateTime: 'Date',
+          //   Decimal: 'Decimal',
+          //   Time: 'Date',
+        }
       },
       plugins: [
         'typescript',

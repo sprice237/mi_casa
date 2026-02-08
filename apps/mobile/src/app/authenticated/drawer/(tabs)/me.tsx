@@ -7,8 +7,8 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 export default function Me() {
   useRegisterTitle('Me');
 
-  const { version } = useSuspenseQuery(StatusDocument).data.status
-  console.log('version', version);
+  const status = useSuspenseQuery(StatusDocument).data.status
+  console.log('status', status);
 
   const username = useAuthStore((state) => state.username);
   const updateUsername = useAuthStore((state) => state.updateUsername);
