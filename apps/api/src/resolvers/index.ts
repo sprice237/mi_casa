@@ -6,16 +6,15 @@ import { config } from "../config"
 
 export const resolvers: Resolvers<AppContext> = {
   Query: {
-    task(_, { taskId }, { tasks }) {
-      const task = tasks.find(t => t.id === taskId);
-
-      if (!task) {
-        throw new Error('not found');
-      }
+    async task(_, { taskId }, { db }) {
+      const task = await db.task.findUniqueOrThrow({
+        where: { id: taskId }
+      });
 
       return task;
     },
-    tasks(_1, _2, { tasks }) {
+    async tasks(_1, _2, { db }) {
+      const tasks = await db.task.findMany();
       return tasks;
     },
     status() {
@@ -25,34 +24,31 @@ export const resolvers: Resolvers<AppContext> = {
     }
   },
   Mutation: {
-    createTask(_, { input }, { tasks }) {
-      const task = { id: crypto.randomUUID(), name: input.name, status: 'READY_TO_BEGIN' as const };
-      tasks.push(task);
+    async createTask(_, { input }, { db }) {
+      const task = await db.task.create({
+        data: {
+          name: input.name,
+          status: 'READY_TO_BEGIN'
+        }
+      });
+
       return task;
     },
-    updateTask(_, { taskId, input }, { tasks }) {
-      const task = tasks.find(t => t.id === taskId);
+    async updateTask(_, { taskId, input }, { db }) {
+      const task = await db.task.update({
+        where: { id: taskId },
+        data: {
+          name: input.name !== null ? input.name : undefined,
+          status: input.status !== null ? input.status : undefined,
+        }
+      });
 
-      if (!task) {
-        throw new Error('not found');
-      }
-
-      if (input.name !== null) {
-        task.name = input.name;
-      }
-      if (input.status !== null) {
-        task.status = input.status;
-      }
       return task;
     },
-    deleteTask(_, { taskId }, { tasks }) {
-      const taskIndex = tasks.findIndex(t => t.id === taskId);
-
-      if (taskIndex < 0) {
-        throw new Error('not found');
-      }
-
-      tasks.splice(taskIndex, 1);
+    async deleteTask(_, { taskId }, { db }) {
+      await db.task.delete({
+        where: { id: taskId },
+      });
 
       return true;
     },

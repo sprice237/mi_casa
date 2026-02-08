@@ -6,6 +6,7 @@
   },
   "private": true,
   "dependencies": {
+    "@mi_casa/db": "*",
     "@mi_casa/gql": "*",
     "@types/node": "20.17.10",
     "big.js": "^6.2.2",

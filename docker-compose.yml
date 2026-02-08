@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
+    depends_on:
+      - db
     restart: unless-stopped
     working_dir: /app
     command: sh -c "npm i && npm run build -w packages --if-present && cd apps/api && npm start"
@@ -13,3 +15,17 @@ services:
       - /app/node_modules
     ports:
       - "${HOST_API_PORT}:8080"
+
+  db:
+    image: postgres:17.7-alpine
+    restart: unless-stopped
+    environment:
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_DB=app"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      
+volumes:
+  db-data:

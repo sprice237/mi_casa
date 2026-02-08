@@ -1,17 +1,12 @@
-import { TaskStatus } from "@mi_casa/gql";
+import type { PrismaClient } from '@mi_casa/db/client';
 import { config } from "./config";
-import { randomUUID } from "node:crypto";
 
 export type AppContext = {
   version: string;
-  tasks: { id: string, name: string, status: TaskStatus }[];
+  db: PrismaClient;
 }
 
-export const initialContext: AppContext = {
+export const createInitialContext = (db: PrismaClient): AppContext => ({
   version: config.VERSION ?? 'unknown',
-  tasks: [
-    { id: randomUUID(), name: 'Change furnace filter', status: 'READY_TO_BEGIN' },
-    { id: randomUUID(), name: 'Install outlet', status: 'READY_TO_BEGIN' },
-    { id: randomUUID(), name: 'Cut wood', status: 'READY_TO_BEGIN' },
-  ]
-}
+  db,
+})

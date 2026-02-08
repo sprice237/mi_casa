@@ -2,14 +2,20 @@ import { readFileSync } from 'node:fs'
 import { createYoga, createSchema } from 'graphql-yoga';
 import { createServer } from 'http';
 import { config } from './config';
-import { AppContext, initialContext } from './context';
+import { AppContext, createInitialContext } from './context';
 import { resolvers } from './resolvers';
+import { PrismaClient } from '@mi_casa/db/client';
+import { PrismaPg } from '@mi_casa/db/adapter';
 
 const typeDefs = readFileSync(require.resolve('@mi_casa/gql/schema.graphql'), 'utf8');
 
 async function main() {
   const schema = createSchema<AppContext>({ typeDefs, resolvers });
-  const context = () => initialContext;
+  const db = new PrismaClient({
+    adapter: new PrismaPg({ connectionString: config.DATABASE_URL })
+  });
+
+  const context = createInitialContext(db);
   const yoga = createYoga<AppContext>({ schema, context });
   const server = createServer(yoga);
 
