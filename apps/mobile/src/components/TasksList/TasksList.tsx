@@ -21,6 +21,7 @@ export const TasksList = ({ ...props }: EntriesListProps) => {
     <View {...props} style={[props.style, styles.container]}>
       <SwipeListView
         style={styles.list}
+        contentContainerStyle={styles.contentContainer}
         refreshing={loading}
         onRefresh={refetch}
         data={tasks}
@@ -50,8 +51,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
+  contentContainer: {
+    // flex: 1,
+    minHeight: '100%'
+  },
   list: {
-    flex: 1
+    flex: 1,
   }
 });
 
