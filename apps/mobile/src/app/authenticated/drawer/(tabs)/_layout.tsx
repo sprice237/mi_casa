@@ -15,10 +15,26 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tasks"
+        name="todoTasks"
         options={{
           headerShown: false,
-          title: 'Tasks',
+          title: 'To do',
+          tabBarIcon: ({ focused }) => <FontAwesome6 name="face-smile" size={24} color={focused ? 'blue' : 'black'} />,
+        }}
+      />
+      <Tabs.Screen
+        name="inProgressTasks"
+        options={{
+          headerShown: false,
+          title: 'In progress',
+          tabBarIcon: ({ focused }) => <FontAwesome6 name="face-smile" size={24} color={focused ? 'blue' : 'black'} />,
+        }}
+      />
+      <Tabs.Screen
+        name="completeTasks"
+        options={{
+          headerShown: false,
+          title: 'Complete',
           tabBarIcon: ({ focused }) => <FontAwesome6 name="face-smile" size={24} color={focused ? 'blue' : 'black'} />,
         }}
       />

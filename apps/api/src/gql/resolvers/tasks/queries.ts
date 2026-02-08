@@ -1,7 +1,12 @@
+import { Prisma } from "@mi_casa/db/client";
 import { AppResolvers } from "../types";
 
-export const tasksQueryResolver: AppResolvers['Query']['tasks'] = async (_1, _2, { db }) => {
-  const tasks = await db.task.findMany();
+export const tasksQueryResolver: AppResolvers['Query']['tasks'] = async (_, { filter }, { db }) => {
+  const tasks = await db.task.findMany({
+    where: {
+      status: filter?.status ?? Prisma.skip,
+    }
+  });
   return tasks;
 };
 

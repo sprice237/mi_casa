@@ -1,3 +1,7 @@
+input TasksFilterInput {
+  status: TaskStatus
+}
+
 input CreateTaskInput {
   name: String!
 }

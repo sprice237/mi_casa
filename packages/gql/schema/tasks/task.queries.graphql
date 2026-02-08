@@ -1,4 +1,4 @@
 extend type Query {
-  tasks: [Task!]!
+  tasks(filter: TasksFilterInput): [Task!]!
   task(taskId: ID!): Task!
 }

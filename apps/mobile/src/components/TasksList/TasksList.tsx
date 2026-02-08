@@ -1,4 +1,4 @@
-import { getFragmentData, TaskFragmentDoc, TasksDocument } from '$/gql';
+import { getFragmentData, TaskFragmentDoc, TasksDocument, TaskStatus } from '$/gql';
 import { ComponentProps } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useQuery } from '@apollo/client/react';
@@ -10,10 +10,13 @@ import { AddTaskButton } from '../AddTaskButton';
 
 const ROW_HEIGHT = 60;
 
-type EntriesListProps = ComponentProps<typeof View>;
+type EntriesListProps = ComponentProps<typeof View> & {
+  status?: TaskStatus;
+  showAddTaskButton?: boolean;
+};
 
-export const TasksList = ({ ...props }: EntriesListProps) => {
-  const { data, refetch, loading } = useQuery(TasksDocument);
+export const TasksList = ({ status, showAddTaskButton, ...props }: EntriesListProps) => {
+  const { data, refetch, loading } = useQuery(TasksDocument, { variables: { filter: { status: status ?? null } } });
   const tasks = data?.tasks;
 
 
@@ -41,7 +44,7 @@ export const TasksList = ({ ...props }: EntriesListProps) => {
         rightOpenValue={-ROW_HEIGHT * TaskListItemActions.numRightButtons}
         ListEmptyComponent={() => <View><Text>Empty</Text></View>}
       />
-      <AddTaskButton height={ROW_HEIGHT} />
+      {showAddTaskButton && <AddTaskButton height={ROW_HEIGHT} />}
     </View>
   );
 };

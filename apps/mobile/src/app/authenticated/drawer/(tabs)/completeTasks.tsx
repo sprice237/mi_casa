@@ -2,12 +2,12 @@ import { TasksList } from '$/components/TasksList';
 import { useRegisterTitle } from '$/stores/titleStore';
 import { StyleSheet, View } from 'react-native';
 
-export default function Tasks() {
-  useRegisterTitle('Tasks');
+export default function CompleteTasks() {
+  useRegisterTitle('Complete');
 
   return (
     <View style={styles.container}>
-      <TasksList style={styles.list} />
+      <TasksList style={styles.list} status="COMPLETE" />
     </View>
   );
 }

@@ -37,7 +37,9 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
             name
           }
         },
-        refetchQueries: [TasksDocument]
+        update(cache) {
+          cache.evict({ fieldName: 'tasks' })
+        }
       });
 
     }

@@ -28,6 +28,9 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: 
           name: null,
           status: 'IN_PROGRESS'
         }
+      },
+      update(cache) {
+        cache.evict({ fieldName: 'tasks' })
       }
     })
   }
@@ -41,6 +44,9 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: 
           name: null,
           status: 'COMPLETE'
         }
+      },
+      update(cache) {
+        cache.evict({ fieldName: 'tasks' })
       }
     })
   }
@@ -51,7 +57,9 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: 
       variables: {
         taskId: task.id,
       },
-      refetchQueries: [TasksDocument]
+      update(cache) {
+        cache.evict({ fieldName: 'tasks' })
+      }
     })
   }
 
