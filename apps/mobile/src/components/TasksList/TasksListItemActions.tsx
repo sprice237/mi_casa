@@ -1,11 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 import { DeleteButton } from '../DeleteButton';
-import { EditTaskButton } from '../EditButton';
+import { EditButton } from '../EditButton';
 import { CompleteTaskButton } from '../CompleteTaskButton';
 import { FragmentType, getFragmentData, TaskFragmentDoc, UpdateTaskDocument, DeleteTaskDocument, TasksDocument } from '$/gql';
 import { StartTaskButton } from '../StartTaskButton';
 import { useMutation } from '@apollo/client/react';
 import { Dispatch } from 'react';
+import { useFlagState } from '$/util';
+import { CreateOrUpdateTaskModal } from '../CreateOrUpdateTaskModal';
 
 type TaskListItemActionsProps = {
   itemWidth: number;
@@ -14,6 +16,7 @@ type TaskListItemActionsProps = {
 };
 
 export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: TaskListItemActionsProps) => {
+  const { value: isEditModalVisible, setTrue: showEditModal, setFalse: hideEditModal } = useFlagState();
   const task = getFragmentData(TaskFragmentDoc, taskFragment);
 
   const [updateTask] = useMutation(UpdateTaskDocument);
@@ -64,20 +67,23 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: 
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.actionsContainer}>
-        {task.status === 'READY_TO_BEGIN' && (
-          <StartTaskButton height="100%" onPress={doStartTask} width={itemWidth} />
-        )}
-        {task.status === 'IN_PROGRESS' && (
-          <CompleteTaskButton height="100%" onPress={doCompleteTask} width={itemWidth} />
-        )}
+    <>
+      {isEditModalVisible && <CreateOrUpdateTaskModal task={taskFragment} onClose={hideEditModal} />}
+      <View style={styles.container}>
+        <View style={styles.actionsContainer}>
+          {task.status === 'READY_TO_BEGIN' && (
+            <StartTaskButton height="100%" onPress={doStartTask} width={itemWidth} />
+          )}
+          {task.status === 'IN_PROGRESS' && (
+            <CompleteTaskButton height="100%" onPress={doCompleteTask} width={itemWidth} />
+          )}
+        </View>
+        <View style={styles.actionsContainer}>
+          <EditButton height="100%" onPress={showEditModal} width={itemWidth} />
+          <DeleteButton height="100%" onPress={doDeleteTask} width={itemWidth} />
+        </View>
       </View>
-      <View style={styles.actionsContainer}>
-        <EditTaskButton height="100%" onPress={onPress} task={taskFragment} width={itemWidth} />
-        <DeleteButton height="100%" onPress={doDeleteTask} width={itemWidth} />
-      </View>
-    </View>
+    </>
   );
 }
 
