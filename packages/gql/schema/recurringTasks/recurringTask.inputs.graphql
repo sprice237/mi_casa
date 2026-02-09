@@ -1,0 +1,9 @@
+input CreateRecurringTaskInput {
+  name: String!
+  rule: Json!
+}
+
+input UpdateRecurringTaskInput {
+  name: String
+  rule: Json
+}

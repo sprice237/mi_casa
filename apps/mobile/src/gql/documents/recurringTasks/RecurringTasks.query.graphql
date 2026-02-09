@@ -1,0 +1,5 @@
+query RecurringTasks {
+  recurringTasks {
+    ...RecurringTask
+  }
+}

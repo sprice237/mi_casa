@@ -1,0 +1,5 @@
+extend type Mutation {
+  createRecurringTask(input: CreateRecurringTaskInput!): RecurringTask!
+  updateRecurringTask(recurringTaskId: ID!, input: UpdateRecurringTaskInput!): RecurringTask!
+  deleteRecurringTask(recurringTaskId: ID!): Boolean!
+}

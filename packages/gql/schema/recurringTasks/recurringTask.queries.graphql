@@ -1,0 +1,4 @@
+extend type Query {
+  recurringTasks: [RecurringTask!]!
+  recurringTask(recurringTaskId: ID!): RecurringTask!
+}

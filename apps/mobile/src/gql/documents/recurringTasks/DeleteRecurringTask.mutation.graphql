@@ -1,0 +1,3 @@
+mutation DeleteRecurringTask($recurringTaskId: ID!) {
+  deleteRecurringTask(recurringTaskId: $recurringTaskId)
+}

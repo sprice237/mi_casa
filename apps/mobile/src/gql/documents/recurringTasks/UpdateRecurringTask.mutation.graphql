@@ -1,0 +1,5 @@
+mutation UpdateRecurringTask($recurringTaskId: ID!, $input: UpdateRecurringTaskInput!) {
+  updateRecurringTask(recurringTaskId: $recurringTaskId, input: $input) {
+    ...RecurringTask
+  }
+}

@@ -22,7 +22,13 @@
   },
   "references": [
     {
+      "path": "../../packages/common"
+    },
+    {
       "path": "../../packages/db"
+    },
+    {
+      "path": "../../packages/domain"
     },
     {
       "path": "../../packages/gql"

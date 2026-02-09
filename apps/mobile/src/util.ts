@@ -5,6 +5,7 @@ export const useFlagState = (initialState: boolean | (() => boolean) = false) =>
 
   const setTrue = useCallback(() => setValue(true), []);
   const setFalse = useCallback(() => setValue(false), []);
+  const toggleValue = useCallback(() => setValue(pv => !pv), []);
 
-  return useMemo(() => ({ value, setTrue, setFalse, setValue }), [value, setTrue, setFalse, setValue]);
+  return useMemo(() => ({ value, setTrue, setFalse, setValue, toggleValue }), [value, setTrue, setFalse, setValue, toggleValue]);
 }
