@@ -1,7 +1,7 @@
 import { RecurringTasksList } from '$/components/RecurringTasksList/RecurringTasksList';
 import { StyleSheet, View } from 'react-native';
 
-export default function Categories() {
+export default function List() {
   return (
     <View style={styles.container}>
       <RecurringTasksList style={styles.listContainer} />
