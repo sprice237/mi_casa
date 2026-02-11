@@ -15,14 +15,15 @@ enum TaskStatus {
 }
 
 model RecurringTask {
-  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
-  rule Json
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  rule      Json
+  startDate DateTime @db.Date
 
   /**
    * rule
    * { type: 'day'; interval: number } |
-   * { type: 'week'; interval: number; dow: number } | // dow will be a bitwise value, e.g. MONDAY = 2^0, TUESDAY = 2^1, WEDNESDAY = 2^2, etc
+   * { type: 'week'; interval: number; dow: number[] } | 
    * { type: 'month_dom'; interval: number; dom: number } |
    * { type: 'month_dow'; interval: number; dow: number; wom: number } |
    * { type: 'year'; interval: number; month: number; dom: number }

@@ -14,7 +14,7 @@ const config: CodegenConfig = {
         printFieldsOnNewLines: true,
         scalars: {
           Json: 'unknown',
-          //   Date: 'Date',
+          Date: 'Date',
           DateTime: 'Date',
           //   Decimal: 'Decimal',
           //   Time: 'Date',

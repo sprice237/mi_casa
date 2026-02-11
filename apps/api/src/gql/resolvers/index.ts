@@ -1,7 +1,7 @@
 import { statusQueryResolver, statusTypeResolver } from "./status";
 import { createTaskMutationResolver, deleteTaskMutationResolver, taskQueryResolver, tasksQueryResolver, taskTypeResolver, updateTaskMutationResolver } from "./tasks";
 import { AppResolvers } from './types';
-import { createRecurringTaskMutationResolver, deleteRecurringTaskMutationResolver, recurringTaskQueryResolver, recurringTasksQueryResolver, recurringTaskTypeResolver, updateRecurringTaskMutationResolver } from "./recurringTasks";
+import { createRecurringTaskMutationResolver, deleteRecurringTaskMutationResolver, recurringTaskProjectionsQueryResolver, recurringTaskProjectionTypeResolver, recurringTaskQueryResolver, recurringTasksQueryResolver, recurringTaskTypeResolver, updateRecurringTaskMutationResolver } from "./recurringTasks";
 import { scalars } from "@mi_casa/gql";
 
 
@@ -9,6 +9,7 @@ export const resolvers: AppResolvers = {
   Query: {
     recurringTasks: recurringTasksQueryResolver,
     recurringTask: recurringTaskQueryResolver,
+    recurringTaskProjections: recurringTaskProjectionsQueryResolver,
     tasks: tasksQueryResolver,
     task: taskQueryResolver,
     status: statusQueryResolver,
@@ -24,6 +25,7 @@ export const resolvers: AppResolvers = {
 
   Status: statusTypeResolver,
   RecurringTask: recurringTaskTypeResolver,
+  RecurringTaskProjection: recurringTaskProjectionTypeResolver,
   Task: taskTypeResolver,
 
   ...scalars,

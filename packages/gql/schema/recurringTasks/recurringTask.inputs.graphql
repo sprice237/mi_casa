@@ -1,9 +1,17 @@
 input CreateRecurringTaskInput {
   name: String!
   rule: Json!
+  startDate: Date!
 }
 
 input UpdateRecurringTaskInput {
   name: String
   rule: Json
+  startDate: Date
+}
+
+input RecurringTaskProjectionsFilterInput {
+  startDate: Date!
+  endDate: Date!
+  recurringTaskIds: [ID!]
 }

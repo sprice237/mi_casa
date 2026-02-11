@@ -3,11 +3,12 @@ import { eachDayOfInterval, startOfWeek, add, format, Day } from 'date-fns';
 import { useMemo } from 'react';
 
 type WeekHeaderProps = {
-  date: Date;
   weekStartsOn: Day;
 }
 
-export const WeekHeader = ({ date, weekStartsOn }: WeekHeaderProps) => {
+const date = new Date();
+
+export const WeekHeader = ({ weekStartsOn }: WeekHeaderProps) => {
   const daysOfWeek = useMemo(() => {
     const firstDayOfWeek = startOfWeek(date, { weekStartsOn });
 
@@ -32,9 +33,12 @@ const styles = StyleSheet.create({
   weekHeader: {
     display: 'flex',
     flexDirection: 'row',
-    height: 50,
+    height: 20,
   },
   dayName: {
-    flex: 1
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   }
 });

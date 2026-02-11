@@ -1,5 +1,5 @@
-mutation CreateRecurringTask($input: CreateRecurringTaskInput!) {
-  createRecurringTask(input: $input) {
-    ...RecurringTask
+mutation CreateTask($input: CreateTaskInput!) {
+  createTask(input: $input) {
+    ...Task
   }
 }

@@ -27,6 +27,7 @@ const config: CodegenConfig = {
         strictScalars: true,
         scalars: {
           Json: 'unknown',
+          Date: 'Date',
           DateTime: 'Date'
         },
         useTypeImports: true,

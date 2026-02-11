@@ -2,20 +2,25 @@ import { StyleSheet, View } from 'react-native';
 import { WeekHeader } from './WeekHeader';
 import { DaysOfMonth } from './DaysOfMonth';
 import { Header } from './Header';
+import { Dispatch } from 'react';
+import { UTCDate } from '@date-fns/utc';
 
 const weekStartsOn = 0; // Sunday
 
 type CalendarProps = {
-  date: Date;
-  onDateChange: (date: Date) => void;
+  month: UTCDate;
+  onMonthChange: Dispatch<CalendarProps['month']>;
+  selectedDate: UTCDate | null;
+  onSelectedDateChange: Dispatch<CalendarProps['selectedDate']>
+  dateHasIndicator?: (date: UTCDate) => boolean;
 }
 
-export const Calendar = ({ date, onDateChange }: CalendarProps) => {
+export const Calendar = ({ month, onMonthChange, selectedDate, onSelectedDateChange, dateHasIndicator }: CalendarProps) => {
   return (
     <View style={styles.container}>
-      <Header date={date} onDateChange={onDateChange} />
-      <WeekHeader date={date} weekStartsOn={weekStartsOn} />
-      <DaysOfMonth date={date} weekStartsOn={weekStartsOn} />
+      <Header month={month} onMonthChange={onMonthChange} />
+      <WeekHeader weekStartsOn={weekStartsOn} />
+      <DaysOfMonth month={month} weekStartsOn={weekStartsOn} selectedDate={selectedDate} onSelectedDateChange={onSelectedDateChange} dateHasIndicator={dateHasIndicator} />
     </View>
   );
 }

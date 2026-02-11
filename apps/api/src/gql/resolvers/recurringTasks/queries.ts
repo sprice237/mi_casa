@@ -13,3 +13,12 @@ export const recurringTaskQueryResolver: AppResolvers['Query']['recurringTask'] 
 
   return recurringTask;
 };
+
+export const recurringTaskProjectionsQueryResolver: AppResolvers['Query']['recurringTaskProjections'] = async (_1, { input: { recurringTaskIds, startDate, endDate } }, { services }) => {
+  const recurringTaskProjections = await services.recurringTasks.getProjections({ where: recurringTaskIds ? { id: { in: recurringTaskIds } } : undefined, startDate, endDate });
+  const recurringTaskProjectionsWithIds = recurringTaskProjections.map(projection => ({
+    ...projection,
+    id: `${projection.recurringTask.id}-${projection.date.toISOString().split('T')[0]}`
+  }));
+  return recurringTaskProjectionsWithIds;
+};

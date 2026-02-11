@@ -63,6 +63,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
           input: {
             name,
             rule,
+            startDate: null,
           }
         },
       });
@@ -71,7 +72,8 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
         variables: {
           input: {
             name,
-            rule
+            rule,
+            startDate: new Date(),
           }
         },
         update(cache) {

@@ -3,3 +3,10 @@ type RecurringTask {
   name: String!
   rule: Json!
 }
+
+type RecurringTaskProjection {
+  id: ID!
+  recurringTask: RecurringTask!
+  n: Int!
+  date: Date!
+}

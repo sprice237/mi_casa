@@ -1,0 +1,8 @@
+fragment RecurringTaskProjection on RecurringTaskProjection {
+  id
+  n
+  date
+  recurringTask {
+    ...RecurringTask
+  }
+}

@@ -1,0 +1,5 @@
+query RecurringTaskProjections($input: RecurringTaskProjectionsFilterInput!) {
+  recurringTaskProjections(input: $input) {
+    ...RecurringTaskProjection
+  }
+}

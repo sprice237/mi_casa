@@ -1,18 +1,20 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { startOfMonth, add, format } from 'date-fns';
+import { utc, UTCDate } from '@date-fns/utc';
+import { Dispatch } from 'react';
 
 type HeaderProps = {
-  date: Date;
-  onDateChange: (date: Date) => void;
+  month: UTCDate;
+  onMonthChange: Dispatch<HeaderProps['month']>;
 }
 
-export const Header = ({ date, onDateChange }: HeaderProps) => {
+export const Header = ({ month, onMonthChange }: HeaderProps) => {
   const prevMonth = () => {
-    onDateChange(startOfMonth(add(date, { months: -1 })));
+    onMonthChange(startOfMonth(add(month, { months: -1, }), { in: utc }));
   }
 
   const nextMonth = () => {
-    onDateChange(startOfMonth(add(date, { months: 1 })));
+    onMonthChange(startOfMonth(add(month, { months: 1, }), { in: utc }));
   }
 
   return (
@@ -20,7 +22,7 @@ export const Header = ({ date, onDateChange }: HeaderProps) => {
       <Pressable style={styles.button} onPress={prevMonth}>
         <Text>Prev</Text>
       </Pressable>
-      <Text style={{ marginHorizontal: 20, fontWeight: 'bold' }}>{format(date, 'MMMM yyyy')}</Text>
+      <Text style={{ marginHorizontal: 20, fontWeight: 'bold' }}>{format(month, 'MMMM yyyy')}</Text>
       <Pressable style={styles.button} onPress={nextMonth}>
         <Text>Next</Text>
       </Pressable>

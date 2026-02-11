@@ -19,7 +19,8 @@ export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['upda
     where: { id: recurringTaskId },
     data: {
       name: input.name ?? undefined,
-      rule
+      rule,
+      startDate: input.startDate ?? undefined,
     }
   });
 

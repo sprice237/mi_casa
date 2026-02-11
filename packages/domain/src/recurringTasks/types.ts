@@ -9,9 +9,21 @@ export type CreateRecurringTaskInput = {
   id?: string;
   name: string;
   rule: RecurringTaskRule
+  startDate: Date;
 }
 
 export type UpdateRecurringTaskInput = {
   name?: string;
   rule?: RecurringTaskRule
+  startDate?: Date;
+}
+
+export type RecurringTaskProjection = {
+  recurringTask: {
+    id: string;
+    name: string;
+    rule: RecurringTaskRule
+  }
+  n: number;
+  date: Date;
 }
