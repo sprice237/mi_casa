@@ -7,12 +7,11 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 
-export function buildGqlServer({ db }: { db: PrismaClient }) {
+export function buildGqlServer({ db, context }: { db: PrismaClient, context?: AppContext }) {
   const typeDefs = readFileSync(require.resolve('@mi_casa/gql/schema.graphql'), 'utf8');
   const schema = createSchema<AppContext>({ typeDefs, resolvers });
 
-  const context = createInitialContext({ db });
-  const yoga = createYoga<AppContext>({ schema, context });
+  const yoga = createYoga<AppContext>({ schema, context: context ?? createInitialContext({ db }) });
 
   return yoga;
 }

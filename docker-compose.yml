@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./apps/api/Dockerfile
+      dockerfile: ./apps/api/Dockerfile.dev
     depends_on:
       - db
     restart: unless-stopped
@@ -15,6 +15,8 @@ services:
       - /app/node_modules
     ports:
       - "${HOST_API_PORT}:8080"
+    environment:
+      - "DATABASE_URL=postgres://postgres:password@db/app"
 
   db:
     image: postgres:17.7-alpine
