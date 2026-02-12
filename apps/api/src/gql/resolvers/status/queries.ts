@@ -1,5 +1,5 @@
-import { config } from "../../../config";
-import { AppResolvers } from "../types";
+import { config } from "../../../config.js";
+import { AppResolvers } from "../types.js";
 
 export const statusQueryResolver: AppResolvers['Query']['status'] = () => {
   return {

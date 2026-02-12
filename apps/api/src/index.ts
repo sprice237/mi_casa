@@ -1,8 +1,7 @@
 import { createServer } from 'http';
-import { config } from './config';
-import { db } from './db';
-import { buildGqlServer } from './gql';
-
+import { config } from './config.js';
+import { db } from './db.js';
+import { buildGqlServer } from './gql/index.js';
 
 async function main() {
   const yoga = buildGqlServer({ db })

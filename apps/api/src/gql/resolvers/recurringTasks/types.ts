@@ -1,4 +1,4 @@
-import { AppResolvers } from "../types";
+import { AppResolvers } from "../types.js";
 
 export const recurringTaskTypeResolver: AppResolvers['RecurringTask'] = {
   id: (root) => root.id,

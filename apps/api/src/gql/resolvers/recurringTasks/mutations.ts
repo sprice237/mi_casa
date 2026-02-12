@@ -1,5 +1,5 @@
 import { RecurringTaskRuleSchema } from "@mi_casa/common";
-import { AppResolvers } from "../types";
+import { AppResolvers } from "../types.js";
 
 export const createRecurringTaskMutationResolver: AppResolvers['Mutation']['createRecurringTask'] = async (_, { input }, { services }) => {
   const rule = RecurringTaskRuleSchema.parse(input.rule);

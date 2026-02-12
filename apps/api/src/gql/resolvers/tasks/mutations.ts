@@ -1,5 +1,5 @@
 import { Prisma } from "@mi_casa/db/client";
-import { AppResolvers } from "../types";
+import { AppResolvers } from "../types.js";
 
 export const createTaskMutationResolver: AppResolvers['Mutation']['createTask'] = async (_, { input }, { db }) => {
   const task = await db.task.create({

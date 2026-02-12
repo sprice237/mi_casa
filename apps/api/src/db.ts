@@ -1,8 +1,8 @@
 import { PrismaClient } from '@mi_casa/db/client';
 import { PrismaPg } from '@mi_casa/db/adapter';
-import { config } from './config';
+import { config } from './config.js';
 
-export function createPrismaClient(databaseUrl: string) {
+export function createPrismaClient(databaseUrl: string): PrismaClient {
   return new PrismaClient({
     adapter: new PrismaPg({ connectionString: databaseUrl })
   });

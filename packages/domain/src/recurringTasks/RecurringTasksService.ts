@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient, RecurringTask as DbRecurringTask } from '@mi_casa/db/client';
-import { shimRecurringTask, shimRecurringTaskProjection } from './shims';
-import { CreateRecurringTaskInput, UpdateRecurringTaskInput } from './types';
+import { shimRecurringTask, shimRecurringTaskProjection } from './shims.js';
+import { CreateRecurringTaskInput, UpdateRecurringTaskInput } from './types.js';
 
 
 export class RecurringTasksService {

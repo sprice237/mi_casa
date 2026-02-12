@@ -1,2 +1,2 @@
-export * from './RecurringTasksService';
-export * from './types';
+export * from './RecurringTasksService.js';
+export * from './types.js';

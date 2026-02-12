@@ -1,5 +1,5 @@
 import { RecurringTask as DbRecurringTask } from "@mi_casa/db/client"
-import { RecurringTask, RecurringTaskProjection } from "./types"
+import { RecurringTask, RecurringTaskProjection } from "./types.js"
 import { RecurringTaskRuleSchema } from "@mi_casa/common"
 
 export const shimRecurringTask = (dbRecurringTask: DbRecurringTask): RecurringTask => {

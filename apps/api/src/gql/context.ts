@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@mi_casa/db/client';
 import { RecurringTasksService } from '@mi_casa/domain';
-import { config } from "../config";
+import { config } from "../config.js";
 
 export type Services = {
   recurringTasks: RecurringTasksService

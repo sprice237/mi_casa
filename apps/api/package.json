@@ -4,6 +4,7 @@
   "scripts": {
     "start": "tsx watch --conditions=development --env-file=.env --clear-screen=false --include \"../../packages/gql/dist\" --include \"./src\" src/index.ts"
   },
+  "type": "module",
   "private": true,
   "dependencies": {
     "@mi_casa/common": "*",
