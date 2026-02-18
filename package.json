@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "license": "UNLICENSED",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "packages/common",
+    "packages/db",
+    "packages/domain",
+    "packages/gql",
+    "apps/api",
+    "apps/mobile"
   ]
 }
