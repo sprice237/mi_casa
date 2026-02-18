@@ -2,7 +2,9 @@
   "name": "@mi_casa/api",
   "version": "0.1.0",
   "scripts": {
-    "start": "tsx watch --conditions=development --env-file=.env --clear-screen=false --include \"../../packages/gql/dist\" --include \"./src\" src/index.ts"
+    "start": "tsx watch --conditions=development --env-file=.env --clear-screen=false --include \"../../packages/gql/dist\" --include \"./src\" src/index.ts",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "build": "tsc"
   },
   "type": "module",
   "private": true,
@@ -31,6 +33,6 @@
     "rimraf": "3.0.2",
     "ts-node": "10.9.2",
     "tsx": "4.19.1",
-    "typescript": "5.3.3"
+    "typescript": "^5.9.3"
   }
 }
