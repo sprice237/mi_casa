@@ -60,108 +60,173 @@ export class RecurringTasksService {
     // needs to be cleaned up and better organized.
 
     const projections = await this.db.$queryRaw<(DbRecurringTask & { n: number, date: Date })[]>`
-select "RecurringTask".*, p.n, p.date
-from "RecurringTask"
-         join lateral (
-    with recursive generated_dates(n, "date") as (
-        select 0 n, null::date d
+      select "RecurringTask".*, p.n, p.date
+      from "RecurringTask"
+      join lateral (
+        with recursive generated_dates(n, "date") as (
+          select 0 n, null::date d
 
-        union all
+          union all
 
-        (
+          (
             with n as (
                 select generated_dates.n + 1 n
                 from generated_dates
             ),
-                 d as (
-                     select (
-                                case "rule" ->> 'type'
-                                    when 'day' then (
-                                            "RecurringTask"."startDate" +
-                                            (n - 1) * ("RecurringTask".rule ->> 'interval')::integer
-                                        )
-                                    when 'week' then (
-                                            "RecurringTask"."startDate" +
-                                            (n - 1) / jsonb_array_length("RecurringTask".rule -> 'dow') * 7 *
-                                            ("RecurringTask".rule ->> 'interval')::integer +
-                                            (array(
-                                                    select unnest(array_agg(
-                                                                (dow::text::integer - extract(isodow from "RecurringTask"."startDate") +
-                                                                 7) % 7
-                                                        )) u
-                                                    from jsonb_array_elements("RecurringTask".rule -> 'dow') t(dow)
-                                                    order by u
-                                                )::integer[])[(n - 1) % jsonb_array_length("RecurringTask".rule -> 'dow') + 1]
-                                        )
-                                    when 'month_dom' then (
+            d as (
+              select (
+                case "rule" ->> 'type'
+                  when 'day' then (
+                    "RecurringTask"."startDate" +
+                    (n - 1) * ("RecurringTask".rule ->> 'interval')::integer
+                  )
+                  when 'week' then (
+                    "RecurringTask"."startDate" +
+                    (n - 1) / jsonb_array_length("RecurringTask".rule -> 'dow') * 7 *
+                    ("RecurringTask".rule ->> 'interval')::integer +
+                    (array(
+                      select unnest(array_agg((dow::text::integer - extract(isodow from "RecurringTask"."startDate") + 7) % 7)) u
+                      from jsonb_array_elements("RecurringTask".rule -> 'dow') t(dow)
+                      order by u
+                    )::integer[])[(n - 1) % jsonb_array_length("RecurringTask".rule -> 'dow') + 1]
+                  )
+                  when 'month_dom' then (
+                    (
+                      make_date(
+                        extract(year from "RecurringTask"."startDate")::integer,
+                        extract(month from "RecurringTask"."startDate")::integer,
+                        ("RecurringTask".rule -> 'dom')::integer
+                      ) +
+                      (
+                        case (
+                          make_date(
+                            extract(year from "RecurringTask"."startDate")::integer,
+                            extract(month from "RecurringTask"."startDate")::integer,
+                            ("RecurringTask".rule -> 'dom')::integer
+                          ) >= "RecurringTask"."startDate"
+                        )
+                          when true then 0
+                          else 1
+                        end
+                      ) * '1 month'::interval +
+                      (n - 1) * ("RecurringTask".rule ->> 'interval')::integer * '1 month'::interval
+                    )::date
+                  )
+                  when 'month_dow' then (
+                      (
+                        (
+                          (
+                            (
+                              date_trunc('month', "RecurringTask"."startDate")::date +
+                              (
+                                case (
+                                  (
+                                    (
+                                      date_trunc('month', "RecurringTask"."startDate")::date +
+                                      (
                                         (
-                                                make_date(extract(year from "RecurringTask"."startDate")::integer,
-                                                          extract(month from "RecurringTask"."startDate")::integer,
-                                                          ("RecurringTask".rule -> 'dom')::integer) +
-                                                (case (make_date(
-                                                               extract(year from "RecurringTask"."startDate")::integer,
-                                                               extract(month from "RecurringTask"."startDate")::integer,
-                                                               ("RecurringTask".rule -> 'dom')::integer) >=
-                                                       "RecurringTask"."startDate")
-                                                     when true then 0
-                                                     else 1 end) * '1 month'::interval +
-                                                (n - 1) * ("RecurringTask".rule ->> 'interval')::integer * '1 month'::interval
-                                            )::date
-                                        )
-                                    when 'month_dow' then (
-                                        ((((date_trunc('month', "RecurringTask"."startDate")::date +
-                                                         (case (((date_trunc('month', "RecurringTask"."startDate")::date +
-                                                         ((("RecurringTask".rule ->> 'dow')::integer -
-                                                           extract(isodow from date_trunc('month', "RecurringTask"."startDate")::date) + 7) %
-                                                          7)::integer) +
-                                                         (("RecurringTask".rule ->> 'wom')::integer - 1) * '1 week'::interval)::date >= "RecurringTask"."startDate")
-                                                              when true then 0
-                                                              else 1 end) *
-                                                         '1 month'::interval)::date + (n - 1) * ("RecurringTask".rule ->> 'interval')::integer *
-                                                        '1 month'::interval)::date +
-                                                         ((("RecurringTask".rule ->> 'dow')::integer -
-                                                           extract(isodow from ((date_trunc('month', "RecurringTask"."startDate")::date +
-                                                         (case (((date_trunc('month', "RecurringTask"."startDate")::date +
-                                                         ((("RecurringTask".rule ->> 'dow')::integer -
-                                                           extract(isodow from date_trunc('month', "RecurringTask"."startDate")::date) + 7) %
-                                                          7)::integer) +
-                                                         (("RecurringTask".rule ->> 'wom')::integer - 1) * '1 week'::interval)::date >= "RecurringTask"."startDate")
-                                                              when true then 0
-                                                              else 1 end) *
-                                                         '1 month'::interval)::date + (n - 1) * ("RecurringTask".rule ->> 'interval')::integer *
-                                                        '1 month'::interval)::date) + 7) %
-                                                          7)::integer) +
-                                                         (("RecurringTask".rule ->> 'wom')::integer - 1) * '1 week'::interval)::date
+                                          ("RecurringTask".rule ->> 'dow')::integer - 
+                                          extract(isodow from date_trunc('month', "RecurringTask"."startDate")::date) + 
+                                          7
+                                        ) % 7
+                                      )::integer
+                                    ) +
+                                    (
+                                      ("RecurringTask".rule ->> 'wom')::integer - 
+                                      1
+                                    ) * '1 week'::interval
+                                  )::date >= "RecurringTask"."startDate"
+                                )
+                                  when true 
+                                  then 0
+                                  else 1 
+                                end
+                              ) *
+                              '1 month'::interval
+                            )::date + (n - 1) * ("RecurringTask".rule ->> 'interval')::integer *
+                            '1 month'::interval
+                          )::date +
+                          (
+                            (
+                              ("RecurringTask".rule ->> 'dow')::integer -
+                              extract(isodow from (
+                                (
+                                  date_trunc('month', "RecurringTask"."startDate")::date +
+                                  (
+                                    case (
+                                      (
+                                        (
+                                          date_trunc('month', "RecurringTask"."startDate")::date +
+                                          (
+                                            (
+                                              ("RecurringTask".rule ->> 'dow')::integer -
+                                              extract(isodow from date_trunc('month', "RecurringTask"."startDate")::date) +
+                                              7
+                                            ) %
+                                            7
+                                          )::integer
+                                        ) +
+                                        (("RecurringTask".rule ->> 'wom')::integer - 1) *
+                                        '1 week'::interval
+                                      )::date >= "RecurringTask"."startDate"
                                     )
-                                    when 'year' then (
-                                         (
-                                                       make_date(extract(year from "RecurringTask"."startDate")::integer,
-                                                             ("RecurringTask".rule -> 'month')::integer,
-                                                             ("RecurringTask".rule -> 'dom')::integer) +
-                                                       (case (make_date(extract(year from "RecurringTask"."startDate")::integer,
-                                                             ("RecurringTask".rule -> 'month')::integer,
-                                                             ("RecurringTask".rule -> 'dom')::integer) >= "RecurringTask"."startDate") when true then 0 else 1 end) *
-                                                       '1 year'::interval +
-                                                       (n - 1) * ("RecurringTask".rule ->> 'interval')::integer *
-                                                        '1 year'::interval
-                                                   )::date
-
-                                    )
+                                      when true then 0
+                                      else 1
                                     end
-                                ) d
-                     from n
-                 )
+                                  ) *
+                                  '1 month'::interval
+                                )::date +
+                                (n - 1) * ("RecurringTask".rule ->> 'interval')::integer *
+                                '1 month'::interval
+                              )::date
+                            ) + 7
+                          ) % 7
+                        )::integer
+                      ) +
+                      (("RecurringTask".rule ->> 'wom')::integer - 1) * '1 week'::interval
+                    )::date
+                  )
+                  when 'year' then (
+                    (
+                      make_date(
+                        extract(year from "RecurringTask"."startDate")::integer,
+                        ("RecurringTask".rule -> 'month')::integer,
+                        ("RecurringTask".rule -> 'dom')::integer
+                      ) +
+                      (
+                        case (
+                          make_date(
+                            extract(year from "RecurringTask"."startDate")::integer,
+                            ("RecurringTask".rule -> 'month')::integer,
+                            ("RecurringTask".rule -> 'dom')::integer
+                          ) >= "RecurringTask"."startDate"
+                        )
+                          when true 
+                          then 0 
+                          else 1
+                        end
+                      ) *
+                      '1 year'::interval +
+                      (n - 1) * ("RecurringTask".rule ->> 'interval')::integer *
+                      '1 year'::interval
+                    )::date
+                  )
+                end
+              ) d
+              from n
+            )
             select n, d
-            from n,
-                 d
+            from n, d
             where d < ${endDate.toISOString().split('T')[0]}::date
+          )
         )
-    )
-    select *
-    from generated_dates
-    where n != 0
-      and "date" >= ${startDate.toISOString().split('T')[0]}::date
-    ) p on true;
+        select *
+        from generated_dates
+        where n != 0 and "date" >= ${startDate.toISOString().split('T')[0]}::date
+      ) p on true
+      where
+        ${where?.id && typeof where.id === 'object' && 'in' in where.id ? Prisma.sql`"RecurringTask".id = any (${where.id.in}::uuid[])` : true} and
+        ${where?.id && typeof where.id === 'string' ? Prisma.sql`"RecurringTask".id = ${where.id}::uuid` : true}
     `;
 
     const shimmedProjections = projections.map(shimRecurringTaskProjection);
