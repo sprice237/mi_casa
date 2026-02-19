@@ -19,11 +19,13 @@ model RecurringTask {
   name      String
   rule      Json
   startDate DateTime @db.Date
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
 
   /**
    * rule
    * { type: 'day'; interval: number } |
-   * { type: 'week'; interval: number; dow: number[] } | 
+   * { type: 'week'; interval: number; dow: number[] } |
    * { type: 'month_dom'; interval: number; dom: number } |
    * { type: 'month_dow'; interval: number; dow: number; wom: number } |
    * { type: 'year'; interval: number; month: number; dom: number }
@@ -31,7 +33,9 @@ model RecurringTask {
 }
 
 model Task {
-  id     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name   String
-  status TaskStatus
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  status    TaskStatus
+  createdAt DateTime   @default(now()) @db.Timestamptz
+  updatedAt DateTime   @updatedAt @db.Timestamptz
 }
