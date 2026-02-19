@@ -1,17 +1,22 @@
 import { StyleSheet, View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
 import { StyledButton } from '$/components/StyledButton';
 import { StyledTextInput } from '$/components/StyledTextInput';
 import { useAuthStore } from '$/stores/authStore';
 import { useState } from 'react';
+import { predefinedEndpoints, PredefinedEndpointSelect } from '$/components/PredefinedEndpointSelect';
 
 export default function SignIn() {
   const updateUsername = useAuthStore((state) => state.updateUsername);
+  const updateApiUri = useAuthStore((state) => state.updateApiUri);
+
   const [workingUsername, setWorkingUsername] = useState<string>('');
+  const [predefinedEndpoint, setPredefinedEndpoint] = useState(predefinedEndpoints[0] as typeof predefinedEndpoints[number] | null);
+  const [customApiUri, setCustomApiUri] = useState('');
 
   const onSubmit = async () => {
     updateUsername(workingUsername);
+    updateApiUri(predefinedEndpoint?.value ?? customApiUri);
   };
 
   return (
@@ -23,6 +28,20 @@ export default function SignIn() {
           onChangeText={setWorkingUsername}
           style={{ textAlign: 'center' }}
         />
+        <PredefinedEndpointSelect
+          value={predefinedEndpoint ?? null}
+          onChange={(e) => {
+            setPredefinedEndpoint(e)
+          }}
+        />
+        {!predefinedEndpoints.includes(predefinedEndpoint as never) && (
+          <StyledTextInput
+            placeholder="API Endpoint"
+            value={customApiUri}
+            onChangeText={setCustomApiUri}
+            style={{ textAlign: 'center' }}
+          />
+        )}
         <StyledButton text="Sign in" onPress={onSubmit} />
       </View>
     </View>

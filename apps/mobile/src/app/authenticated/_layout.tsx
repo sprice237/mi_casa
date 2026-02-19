@@ -3,24 +3,24 @@ import { Redirect, Stack } from 'expo-router';
 import { ApolloProvider } from "@apollo/client/react";
 import { useClient } from "$/gql";
 
-const uri = 'http://172.17.1.52:8080/graphql';
-
 export default function Layout() {
   const username = useAuthStore((state) => state.username);
+  const apiUri = useAuthStore((state) => state.apiUri);
 
-  if (!username) {
+  if (!username || !apiUri) {
     return <Redirect href="/unauthenticated/signIn" />
   }
 
-  return <Content username={username} />
+  return <Content username={username} apiUri={apiUri} />
 };
 
 type ContentProps = {
   username: string
+  apiUri: string
 }
 
-const Content = ({ username }: ContentProps) => {
-  const client = useClient(uri);
+const Content = ({ username, apiUri }: ContentProps) => {
+  const client = useClient(apiUri);
 
   return (
     <ApolloProvider client={client}>

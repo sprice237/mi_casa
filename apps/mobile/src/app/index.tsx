@@ -7,10 +7,9 @@ LogBox.ignoreLogs(['Failed prop type: Invalid prop `textStyle` of type `array` s
 
 export default function Index() {
   const username = useAuthStore((state) => state.username);
+  const apiUri = useAuthStore((state) => state.apiUri);
 
-  console.log('username', username);
-
-  return !!username ? (
+  return !!username && !!apiUri ? (
     <Redirect href="/authenticated/drawer/(tabs)/me" />
   ) : (
     <Redirect href="/unauthenticated/signIn" />
