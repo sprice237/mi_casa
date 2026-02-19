@@ -12,6 +12,7 @@ input UpdateRecurringTaskInput {
 
 input RecurringTaskProjectionsFilterInput {
   startDate: Date!
-  endDate: Date!
+  endDate: Date
+  limit: Int!
   recurringTaskIds: [ID!]
 }

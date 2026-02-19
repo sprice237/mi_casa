@@ -8,6 +8,7 @@
     "packages/domain",
     "packages/gql",
     "apps/api",
-    "apps/mobile"
+    "apps/mobile",
+    "apps/service"
   ]
 }

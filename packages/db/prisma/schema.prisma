@@ -22,6 +22,8 @@ model RecurringTask {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
+  tasks Task[]
+
   /**
    * rule
    * { type: 'day'; interval: number } |
@@ -38,4 +40,9 @@ model Task {
   status    TaskStatus
   createdAt DateTime   @default(now()) @db.Timestamptz
   updatedAt DateTime   @updatedAt @db.Timestamptz
+
+  recurringTaskId String?        @db.Uuid
+  recurringTask   RecurringTask? @relation(fields: [recurringTaskId], references: [id])
+
+  @@index([recurringTaskId, createdAt(sort: Desc)])
 }

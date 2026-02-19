@@ -1,7 +1,7 @@
 import { getFragmentData, RecurringTaskProjectionFragmentDoc, RecurringTaskProjectionsDocument } from '$/gql';
 import { ComponentProps } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useQuery, useSuspenseQuery } from '@apollo/client/react';
+import { useSuspenseQuery } from '@apollo/client/react';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { RecurringTaskProjectionsListItem } from './RecurringTaskProjectionsListItem';
 import { Border } from './Border';
@@ -15,8 +15,7 @@ type RecurringTaskProjectionsListProps = ComponentProps<typeof View> & {
 }
 
 export const RecurringTaskProjectionsList = ({ startDate, endDate, ...props }: RecurringTaskProjectionsListProps) => {
-  const { data: { recurringTaskProjections } = {}, refetch } = useSuspenseQuery(RecurringTaskProjectionsDocument, { variables: { input: { startDate, endDate, recurringTaskIds: null } } });
-  console.log({ startDate, endDate, recurringTaskProjections })
+  const { data: { recurringTaskProjections } = {}, refetch } = useSuspenseQuery(RecurringTaskProjectionsDocument, { variables: { input: { startDate, endDate, recurringTaskIds: null, limit: 1000 } } });
 
   return (
     <View {...props} style={[props.style, styles.container]}>

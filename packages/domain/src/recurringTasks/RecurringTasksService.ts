@@ -19,6 +19,19 @@ export class RecurringTasksService {
     return recurringTask
   }
 
+  async findLatestTask({ where: { recurringTaskId } }: { where: { recurringTaskId: string } }) {
+    const latestTask = await this.db.task.findFirst({
+      where: {
+        recurringTaskId
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return latestTask;
+  }
+
   async create({ data }: { data: CreateRecurringTaskInput }) {
     const dbRecurringTask = await this.db.recurringTask.create({ data });
     const recurringTask = shimRecurringTask(dbRecurringTask);
@@ -45,7 +58,7 @@ export class RecurringTasksService {
     return recurringTask
   }
 
-  async getProjections({ where, startDate, endDate }: { where?: { id?: string | { in: readonly string[] } }, startDate: Date; endDate: Date }) {
+  async getProjections({ where, startDate, endDate, limit }: { where?: { id?: string | { in: readonly string[] } }, startDate: Date; endDate?: Date; limit: number }) {
     // this approach iterates numerically through each instance of a recurring task
     // at each instance, the date of that instance is calculated using the rule 
     // execution ends when the calculated date exceeds the end date
@@ -217,16 +230,17 @@ export class RecurringTasksService {
             )
             select n, d
             from n, d
-            where d < ${endDate.toISOString().split('T')[0]}::date
+            where ${endDate ? Prisma.sql`d < ${endDate.toISOString().split('T')[0]}::date` : true}
           )
         )
         select *
         from generated_dates
         where n != 0 and "date" >= ${startDate.toISOString().split('T')[0]}::date
+        limit ${limit}
       ) p on true
       where
-        ${where?.id && typeof where.id === 'object' && 'in' in where.id ? Prisma.sql`"RecurringTask".id = any (${where.id.in}::uuid[])` : true} and
-        ${where?.id && typeof where.id === 'string' ? Prisma.sql`"RecurringTask".id = ${where.id}::uuid` : true}
+        ${where?.id && typeof where.id === 'object' && 'in' in where.id ? Prisma.sql`"RecurringTask".id = any (${where.id.in}::uuid[])` : Prisma.sql`true`} and
+        ${where?.id && typeof where.id === 'string' ? Prisma.sql`"RecurringTask".id = ${where.id}::uuid` : Prisma.sql`true`}
     `;
 
     const shimmedProjections = projections.map(shimRecurringTaskProjection);
