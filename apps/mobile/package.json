@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "build:gql": "graphql-codegen --config src/gql-codegen.ts",
     "watch:gql": "graphql-codegen --config src/gql-codegen.ts --watch"
@@ -24,6 +24,7 @@
     "date-fns": "^4.1.0",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
+    "expo-dev-client": "~6.0.20",
     "expo-font": "~14.0.11",
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.23",
