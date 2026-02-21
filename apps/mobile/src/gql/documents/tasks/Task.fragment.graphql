@@ -6,4 +6,8 @@ fragment Task on Task {
     id
     name
   }
+  project {
+    id
+    name
+  }
 }

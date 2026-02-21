@@ -9,5 +9,11 @@ export const taskTypeResolver: AppResolvers['Task'] = {
     if (!root.equipmentId) return null;
     const equipment = await db.equipment.findUnique({ where: { id: root.equipmentId } });
     return equipment;
-  }
+  },
+
+  project: async (root, _, { db }) => {
+    if (!root.projectId) return null;
+    const project = await db.project.findUnique({ where: { id: root.projectId } });
+    return project;
+  },
 }

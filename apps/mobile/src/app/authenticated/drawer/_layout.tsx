@@ -13,6 +13,7 @@ export default function Layout() {
         <Drawer.Screen name="(tabs)" options={{ headerTitle: title }} />
         <Drawer.Screen name="Categories" options={{ headerTitle: 'Categories' }} />
         <Drawer.Screen name="Equipments" options={{ headerTitle: 'Equipment' }} />
+        <Drawer.Screen name="Projects" options={{ headerTitle: 'Projects' }} />
         <Drawer.Screen name="RecurringTasks" options={{ headerTitle: 'Recurring tasks' }} />
       </Drawer>
     </GestureHandlerRootView>
@@ -55,6 +56,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       <DrawerItem
         label="Equipment"
         onPress={() => navigate('Equipments')}
+      />
+      <DrawerItem
+        label="Projects"
+        onPress={() => navigate('Projects')}
       />
       <DrawerItem
         label="Recurring tasks"

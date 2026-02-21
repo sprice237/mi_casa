@@ -3,4 +3,5 @@ type Task {
   name: String!
   status: TaskStatus!
   equipment: Equipment
+  project: Project
 }

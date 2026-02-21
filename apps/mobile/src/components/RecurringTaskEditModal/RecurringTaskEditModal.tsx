@@ -12,6 +12,7 @@ import { MonthDomFields } from './MonthDomFields';
 import { MonthDowFields } from './MonthDowFields';
 import { YearFields } from './YearFields';
 import { EquipmentSelect } from '../EquipmentSelect';
+import { ProjectSelect } from '../ProjectSelect';
 
 type RuleType = 'day' | 'week' | 'month_dom' | 'month_dow' | 'year';
 
@@ -27,6 +28,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
 
   const [name, setName] = useState(recurringTask?.name ?? '');
   const [equipmentId, setEquipmentId] = useState<string | null>(recurringTask?.equipment?.id ?? null);
+  const [projectId, setProjectId] = useState<string | null>(recurringTask?.project?.id ?? null);
   const [rule, setRule] = useState<RecurringTaskRule>(recurringTask?.rule as RecurringTaskRule ?? { type: 'day', interval: 1 });
 
   const setRuleType = (newRuleType: RuleType) => {
@@ -66,6 +68,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
             name,
             rule,
             equipmentId: { id: equipmentId },
+            projectId: { id: projectId },
             startDate: null,
           }
         },
@@ -77,6 +80,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
             name,
             rule,
             equipmentId,
+            projectId,
             startDate: new Date(),
           }
         },
@@ -101,6 +105,13 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
           <Text>Equipment</Text>
           <View style={styles.flexOne}>
             <EquipmentSelect value={equipmentId} onChange={setEquipmentId} />
+          </View>
+        </View>
+        <ProjectSelect value={equipmentId} onChange={setEquipmentId} />
+        <View style={styles.row}>
+          <Text>Project</Text>
+          <View style={styles.flexOne}>
+            <ProjectSelect value={equipmentId} onChange={setProjectId} />
           </View>
         </View>
         <View style={styles.row}>

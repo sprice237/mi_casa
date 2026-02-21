@@ -22,6 +22,7 @@ export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['upda
       rule,
       startDate: input.startDate ?? undefined,
       equipmentId: input.equipmentId ? input.equipmentId.id : undefined,
+      projectId: input.projectId ? input.projectId.id : undefined,
     }
   });
 

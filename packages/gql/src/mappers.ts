@@ -5,11 +5,17 @@ export type EquipmentMapper = {
   name: string;
 }
 
+export type ProjectMapper = {
+  id: string;
+  name: string;
+}
+
 export type RecurringTaskMapper = {
   id: string;
   name: string;
   rule: unknown;
   equipmentId: string | null;
+  projectId: string | null;
 }
 
 export type TaskMapper = {
@@ -17,4 +23,5 @@ export type TaskMapper = {
   name: string;
   status: TaskStatus;
   equipmentId: string | null;
+  projectId: string | null;
 }

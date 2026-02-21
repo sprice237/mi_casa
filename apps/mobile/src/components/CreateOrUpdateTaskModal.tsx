@@ -5,6 +5,7 @@ import { StyledTextInput } from './StyledTextInput';
 import { CreateTaskDocument, UpdateTaskDocument, FragmentType, getFragmentData, TaskFragmentDoc, TasksDocument } from '$/gql';
 import { useMutation } from '@apollo/client/react';
 import { EquipmentSelect } from './EquipmentSelect';
+import { ProjectSelect } from './ProjectSelect';
 
 type CreateOrUpdateTaskModalProps = {
   task?: FragmentType<typeof TaskFragmentDoc>;
@@ -16,6 +17,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
 
   const [name, setName] = useState(task?.name ?? '');
   const [equipmentId, setEquipmentId] = useState<string | null>(task?.equipment?.id ?? null);
+  const [projectId, setProjectId] = useState<string | null>(task?.project?.id ?? null);
 
   const [createTask] = useMutation(CreateTaskDocument);
   const [updateTask] = useMutation(UpdateTaskDocument);
@@ -29,6 +31,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
           input: {
             name,
             equipmentId: { id: equipmentId },
+            projectId: { id: projectId },
             status: null,
           }
         },
@@ -39,6 +42,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
           input: {
             name,
             equipmentId,
+            projectId,
           }
         },
         update(cache) {
@@ -62,6 +66,12 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
           <Text>Equipment</Text>
           <View style={styles.flexOne}>
             <EquipmentSelect value={equipmentId} onChange={setEquipmentId} />
+          </View>
+        </View>
+        <View style={styles.row}>
+          <Text>Project</Text>
+          <View style={styles.flexOne}>
+            <ProjectSelect value={equipmentId} onChange={setProjectId} />
           </View>
         </View>
         <Button onPress={onSubmit} title="Submit" />

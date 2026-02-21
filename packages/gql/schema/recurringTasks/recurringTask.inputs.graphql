@@ -3,6 +3,7 @@ input CreateRecurringTaskInput {
   rule: Json!
   startDate: Date!
   equipmentId: ID
+  projectId: ID
 }
 
 input UpdateRecurringTaskInput {
@@ -10,6 +11,7 @@ input UpdateRecurringTaskInput {
   rule: Json
   startDate: Date
   equipmentId: NullableIdInput
+  projectId: NullableIdInput
 }
 
 input RecurringTaskProjectionsFilterInput {

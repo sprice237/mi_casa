@@ -7,6 +7,7 @@ export const createTaskMutationResolver: AppResolvers['Mutation']['createTask'] 
       name: input.name,
       status: 'READY_TO_BEGIN',
       equipmentId: input.equipmentId,
+      projectId: input.projectId,
     }
   });
 
@@ -20,6 +21,7 @@ export const updateTaskMutationResolver: AppResolvers['Mutation']['updateTask'] 
       name: input.name !== null ? input.name : Prisma.skip,
       status: input.status !== null ? input.status : Prisma.skip,
       equipmentId: input.equipmentId ? input.equipmentId.id : Prisma.skip,
+      projectId: input.projectId ? input.projectId.id : Prisma.skip,
     }
   });
 
