@@ -1,1 +1,1 @@
-export { RecurringTasksList as TasksList } from './RecurringTasksList';
+export { RecurringTasksList } from './RecurringTasksList';
