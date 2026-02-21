@@ -26,7 +26,6 @@ const Content = ({ username, apiUri }: ContentProps) => {
     <ApolloProvider client={client}>
       <Stack>
         <Stack.Screen name="drawer" options={{ headerShown: false }} />
-        <Stack.Screen name="Categories" options={{ headerBackButtonDisplayMode: 'minimal', title: 'Categories' }} />
       </Stack>
     </ApolloProvider>
   )
