@@ -20,6 +20,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.160",
     "@types/lodash": "4.17.15",
     "rimraf": "3.0.2",
     "ts-node": "10.9.2",
