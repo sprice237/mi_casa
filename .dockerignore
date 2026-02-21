@@ -1,3 +1,5 @@
 node_modules
 .env
 .git
+apps/mobile/android
+apps/mobile/ios
