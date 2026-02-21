@@ -2,6 +2,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import { useTitleStore } from '$/stores/titleStore';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { useAuthStore } from '$/stores/authStore';
 
 export default function Layout() {
   const title = useTitleStore((store) => store.title);
@@ -19,6 +20,14 @@ export default function Layout() {
 
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
+  const updateApiUri = useAuthStore((state) => state.updateApiUri);
+  const updateUsername = useAuthStore((state) => state.updateUsername);
+
+  const onLogOut = () => {
+    updateApiUri(null);
+    updateUsername(null);
+  };
+
   const navigate: DrawerContentComponentProps['navigation']['navigate'] = (...args) => {
     props.navigation.closeDrawer();
 
@@ -45,6 +54,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       <DrawerItem
         label="Recurring tasks"
         onPress={() => navigate('RecurringTasks')}
+      />
+      <DrawerItem
+        label="Log out"
+        onPress={onLogOut}
       />
     </DrawerContentScrollView>
   );
