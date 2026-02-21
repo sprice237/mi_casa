@@ -4,6 +4,12 @@ export const recurringTaskTypeResolver: AppResolvers['RecurringTask'] = {
   id: (root) => root.id,
   name: (root) => root.name,
   rule: (root) => root.rule,
+
+  equipment: async (root, _, { db }) => {
+    if (!root.equipmentId) return null;
+    const equipment = await db.equipment.findUnique({ where: { id: root.equipmentId } });
+    return equipment;
+  }
 }
 
 export const recurringTaskProjectionTypeResolver: AppResolvers['RecurringTaskProjection'] = {

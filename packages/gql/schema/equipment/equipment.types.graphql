@@ -1,0 +1,7 @@
+type Equipment {
+  id: ID!
+  name: String!
+
+  recurringTasks: [RecurringTask!]!
+  tasks: [Task!]!
+}

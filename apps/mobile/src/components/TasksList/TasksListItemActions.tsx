@@ -29,6 +29,7 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: 
         taskId: task.id,
         input: {
           name: null,
+          equipmentId: null,
           status: 'IN_PROGRESS'
         }
       },
@@ -45,6 +46,7 @@ export const TaskListItemActions = ({ itemWidth, task: taskFragment, onPress }: 
         taskId: task.id,
         input: {
           name: null,
+          equipmentId: null,
           status: 'COMPLETE'
         }
       },

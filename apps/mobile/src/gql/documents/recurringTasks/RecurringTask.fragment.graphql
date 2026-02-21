@@ -2,4 +2,8 @@ fragment RecurringTask on RecurringTask {
   id
   name
   rule
+  equipment {
+    id
+    name
+  }
 }

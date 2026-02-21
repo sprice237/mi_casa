@@ -3,10 +3,13 @@ import { createTaskMutationResolver, deleteTaskMutationResolver, taskQueryResolv
 import { AppResolvers } from './types.js';
 import { createRecurringTaskMutationResolver, deleteRecurringTaskMutationResolver, recurringTaskProjectionsQueryResolver, recurringTaskProjectionTypeResolver, recurringTaskQueryResolver, recurringTasksQueryResolver, recurringTaskTypeResolver, updateRecurringTaskMutationResolver } from "./recurringTasks/index.js";
 import { scalars } from "@mi_casa/gql";
+import { createEquipmentMutationResolver, deleteEquipmentMutationResolver, equipmentQueryResolver, equipmentsQueryResolver, equipmentTypeResolver, updateEquipmentMutationResolver } from "./equipment/index.js";
 
 
 export const resolvers: AppResolvers = {
   Query: {
+    equipments: equipmentsQueryResolver,
+    equipment: equipmentQueryResolver,
     recurringTasks: recurringTasksQueryResolver,
     recurringTask: recurringTaskQueryResolver,
     recurringTaskProjections: recurringTaskProjectionsQueryResolver,
@@ -15,6 +18,9 @@ export const resolvers: AppResolvers = {
     status: statusQueryResolver,
   },
   Mutation: {
+    createEquipment: createEquipmentMutationResolver,
+    updateEquipment: updateEquipmentMutationResolver,
+    deleteEquipment: deleteEquipmentMutationResolver,
     createRecurringTask: createRecurringTaskMutationResolver,
     updateRecurringTask: updateRecurringTaskMutationResolver,
     deleteRecurringTask: deleteRecurringTaskMutationResolver,
@@ -23,6 +29,7 @@ export const resolvers: AppResolvers = {
     deleteTask: deleteTaskMutationResolver,
   },
 
+  Equipment: equipmentTypeResolver,
   Status: statusTypeResolver,
   RecurringTask: recurringTaskTypeResolver,
   RecurringTaskProjection: recurringTaskProjectionTypeResolver,

@@ -1,9 +1,10 @@
 import { DispatchWithoutAction, useState } from 'react';
-import { Button, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { Modal } from './Modal';
 import { StyledTextInput } from './StyledTextInput';
 import { CreateTaskDocument, UpdateTaskDocument, FragmentType, getFragmentData, TaskFragmentDoc, TasksDocument } from '$/gql';
 import { useMutation } from '@apollo/client/react';
+import { EquipmentSelect } from './EquipmentSelect';
 
 type CreateOrUpdateTaskModalProps = {
   task?: FragmentType<typeof TaskFragmentDoc>;
@@ -14,6 +15,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
   const task = getFragmentData(TaskFragmentDoc, taskFragment);
 
   const [name, setName] = useState(task?.name ?? '');
+  const [equipmentId, setEquipmentId] = useState<string | null>(task?.equipment?.id ?? null);
 
   const [createTask] = useMutation(CreateTaskDocument);
   const [updateTask] = useMutation(UpdateTaskDocument);
@@ -26,6 +28,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
           taskId: task.id,
           input: {
             name,
+            equipmentId: { id: equipmentId },
             status: null,
           }
         },
@@ -34,7 +37,8 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
       await createTask({
         variables: {
           input: {
-            name
+            name,
+            equipmentId,
           }
         },
         update(cache) {
@@ -54,8 +58,26 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
     <Modal backdropClose title="Add task" onClose={onClose} content={(
       <View style={{ display: 'flex', flexDirection: 'column' }}>
         <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+        <View style={styles.row}>
+          <Text>Equipment</Text>
+          <View style={styles.flexOne}>
+            <EquipmentSelect value={equipmentId} onChange={setEquipmentId} />
+          </View>
+        </View>
         <Button onPress={onSubmit} title="Submit" />
       </View>
     )} />
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  flexOne: {
+    flex: 1
+  }
+})

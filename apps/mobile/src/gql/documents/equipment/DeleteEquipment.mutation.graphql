@@ -1,0 +1,3 @@
+mutation DeleteEquipment($equipmentId: ID!) {
+  deleteEquipment(equipmentId: $equipmentId)
+}

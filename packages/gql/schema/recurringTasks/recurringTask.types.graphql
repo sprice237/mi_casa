@@ -2,6 +2,7 @@ type RecurringTask {
   id: ID!
   name: String!
   rule: Json!
+  equipment: Equipment
 }
 
 type RecurringTaskProjection {

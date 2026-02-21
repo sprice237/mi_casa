@@ -4,9 +4,11 @@ input TasksFilterInput {
 
 input CreateTaskInput {
   name: String!
+  equipmentId: ID
 }
 
 input UpdateTaskInput {
   name: String
   status: TaskStatus
+  equipmentId: NullableIdInput
 }

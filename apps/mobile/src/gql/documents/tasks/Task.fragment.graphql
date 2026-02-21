@@ -2,4 +2,8 @@ fragment Task on Task {
   id
   name
   status
+  equipment {
+    id
+    name
+  }
 }

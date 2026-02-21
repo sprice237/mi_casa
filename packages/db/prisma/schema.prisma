@@ -14,6 +14,16 @@ enum TaskStatus {
   READY_TO_BEGIN
 }
 
+model Equipment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  recurringTasks RecurringTask[]
+  tasks          Task[]
+}
+
 model RecurringTask {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
@@ -21,6 +31,9 @@ model RecurringTask {
   startDate DateTime @db.Date
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
+
+  equipmentId String?    @db.Uuid
+  equipment   Equipment? @relation(fields: [equipmentId], references: [id])
 
   tasks Task[]
 
@@ -43,6 +56,9 @@ model Task {
 
   recurringTaskId String?        @db.Uuid
   recurringTask   RecurringTask? @relation(fields: [recurringTaskId], references: [id])
+
+  equipmentId String?    @db.Uuid
+  equipment   Equipment? @relation(fields: [equipmentId], references: [id])
 
   @@index([recurringTaskId, createdAt(sort: Desc)])
 }

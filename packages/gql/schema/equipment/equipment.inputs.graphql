@@ -1,0 +1,7 @@
+input CreateEquipmentInput {
+  name: String!
+}
+
+input UpdateEquipmentInput {
+  name: String
+}

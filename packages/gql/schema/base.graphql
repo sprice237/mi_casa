@@ -1,2 +1,6 @@
 type Query
 type Mutation
+
+input NullableIdInput {
+  id: ID
+}

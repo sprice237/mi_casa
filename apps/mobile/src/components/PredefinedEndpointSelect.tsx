@@ -4,7 +4,7 @@ import { OptionPicker } from './OptionPicker';
 
 export const predefinedEndpoints = [
   { label: 'AWS', value: 'https://rctrnsnrimtuuomvpnfrp7tedm0zjicv.lambda-url.us-east-1.on.aws/graphql' },
-  { label: 'local', value: 'http://172.17.1.197:8080/graphql' }
+  { label: 'local', value: 'http://172.17.1.52:8080/graphql' }
 ] as const;
 export type PredefinedEndpoint = (typeof predefinedEndpoints)[number];
 

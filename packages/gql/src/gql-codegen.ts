@@ -18,6 +18,11 @@ const config: CodegenConfig = {
           DateTime: 'Date',
           //   Decimal: 'Decimal',
           //   Time: 'Date',
+        },
+        mappers: {
+          Equipment: '../mappers.js#EquipmentMapper',
+          RecurringTask: '../mappers.js#RecurringTaskMapper',
+          Task: '../mappers.js#TaskMapper',
         }
       },
       plugins: [

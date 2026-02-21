@@ -32,6 +32,7 @@ export async function generateTasksForRecurringTasks({ db }: { db: PrismaClient 
           recurringTaskId: recurringTask.id,
           name: recurringTask.name,
           status: 'READY_TO_BEGIN',
+          equipmentId: recurringTask.equipmentId
         }
       })
     } {

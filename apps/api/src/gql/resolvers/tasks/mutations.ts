@@ -5,7 +5,8 @@ export const createTaskMutationResolver: AppResolvers['Mutation']['createTask'] 
   const task = await db.task.create({
     data: {
       name: input.name,
-      status: 'READY_TO_BEGIN'
+      status: 'READY_TO_BEGIN',
+      equipmentId: input.equipmentId,
     }
   });
 
@@ -18,6 +19,7 @@ export const updateTaskMutationResolver: AppResolvers['Mutation']['updateTask'] 
     data: {
       name: input.name !== null ? input.name : Prisma.skip,
       status: input.status !== null ? input.status : Prisma.skip,
+      equipmentId: input.equipmentId ? input.equipmentId.id : Prisma.skip,
     }
   });
 

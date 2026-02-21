@@ -11,6 +11,7 @@ import { WeekFields } from './WeekFields';
 import { MonthDomFields } from './MonthDomFields';
 import { MonthDowFields } from './MonthDowFields';
 import { YearFields } from './YearFields';
+import { EquipmentSelect } from '../EquipmentSelect';
 
 type RuleType = 'day' | 'week' | 'month_dom' | 'month_dow' | 'year';
 
@@ -25,6 +26,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
   const recurringTask = getFragmentData(RecurringTaskFragmentDoc, recurringTaskFragment);
 
   const [name, setName] = useState(recurringTask?.name ?? '');
+  const [equipmentId, setEquipmentId] = useState<string | null>(recurringTask?.equipment?.id ?? null);
   const [rule, setRule] = useState<RecurringTaskRule>(recurringTask?.rule as RecurringTaskRule ?? { type: 'day', interval: 1 });
 
   const setRuleType = (newRuleType: RuleType) => {
@@ -63,6 +65,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
           input: {
             name,
             rule,
+            equipmentId: { id: equipmentId },
             startDate: null,
           }
         },
@@ -73,6 +76,7 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
           input: {
             name,
             rule,
+            equipmentId,
             startDate: new Date(),
           }
         },
@@ -93,6 +97,12 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
     <Modal backdropClose title="Add recurring task" onClose={onClose} content={(
       <View style={styles.container}>
         <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+        <View style={styles.row}>
+          <Text>Equipment</Text>
+          <View style={styles.flexOne}>
+            <EquipmentSelect value={equipmentId} onChange={setEquipmentId} />
+          </View>
+        </View>
         <View style={styles.row}>
           <Text>Type</Text>
           <OptionPicker options={ruleTypeOptions} value={rule.type}
@@ -127,5 +137,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  flexOne: {
+    flex: 1
   }
 })

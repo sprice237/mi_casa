@@ -3,6 +3,7 @@ import { RecurringTaskRule } from '@mi_casa/common';
 
 export type RecurringTask = Omit<DbRecurringTask, 'rule'> & {
   rule: RecurringTaskRule
+  equipmentId: string | null;
 }
 
 export type CreateRecurringTaskInput = {
@@ -10,20 +11,18 @@ export type CreateRecurringTaskInput = {
   name: string;
   rule: RecurringTaskRule
   startDate: Date;
+  equipmentId: string | null;
 }
 
 export type UpdateRecurringTaskInput = {
   name?: string;
   rule?: RecurringTaskRule
   startDate?: Date;
+  equipmentId?: string | null;
 }
 
 export type RecurringTaskProjection = {
-  recurringTask: {
-    id: string;
-    name: string;
-    rule: RecurringTaskRule
-  }
+  recurringTask: RecurringTask;
   n: number;
   date: Date;
 }

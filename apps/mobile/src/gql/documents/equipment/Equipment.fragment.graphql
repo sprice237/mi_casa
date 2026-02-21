@@ -1,0 +1,4 @@
+fragment Equipment on Equipment {
+  id
+  name
+}

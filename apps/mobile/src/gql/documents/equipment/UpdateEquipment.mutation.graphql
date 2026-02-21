@@ -1,0 +1,5 @@
+mutation UpdateEquipment($equipmentId: ID!, $input: UpdateEquipmentInput!) {
+  updateEquipment(equipmentId: $equipmentId, input: $input) {
+    ...Equipment
+  }
+}

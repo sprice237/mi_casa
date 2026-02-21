@@ -2,4 +2,5 @@ type Task {
   id: ID!
   name: String!
   status: TaskStatus!
+  equipment: Equipment
 }
