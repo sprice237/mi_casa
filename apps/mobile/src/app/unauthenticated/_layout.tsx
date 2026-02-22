@@ -6,13 +6,10 @@ export default function AuthLayout() {
   const apiUri = useAuthStore((state) => state.apiUri);
 
   if (username && apiUri) {
-    return <Redirect href="/authenticated/drawer/(tabs)/me" />
+    return <Redirect href="/authenticated" />
   }
 
   return (
-    <Stack initialRouteName="signIn">
-      <Stack.Screen name="signIn" options={{ headerShown: false }} />
-      {/* <Stack.Screen name="register" options={{ headerBackTitle: "Back", title: 'Register' }} /> */}
-    </Stack>
+    <Stack initialRouteName="index" screenOptions={{ headerShown: false }} />
   );
 }

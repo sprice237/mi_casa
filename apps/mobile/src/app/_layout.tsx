@@ -50,10 +50,7 @@ function RootLayoutNav() {
 
   return (
     // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="authenticated" />
-      <Stack.Screen name="unauthenticated" />
-    </Stack>
+    <Stack screenOptions={{ headerShown: false }} />
     // </ThemeProvider>
   );
 }

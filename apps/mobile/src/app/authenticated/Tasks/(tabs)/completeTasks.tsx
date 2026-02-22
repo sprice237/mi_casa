@@ -1,10 +1,7 @@
 import { TasksList } from '$/components/TasksList';
-import { useRegisterTitle } from '$/stores/titleStore';
 import { StyleSheet, View } from 'react-native';
 
 export default function CompleteTasks() {
-  useRegisterTitle('Complete');
-
   return (
     <View style={styles.container}>
       <TasksList style={styles.list} status="COMPLETE" />

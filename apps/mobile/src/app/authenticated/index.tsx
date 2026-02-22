@@ -1,9 +1,7 @@
 import { useAuthStore } from '$/stores/authStore';
-import { useRegisterTitle } from '$/stores/titleStore';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function Me() {
-  useRegisterTitle('Me');
 
   const username = useAuthStore((state) => state.username);
 

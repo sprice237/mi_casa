@@ -10,8 +10,8 @@ export default function Index() {
   const apiUri = useAuthStore((state) => state.apiUri);
 
   return !!username && !!apiUri ? (
-    <Redirect href="/authenticated/drawer/(tabs)/me" />
+    <Redirect href="/authenticated" />
   ) : (
-    <Redirect href="/unauthenticated/signIn" />
+    <Redirect href="/unauthenticated" />
   );
 }
