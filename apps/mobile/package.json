@@ -7,6 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "build:ios": "eas build --platform ios --local",
     "build:gql": "graphql-codegen --config src/gql-codegen.ts",
     "watch:gql": "graphql-codegen --config src/gql-codegen.ts --watch"
   },
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
+    "eas-cli": "^18.0.3",
     "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
   },
