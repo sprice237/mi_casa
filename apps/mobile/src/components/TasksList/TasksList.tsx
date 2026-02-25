@@ -15,16 +15,17 @@ const ROW_HEIGHT = 60;
 type EntriesListProps = ComponentProps<typeof View> & {
   status?: TaskStatus;
   showAddTaskButton?: boolean;
+  equipmentId?: string;
 };
 
-export const TasksList = ({ status, showAddTaskButton, ...props }: EntriesListProps) => {
+export const TasksList = ({ status, showAddTaskButton, equipmentId, ...props }: EntriesListProps) => {
   const { value: isCreateModalVisible, setTrue: showCreateModal, setFalse: hideCreateModal } = useFlagState();
-  const { data, refetch, loading } = useQuery(TasksDocument, { variables: { filter: { status: status ?? null } } });
+  const { data, refetch, loading } = useQuery(TasksDocument, { variables: { filter: { status: status ?? null, equipmentId: equipmentId ?? null } } });
   const tasks = data?.tasks;
 
   return (
     <>
-      {isCreateModalVisible && <CreateOrUpdateTaskModal onClose={hideCreateModal} />}
+      {isCreateModalVisible && <CreateOrUpdateTaskModal onClose={hideCreateModal} defaultValues={{ equipmentId }} />}
       <View {...props} style={[props.style, styles.container]}>
         <SwipeListView
           style={styles.list}
@@ -50,7 +51,6 @@ export const TasksList = ({ status, showAddTaskButton, ...props }: EntriesListPr
         />
         {showAddTaskButton && <AddTaskButton height={ROW_HEIGHT} onPress={showCreateModal} />}
       </View>
-
     </>
   );
 };

@@ -9,15 +9,16 @@ import { ProjectSelect } from './ProjectSelect';
 
 type CreateOrUpdateTaskModalProps = {
   task?: FragmentType<typeof TaskFragmentDoc>;
+  defaultValues?: { name?: string, equipmentId?: string | null; projectId?: string | null };
   onClose: DispatchWithoutAction;
 }
 
-export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateOrUpdateTaskModalProps) => {
+export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, onClose }: CreateOrUpdateTaskModalProps) => {
   const task = getFragmentData(TaskFragmentDoc, taskFragment);
 
-  const [name, setName] = useState(task?.name ?? '');
-  const [equipmentId, setEquipmentId] = useState<string | null>(task?.equipment?.id ?? null);
-  const [projectId, setProjectId] = useState<string | null>(task?.project?.id ?? null);
+  const [name, setName] = useState(task?.name ?? defaultValues?.name ?? '');
+  const [equipmentId, setEquipmentId] = useState<string | null>(task?.equipment?.id ?? defaultValues?.equipmentId ?? null);
+  const [projectId, setProjectId] = useState<string | null>(task?.project?.id ?? defaultValues?.projectId ?? null);
 
   const [createTask] = useMutation(CreateTaskDocument);
   const [updateTask] = useMutation(UpdateTaskDocument);

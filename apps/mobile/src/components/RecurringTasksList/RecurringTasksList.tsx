@@ -12,17 +12,19 @@ import { RecurringTaskEditModal } from '../RecurringTaskEditModal';
 
 const ROW_HEIGHT = 60;
 
-type RecurringTasksListProps = ComponentProps<typeof View>
+type RecurringTasksListProps = ComponentProps<typeof View> & {
+  equipmentId?: string;
+}
 
-export const RecurringTasksList = ({ ...props }: RecurringTasksListProps) => {
+export const RecurringTasksList = ({ equipmentId, ...props }: RecurringTasksListProps) => {
   const { value: isCreateModalVisible, setTrue: showCreateModal, setFalse: hideCreateModal } = useFlagState();
-  const { data, refetch, loading } = useQuery(RecurringTasksDocument);
+  const { data, refetch, loading } = useQuery(RecurringTasksDocument, { variables: { filter: { equipmentId: equipmentId ?? null } } });
   const recurringTasks = data?.recurringTasks;
 
 
   return (
     <>
-      {isCreateModalVisible && <RecurringTaskEditModal onClose={hideCreateModal} />}
+      {isCreateModalVisible && <RecurringTaskEditModal onClose={hideCreateModal} defaultValues={{ equipmentId }} />}
       <View {...props} style={[props.style, styles.container]}>
         <SwipeListView
           style={styles.list}

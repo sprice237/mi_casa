@@ -8,12 +8,14 @@ import { TabRow } from '$/components/TabRow';
 import { useState } from 'react';
 import { EquipmentNotesList } from '$/components/EquipmentsNotesList';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
+import { TasksList } from '$/components/TasksList';
+import { RecurringTasksList } from '$/components/RecurringTasksList';
 
 interface EquipmentFormValues {
   name: string;
 }
 
-const tabs = [{ key: 'details', label: 'Details' }, { key: 'notes', label: 'Notes' }] as const;
+const tabs = [{ key: 'details', label: 'Details' }, { key: 'notes', label: 'Notes' }, { key: 'tasks', label: 'Tasks' }, { key: 'recurring-tasks', label: 'Recurring Tasks' }] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
 const getTabLabel = (tab: Tab) => tab.label;
@@ -65,6 +67,12 @@ export default function Equipment() {
         )}
         {tab === 'notes' && (
           <EquipmentNotesList style={styles.flexOne} equipmentId={equipment.id} />
+        )}
+        {tab === 'tasks' && (
+          <TasksList style={styles.flexOne} equipmentId={equipment.id} showAddTaskButton />
+        )}
+        {tab === 'recurring-tasks' && (
+          <RecurringTasksList style={styles.flexOne} equipmentId={equipment.id} />
         )}
       </View>
     </View>

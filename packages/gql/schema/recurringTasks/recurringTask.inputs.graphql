@@ -1,3 +1,7 @@
+input RecurringTasksFilterInput {
+  equipmentId: ID
+}
+
 input CreateRecurringTaskInput {
   name: String!
   rule: Json!

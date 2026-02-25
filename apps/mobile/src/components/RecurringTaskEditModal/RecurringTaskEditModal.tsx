@@ -20,15 +20,16 @@ const ruleTypeOptions: RuleType[] = ['day', 'week', 'month_dom', 'month_dow', 'y
 
 type RecurringTaskEditModalProps = {
   recurringTask?: FragmentType<typeof RecurringTaskFragmentDoc>;
+  defaultValues?: { name?: string, equipmentId?: string | null; projectId?: string | null };
   onClose: DispatchWithoutAction;
 }
 
-export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, onClose }: RecurringTaskEditModalProps) => {
+export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, defaultValues, onClose }: RecurringTaskEditModalProps) => {
   const recurringTask = getFragmentData(RecurringTaskFragmentDoc, recurringTaskFragment);
 
-  const [name, setName] = useState(recurringTask?.name ?? '');
-  const [equipmentId, setEquipmentId] = useState<string | null>(recurringTask?.equipment?.id ?? null);
-  const [projectId, setProjectId] = useState<string | null>(recurringTask?.project?.id ?? null);
+  const [name, setName] = useState(recurringTask?.name ?? defaultValues?.name ?? '');
+  const [equipmentId, setEquipmentId] = useState<string | null>(recurringTask?.equipment?.id ?? defaultValues?.equipmentId ?? null);
+  const [projectId, setProjectId] = useState<string | null>(recurringTask?.project?.id ?? defaultValues?.projectId ?? null);
   const [rule, setRule] = useState<RecurringTaskRule>(recurringTask?.rule as RecurringTaskRule ?? { type: 'day', interval: 1 });
 
   const setRuleType = (newRuleType: RuleType) => {

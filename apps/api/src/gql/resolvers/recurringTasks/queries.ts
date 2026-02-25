@@ -1,8 +1,12 @@
 import { Prisma } from "@mi_casa/db/client";
 import { AppResolvers } from "../types.js";
 
-export const recurringTasksQueryResolver: AppResolvers['Query']['recurringTasks'] = async (_1, _2, { services }) => {
-  const recurringTasks = await services.recurringTasks.findMany();
+export const recurringTasksQueryResolver: AppResolvers['Query']['recurringTasks'] = async (_, { filter }, { services }) => {
+  const recurringTasks = await services.recurringTasks.findMany({
+    where: {
+      equipmentId: filter?.equipmentId ?? Prisma.skip
+    }
+  });
   return recurringTasks;
 };
 

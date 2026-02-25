@@ -5,6 +5,7 @@ export const tasksQueryResolver: AppResolvers['Query']['tasks'] = async (_, { fi
   const tasks = await db.task.findMany({
     where: {
       status: filter?.status ?? Prisma.skip,
+      equipmentId: filter?.equipmentId ?? Prisma.skip,
     }
   });
   return tasks;

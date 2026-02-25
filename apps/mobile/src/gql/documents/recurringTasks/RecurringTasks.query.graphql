@@ -1,5 +1,5 @@
-query RecurringTasks {
-  recurringTasks {
+query RecurringTasks($filter: RecurringTasksFilterInput) {
+  recurringTasks(filter: $filter) {
     ...RecurringTask
   }
 }

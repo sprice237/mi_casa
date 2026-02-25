@@ -1,5 +1,5 @@
 extend type Query {
-  recurringTasks: [RecurringTask!]!
+  recurringTasks(filter: RecurringTasksFilterInput): [RecurringTask!]!
   recurringTask(recurringTaskId: ID!): RecurringTask!
   recurringTaskProjections(input: RecurringTaskProjectionsFilterInput!): [RecurringTaskProjection!]!
 }
