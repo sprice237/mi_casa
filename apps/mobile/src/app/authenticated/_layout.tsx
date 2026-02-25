@@ -30,7 +30,7 @@ const Content = ({ apiUri }: ContentProps) => {
         <Drawer drawerContent={DrawerContent}>
           <Drawer.Screen name="index" options={{ headerTitle: 'Home' }} />
           <Drawer.Screen name="Categories" options={{ headerTitle: 'Categories' }} />
-          <Drawer.Screen name="Equipments" options={{ headerTitle: 'Equipment' }} />
+          <Drawer.Screen name="Equipment" options={{ headerTitle: 'Equipment' }} />
           <Drawer.Screen name="Projects" options={{ headerTitle: 'Projects' }} />
           <Drawer.Screen name="RecurringTasks" options={{ headerTitle: 'Recurring tasks' }} />
           <Drawer.Screen name="Tasks" options={{ headerTitle: 'Tasks' }} />
@@ -72,7 +72,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       />
       <DrawerItem
         label="Equipment"
-        onPress={() => navigate('/authenticated/Equipments')}
+        onPress={() => navigate('/authenticated/Equipment')}
       />
       <DrawerItem
         label="Projects"
