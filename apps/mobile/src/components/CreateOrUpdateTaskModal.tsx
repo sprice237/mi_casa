@@ -60,8 +60,13 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
 
   return (
     <Modal backdropClose title="Add task" onClose={onClose} content={(
-      <View style={{ display: 'flex', flexDirection: 'column' }}>
-        <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+      <View style={styles.container}>
+        <View style={styles.row}>
+          <Text>Name</Text>
+          <View style={styles.flexOne}>
+            <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+          </View>
+        </View>
         <View style={styles.row}>
           <Text>Equipment</Text>
           <View style={styles.flexOne}>
@@ -81,6 +86,12 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, onClose }: CreateO
 }
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 10,
+    gap: 10
+  },
   row: {
     display: 'flex',
     flexDirection: 'row',

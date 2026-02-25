@@ -100,7 +100,12 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, o
   return (
     <Modal backdropClose title="Add recurring task" onClose={onClose} content={(
       <View style={styles.container}>
-        <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+        <View style={styles.row}>
+          <Text>Name</Text>
+          <View style={styles.flexOne}>
+            <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+          </View>
+        </View>
         <View style={styles.row}>
           <Text>Equipment</Text>
           <View style={styles.flexOne}>
