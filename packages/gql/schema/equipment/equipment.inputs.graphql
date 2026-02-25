@@ -5,3 +5,12 @@ input CreateEquipmentInput {
 input UpdateEquipmentInput {
   name: String
 }
+
+input CreateEquipmentNoteInput {
+  equipmentId: ID!
+  content: String!
+}
+
+input UpdateEquipmentNoteInput {
+  content: String
+}

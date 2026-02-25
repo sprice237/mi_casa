@@ -4,4 +4,12 @@ type Equipment {
 
   recurringTasks: [RecurringTask!]!
   tasks: [Task!]!
+  equipmentNotes: [EquipmentNote!]!
+}
+
+type EquipmentNote {
+  id: ID!
+  createdAt: DateTime!
+  content: String!
+  equipment: Equipment!
 }

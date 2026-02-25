@@ -1,0 +1,5 @@
+mutation UpdateEquipmentNote($equipmentNoteId: ID!, $input: UpdateEquipmentNoteInput!) {
+  updateEquipmentNote(equipmentNoteId: $equipmentNoteId, input: $input) {
+    ...EquipmentNote
+  }
+}

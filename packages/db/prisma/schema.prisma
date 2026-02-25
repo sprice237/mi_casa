@@ -22,6 +22,18 @@ model Equipment {
 
   recurringTasks RecurringTask[]
   tasks          Task[]
+  equipmentNotes EquipmentNote[]
+}
+
+model EquipmentNote {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  equipmentId String    @db.Uuid
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  @@index([equipmentId, createdAt(sort: Desc)])
 }
 
 model Project {

@@ -28,3 +28,32 @@ export const deleteEquipmentMutationResolver: AppResolvers['Mutation']['deleteEq
 
   return true;
 };
+
+export const createEquipmentNoteMutationResolver: AppResolvers['Mutation']['createEquipmentNote'] = async (_, { input }, { db }) => {
+  const equipmentNote = await db.equipmentNote.create({
+    data: {
+      equipmentId: input.equipmentId,
+      content: input.content,
+    }
+  });
+  return equipmentNote;
+};
+
+export const updateEquipmentNoteMutationResolver: AppResolvers['Mutation']['updateEquipmentNote'] = async (_, { equipmentNoteId, input }, { db }) => {
+  const equipmentNote = await db.equipmentNote.update({
+    where: { id: equipmentNoteId },
+    data: {
+      content: input.content ?? Prisma.skip,
+    }
+  });
+
+  return equipmentNote;
+};
+
+export const deleteEquipmentNoteMutationResolver: AppResolvers['Mutation']['deleteEquipmentNote'] = async (_, { equipmentNoteId }, { db }) => {
+  await db.equipmentNote.delete({
+    where: { id: equipmentNoteId },
+  });
+
+  return true;
+};

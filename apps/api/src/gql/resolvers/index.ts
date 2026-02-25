@@ -3,7 +3,7 @@ import { createTaskMutationResolver, deleteTaskMutationResolver, taskQueryResolv
 import { AppResolvers } from './types.js';
 import { createRecurringTaskMutationResolver, deleteRecurringTaskMutationResolver, recurringTaskProjectionsQueryResolver, recurringTaskProjectionTypeResolver, recurringTaskQueryResolver, recurringTasksQueryResolver, recurringTaskTypeResolver, updateRecurringTaskMutationResolver } from "./recurringTasks/index.js";
 import { scalars } from "@mi_casa/gql";
-import { createEquipmentMutationResolver, deleteEquipmentMutationResolver, equipmentQueryResolver, equipmentsQueryResolver, equipmentTypeResolver, updateEquipmentMutationResolver } from "./equipment/index.js";
+import { createEquipmentMutationResolver, createEquipmentNoteMutationResolver, deleteEquipmentMutationResolver, deleteEquipmentNoteMutationResolver, equipmentNoteTypeResolver, equipmentQueryResolver, equipmentsQueryResolver, equipmentTypeResolver, updateEquipmentMutationResolver, updateEquipmentNoteMutationResolver } from "./equipment/index.js";
 import { createProjectMutationResolver, deleteProjectMutationResolver, projectQueryResolver, projectsQueryResolver, projectTypeResolver, updateProjectMutationResolver } from "./projects/index.js";
 
 
@@ -24,6 +24,9 @@ export const resolvers: AppResolvers = {
     createEquipment: createEquipmentMutationResolver,
     updateEquipment: updateEquipmentMutationResolver,
     deleteEquipment: deleteEquipmentMutationResolver,
+    createEquipmentNote: createEquipmentNoteMutationResolver,
+    updateEquipmentNote: updateEquipmentNoteMutationResolver,
+    deleteEquipmentNote: deleteEquipmentNoteMutationResolver,
     createProject: createProjectMutationResolver,
     updateProject: updateProjectMutationResolver,
     deleteProject: deleteProjectMutationResolver,
@@ -36,6 +39,7 @@ export const resolvers: AppResolvers = {
   },
 
   Equipment: equipmentTypeResolver,
+  EquipmentNote: equipmentNoteTypeResolver,
   Status: statusTypeResolver,
   Project: projectTypeResolver,
   RecurringTask: recurringTaskTypeResolver,

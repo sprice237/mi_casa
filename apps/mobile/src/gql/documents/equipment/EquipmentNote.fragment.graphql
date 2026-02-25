@@ -1,0 +1,5 @@
+fragment EquipmentNote on EquipmentNote {
+  id
+  createdAt
+  content
+}

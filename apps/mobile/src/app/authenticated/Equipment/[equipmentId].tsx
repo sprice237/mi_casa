@@ -6,13 +6,14 @@ import { EquipmentDocument, EquipmentFragmentDoc, getFragmentData, UpdateEquipme
 import { useFormAutoSubmitEffect } from '$/util';
 import { TabRow } from '$/components/TabRow';
 import { useState } from 'react';
+import { EquipmentNotesList } from '$/components/EquipmentsNotesList';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 
 interface EquipmentFormValues {
   name: string;
 }
 
-const tabs = [{ key: 'details', label: 'Details' }] as const;
+const tabs = [{ key: 'details', label: 'Details' }, { key: 'notes', label: 'Notes' }] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
 const getTabLabel = (tab: Tab) => tab.label;
@@ -61,6 +62,9 @@ export default function Equipment() {
       <View style={{ flex: 1 }}>
         {tab === 'details' && (
           <View />
+        )}
+        {tab === 'notes' && (
+          <EquipmentNotesList style={styles.flexOne} equipmentId={equipment.id} />
         )}
       </View>
     </View>

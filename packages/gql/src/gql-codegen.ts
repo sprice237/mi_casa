@@ -21,6 +21,7 @@ const config: CodegenConfig = {
         },
         mappers: {
           Equipment: '../mappers.js#EquipmentMapper',
+          EquipmentNote: '../mappers.js#EquipmentNoteMapper',
           Project: '../mappers.js#ProjectMapper',
           RecurringTask: '../mappers.js#RecurringTaskMapper',
           Task: '../mappers.js#TaskMapper',
