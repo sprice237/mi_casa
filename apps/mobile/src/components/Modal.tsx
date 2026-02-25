@@ -2,6 +2,7 @@ import { DispatchWithoutAction, ReactNode } from 'react';
 import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import RNModal from 'react-native-modal'
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { DismissKeyboardAvoidingView } from '$/util';
 
 type ModalProps = {
   title?: string;
@@ -15,7 +16,7 @@ type ModalProps = {
 export const Modal = ({ title, backdropClose, hideHeader, content, onClose, bodyStyle }: ModalProps) => {
   return (
     <RNModal isVisible onDismiss={onClose} {...backdropClose ? { onBackdropPress: onClose } : {}}>
-      <View style={styles.container}>
+      <DismissKeyboardAvoidingView style={styles.container}>
         {!hideHeader && (
           <View style={styles.header}>
             <View style={{ width: 20 }} />
@@ -32,7 +33,7 @@ export const Modal = ({ title, backdropClose, hideHeader, content, onClose, body
         <View style={[styles.body, bodyStyle]}>
           {content}
         </View>
-      </View>
+      </DismissKeyboardAvoidingView>
     </RNModal>
   );
 }
