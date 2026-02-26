@@ -7,13 +7,13 @@ export class RecurringTasksService {
 
   constructor(private db: PrismaClient) { }
 
-  async findMany(args?: Pick<NonNullable<Parameters<typeof this.db.recurringTask.findMany>[0]>, 'where' | 'orderBy' | 'skip' | 'take'>) {
+  async findMany(args?: Pick<NonNullable<Parameters<PrismaClient['recurringTask']['findMany']>[0]>, 'where' | 'orderBy' | 'skip' | 'take'>) {
     const dbRecurringTasks = await this.db.recurringTask.findMany(args);
     const recurringTasks = dbRecurringTasks.map(shimRecurringTask);
     return recurringTasks
   }
 
-  async findUniqueOrThrow(args: Pick<NonNullable<Parameters<typeof this.db.recurringTask.findUniqueOrThrow>[0]>, 'where'>) {
+  async findUniqueOrThrow(args: Pick<NonNullable<Parameters<PrismaClient['recurringTask']['findUniqueOrThrow']>[0]>, 'where'>) {
     const dbRecurringTask = await this.db.recurringTask.findUniqueOrThrow(args);
     const recurringTask = shimRecurringTask(dbRecurringTask);
     return recurringTask
