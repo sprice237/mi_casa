@@ -10,12 +10,19 @@ import { EquipmentNotesList } from '$/components/EquipmentsNotesList';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { TasksList } from '$/components/TasksList';
 import { RecurringTasksList } from '$/components/RecurringTasksList';
+import { EquipmentAttachmentsList } from '$/components/EquipmentAttachmentsList/EquipmentAttachmentsList';
 
 interface EquipmentFormValues {
   name: string;
 }
 
-const tabs = [{ key: 'details', label: 'Details' }, { key: 'notes', label: 'Notes' }, { key: 'tasks', label: 'Tasks' }, { key: 'recurring-tasks', label: 'Recurring Tasks' }] as const;
+const tabs = [
+  { key: 'details', label: 'Details' },
+  { key: 'notes', label: 'Notes' },
+  { key: 'tasks', label: 'Tasks' },
+  { key: 'recurring-tasks', label: 'Recurring Tasks' },
+  { key: 'attachments', label: 'Attachments' }
+] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
 const getTabLabel = (tab: Tab) => tab.label;
@@ -73,6 +80,9 @@ export default function Equipment() {
         )}
         {tab === 'recurring-tasks' && (
           <RecurringTasksList style={styles.flexOne} equipmentId={equipment.id} />
+        )}
+        {tab === 'attachments' && (
+          <EquipmentAttachmentsList style={styles.flexOne} equipmentId={equipment.id} />
         )}
       </View>
     </View>

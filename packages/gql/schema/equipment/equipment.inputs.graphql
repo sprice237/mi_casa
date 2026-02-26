@@ -14,3 +14,14 @@ input CreateEquipmentNoteInput {
 input UpdateEquipmentNoteInput {
   content: String
 }
+
+input CreateEquipmentAttachmentInput {
+  equipmentId: ID!
+  name: String!
+  contentType: String!
+}
+
+input UpdateEquipmentAttachmentInput {
+  equipmentAttachmentId: ID!
+  isReady: Boolean!
+}

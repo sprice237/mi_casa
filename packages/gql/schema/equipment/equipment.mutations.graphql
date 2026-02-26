@@ -6,4 +6,8 @@ extend type Mutation {
   createEquipmentNote(input: CreateEquipmentNoteInput!): EquipmentNote!
   updateEquipmentNote(equipmentNoteId: ID!, input: UpdateEquipmentNoteInput!): EquipmentNote!
   deleteEquipmentNote(equipmentNoteId: ID!): Boolean!
+
+  createEquipmentAttachment(input: CreateEquipmentAttachmentInput!): CreateEquipmentAttachmentPayload!
+  updateEquipmentAttachment(input: UpdateEquipmentAttachmentInput!): EquipmentAttachment!
+  deleteEquipmentAttachment(equipmentAttachmentId: ID!): Boolean!
 }

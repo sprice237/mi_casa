@@ -1,0 +1,1 @@
+export { EquipmentAttachmentsList as EquipmentNotesList } from './EquipmentAttachmentsList';

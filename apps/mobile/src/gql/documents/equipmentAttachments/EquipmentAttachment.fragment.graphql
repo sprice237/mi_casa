@@ -1,0 +1,4 @@
+fragment EquipmentAttachment on EquipmentAttachment {
+  id
+  createdAt
+}

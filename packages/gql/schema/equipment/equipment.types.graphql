@@ -13,3 +13,15 @@ type EquipmentNote {
   content: String!
   equipment: Equipment!
 }
+
+type CreateEquipmentAttachmentPayload {
+  id: ID!
+  presignedPostUrl: String!
+  presignedPostFields: Json!
+}
+
+type EquipmentAttachment {
+  id: ID!
+  url: String!
+  createdAt: DateTime!
+}

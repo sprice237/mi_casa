@@ -20,9 +20,23 @@ model Equipment {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
-  recurringTasks RecurringTask[]
-  tasks          Task[]
-  equipmentNotes EquipmentNote[]
+  recurringTasks       RecurringTask[]
+  tasks                Task[]
+  equipmentNotes       EquipmentNote[]
+  equipmentAttachments EquipmentAttachment[]
+}
+
+model EquipmentAttachment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bucketKey String
+  isReady   Boolean
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  equipmentId String    @db.Uuid
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  @@index([equipmentId, createdAt(sort: Desc)])
 }
 
 model EquipmentNote {

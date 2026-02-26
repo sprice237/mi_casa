@@ -1,4 +1,6 @@
 extend type Query {
   equipments: [Equipment!]!
   equipment(equipmentId: ID!): Equipment!
+  equipmentAttachments(equipmentId: ID!): [EquipmentAttachment!]!
+  equipmentAttachment(equipmentAttachmentId: ID!): EquipmentAttachment!
 }

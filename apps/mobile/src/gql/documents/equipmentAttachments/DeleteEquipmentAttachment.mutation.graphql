@@ -1,0 +1,3 @@
+mutation DeleteEquipmentAttachment($equipmentAttachmentId: ID!) {
+  deleteEquipmentAttachment(equipmentAttachmentId: $equipmentAttachmentId) 
+}

@@ -1,0 +1,5 @@
+query EquipmentAttachments($equipmentId: ID!) {
+  equipmentAttachments(equipmentId: $equipmentId) {
+    ...EquipmentAttachment
+  }
+}
