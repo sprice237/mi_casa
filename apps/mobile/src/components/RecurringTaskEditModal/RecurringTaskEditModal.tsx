@@ -1,22 +1,10 @@
 import { RecurringTaskRule } from '@mi_casa/common';
-import { DispatchWithoutAction, useState } from 'react';
+import { DispatchWithoutAction } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { Modal } from '../Modal';
-import { StyledTextInput } from '../StyledTextInput';
 import { CreateRecurringTaskDocument, UpdateRecurringTaskDocument, FragmentType, getFragmentData, RecurringTaskFragmentDoc } from '$/gql';
 import { useMutation } from '@apollo/client/react';
-import { OptionPicker } from '../OptionPicker';
-import { DayFields } from './DayFields';
-import { WeekFields } from './WeekFields';
-import { MonthDomFields } from './MonthDomFields';
-import { MonthDowFields } from './MonthDowFields';
-import { YearFields } from './YearFields';
-import { EquipmentSelect } from '../EquipmentSelect';
-import { ProjectSelect } from '../ProjectSelect';
-
-type RuleType = 'day' | 'week' | 'month_dom' | 'month_dow' | 'year';
-
-const ruleTypeOptions: RuleType[] = ['day', 'week', 'month_dom', 'month_dow', 'year'];
+import { RuleSubForm, useAppForm } from './form';
 
 type RecurringTaskEditModalProps = {
   recurringTask?: FragmentType<typeof RecurringTaskFragmentDoc>;
@@ -24,77 +12,64 @@ type RecurringTaskEditModalProps = {
   onClose: DispatchWithoutAction;
 }
 
+interface RecurringTaskEditModalFormValues {
+  name: string;
+  equipmentId: string | null;
+  projectId: string | null;
+  rule: RecurringTaskRule;
+}
+
 export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, defaultValues, onClose }: RecurringTaskEditModalProps) => {
   const recurringTask = getFragmentData(RecurringTaskFragmentDoc, recurringTaskFragment);
 
-  const [name, setName] = useState(recurringTask?.name ?? defaultValues?.name ?? '');
-  const [equipmentId, setEquipmentId] = useState<string | null>(recurringTask?.equipment?.id ?? defaultValues?.equipmentId ?? null);
-  const [projectId, setProjectId] = useState<string | null>(recurringTask?.project?.id ?? defaultValues?.projectId ?? null);
-  const [rule, setRule] = useState<RecurringTaskRule>(recurringTask?.rule as RecurringTaskRule ?? { type: 'day', interval: 1 });
-
-  const setRuleType = (newRuleType: RuleType) => {
-    if (newRuleType === rule.type) {
-      return;
-    }
-
-    switch (newRuleType) {
-      case 'day':
-        setRule({ type: 'day', interval: 1 });
-        break;
-      case 'week':
-        setRule({ type: 'week', interval: 1, dow: [] });
-        break;
-      case 'month_dom':
-        setRule({ type: 'month_dom', interval: 1, dom: 1 });
-        break;
-      case 'month_dow':
-        setRule({ type: 'month_dow', interval: 1, dow: 0, wom: 1 });
-        break;
-      case 'year':
-        setRule({ type: 'year', interval: 1, month: 1, dom: 1 });
-        break;
-    }
+  const formDefaultValues: RecurringTaskEditModalFormValues = {
+    name: recurringTask?.name ?? defaultValues?.name ?? '',
+    equipmentId: recurringTask?.equipment?.id ?? defaultValues?.equipmentId ?? null,
+    projectId: recurringTask?.project?.id ?? defaultValues?.projectId ?? null,
+    rule: recurringTask?.rule as RecurringTaskRule ?? { type: 'day', interval: 1 },
   }
+
+  const form = useAppForm({
+    defaultValues: formDefaultValues,
+    onSubmit: async ({ value: { name, rule, equipmentId, projectId } }) => {
+      if (recurringTask) {
+        await updateTask({
+          variables: {
+            recurringTaskId: recurringTask.id,
+            input: {
+              name,
+              rule,
+              equipmentId: { id: equipmentId },
+              projectId: { id: projectId },
+              startDate: null,
+            }
+          },
+        });
+      } else {
+        await createTask({
+          variables: {
+            input: {
+              name,
+              rule,
+              equipmentId,
+              projectId,
+              startDate: new Date(),
+            }
+          },
+          update(cache) {
+            cache.evict({ fieldName: 'recurringTasks' })
+          }
+        });
+
+      }
+    }
+  })
 
   const [createTask] = useMutation(CreateRecurringTaskDocument);
   const [updateTask] = useMutation(UpdateRecurringTaskDocument);
 
-  const doAddRecurringTask = async () => {
-    if (recurringTask) {
-
-      await updateTask({
-        variables: {
-          recurringTaskId: recurringTask.id,
-          input: {
-            name,
-            rule,
-            equipmentId: { id: equipmentId },
-            projectId: { id: projectId },
-            startDate: null,
-          }
-        },
-      });
-    } else {
-      await createTask({
-        variables: {
-          input: {
-            name,
-            rule,
-            equipmentId,
-            projectId,
-            startDate: new Date(),
-          }
-        },
-        update(cache) {
-          cache.evict({ fieldName: 'recurringTasks' })
-        }
-      });
-
-    }
-  }
-
   const onSubmit = async () => {
-    await doAddRecurringTask();
+    await form.handleSubmit();
     onClose();
   }
 
@@ -104,38 +79,35 @@ export const RecurringTaskEditModal = ({ recurringTask: recurringTaskFragment, d
         <View style={styles.row}>
           <Text>Name</Text>
           <View style={styles.flexOne}>
-            <StyledTextInput value={name} onChangeText={setName} placeholder="Name" />
+            <form.AppField
+              name="name"
+              children={(field) => <field.TextField label="Name" />}
+            />
           </View>
         </View>
         <View style={styles.row}>
           <Text>Equipment</Text>
           <View style={styles.flexOne}>
-            <EquipmentSelect value={equipmentId} onChange={setEquipmentId} />
+            <form.AppField
+              name="equipmentId"
+              children={(field) => <field.EquipmentSelectField />}
+            />
           </View>
         </View>
-        <ProjectSelect value={equipmentId} onChange={setEquipmentId} />
         <View style={styles.row}>
           <Text>Project</Text>
           <View style={styles.flexOne}>
-            <ProjectSelect value={equipmentId} onChange={setProjectId} />
+            <form.AppField
+              name="projectId"
+              children={(field) => <field.ProjectSelectField />}
+            />
           </View>
         </View>
-        <View style={styles.row}>
-          <Text>Type</Text>
-          <OptionPicker options={ruleTypeOptions} value={rule.type}
-            onChange={x => { if (x) { setRuleType(x) } }}
-            getKey={option => option}
-
-            getLabel={option => option}
-          >
-            {option => <Text>{option}</Text>}
-          </OptionPicker>
-        </View>
-        {rule.type === 'day' && <DayFields rule={rule} onChange={setRule} />}
-        {rule.type === 'week' && <WeekFields rule={rule} onChange={setRule} />}
-        {rule.type === 'month_dom' && <MonthDomFields rule={rule} onChange={setRule} />}
-        {rule.type === 'month_dow' && <MonthDowFields rule={rule} onChange={setRule} />}
-        {rule.type === 'year' && <YearFields rule={rule} onChange={setRule} />}
+        {/* <form.AppField
+          name="rule"
+          children={(field) => <field.RuleField />}
+        /> */}
+        <RuleSubForm form={form} fields={{ rule: 'rule' }} />
         <Button onPress={onSubmit} title="Submit" />
       </View>
     )} />
