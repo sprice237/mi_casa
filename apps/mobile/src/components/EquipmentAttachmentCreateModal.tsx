@@ -85,8 +85,12 @@ export const EquipmentAttachmentCreateModal = ({ equipmentId, onClose }: Equipme
   };
 
   const uploadImage = async () => {
-    const { data: { createEquipmentAttachment: payload } = {} } = await createEquipmentAttachment({ variables: { input: { equipmentId, name: 'photo', contentType: 'image/jpeg' } } })
-    if (!imagePickerAsset || !imagePickerAsset.mimeType || !payload || !payload.presignedPostFields || typeof payload.presignedPostFields !== 'object') {
+    if (!imagePickerAsset || !imagePickerAsset.mimeType) {
+      return;
+    }
+
+    const { data: { createEquipmentAttachment: payload } = {} } = await createEquipmentAttachment({ variables: { input: { equipmentId, name: 'photo', contentType: imagePickerAsset.mimeType } } })
+    if (!payload || !payload.presignedPostFields || typeof payload.presignedPostFields !== 'object') {
       return;
     }
 
