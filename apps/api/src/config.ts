@@ -6,5 +6,6 @@ export const config = z
     DATABASE_URL: z.string(),
     VERSION: z.string().optional(),
     AWS_BUCKET: z.string(),
+    JWT_SECRET: z.string(),
   })
   .parse(process.env);

@@ -4,41 +4,38 @@ import { persist } from "zustand/middleware"
 import * as SecureStore from 'expo-secure-store';
 
 type State = {
-  username: string | null;
-  apiUri: string | null;
+  auth: {
+    token: string;
+    username: string;
+  } | null;
 }
 
 type Action = {
-  updateUsername: Dispatch<State['username']>
-  updateApiUri: Dispatch<State['apiUri']>
+  updateAuth: Dispatch<State['auth']>
 }
 
 export const useAuthStore = create<State & Action>()(persist(
   (set) => ({
-    username: null,
-    apiUri: null,
-    updateUsername: (username) => set(() => ({ username })),
-    updateApiUri: (apiUri) => set(() => ({ apiUri })),
+    auth: null,
+    updateAuth: (auth) => set(() => ({ auth })),
   }),
   {
     name: 'auth',
     partialize: (state) => ({
-      username: state.username,
-      apiUri: state.apiUri,
+      auth: state.auth,
     }),
     storage: {
       getItem: async (name) => {
-        const username = (await SecureStore.getItemAsync(`${name}.username`)) || null;
-        const apiUri = (await SecureStore.getItemAsync(`${name}.apiUri`)) || null;
-        return { state: { username, apiUri } };
+        const authRaw = await SecureStore.getItemAsync(`${name}.auth`);
+        const auth = authRaw && authRaw.length ? JSON.parse(authRaw) : null
+        return { state: { auth } };
       },
       setItem: async (name, value) => {
-        await SecureStore.setItemAsync(`${name}.username`, value.state.username ?? '');
-        await SecureStore.setItemAsync(`${name}.apiUri`, value.state.apiUri ?? '');
+        const authRaw = value.state.auth ? JSON.stringify(value.state.auth) : ''
+        await SecureStore.setItemAsync(`${name}.auth`, authRaw);
       },
       removeItem: async (name) => {
-        await SecureStore.deleteItemAsync(`${name}.username`);
-        await SecureStore.deleteItemAsync(`${name}.apiUri`);
+        await SecureStore.deleteItemAsync(`${name}.auth`);
       }
     },
   }

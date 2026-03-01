@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 import { resolvers } from "./resolvers/index.js";
 import { PrismaClient } from "@mi_casa/db/client";
 import { createRequire } from 'node:module';
+import { createInlineSigningKeyProvider, extractFromHeader, useJWT } from '@graphql-yoga/plugin-jwt'
+import { config } from "../config.js";
 
 const require = createRequire(import.meta.url);
 
@@ -11,7 +13,18 @@ export function buildGqlServer({ db, context }: { db: PrismaClient, context?: Ap
   const typeDefs = readFileSync(require.resolve('@mi_casa/gql/schema.graphql'), 'utf8');
   const schema = createSchema<AppContext>({ typeDefs, resolvers });
 
-  const yoga = createYoga<AppContext>({ schema, context: context ?? createInitialContext({ db }) });
+  const yoga = createYoga<AppContext>({
+    schema,
+    context: context ?? createInitialContext({ db }),
+    plugins: [
+      useJWT({
+        signingKeyProviders: [createInlineSigningKeyProvider(config.JWT_SECRET)],
+        tokenLookupLocations: [
+          extractFromHeader({ name: 'Authorization', prefix: 'Bearer' })
+        ],
+      })
+    ]
+  });
 
   return yoga;
 }

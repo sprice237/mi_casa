@@ -7,22 +7,17 @@ import Drawer from 'expo-router/drawer';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 
 export default function Layout() {
-  const username = useAuthStore((state) => state.username);
-  const apiUri = useAuthStore((state) => state.apiUri);
+  const auth = useAuthStore((state) => state.auth);
 
-  if (!username || !apiUri) {
+  if (!auth) {
     return <Redirect href="/unauthenticated" />
   }
 
-  return <Content apiUri={apiUri} />
+  return <Content />
 };
 
-type ContentProps = {
-  apiUri: string
-}
-
-const Content = ({ apiUri }: ContentProps) => {
-  const client = useClient(apiUri);
+const Content = () => {
+  const client = useClient();
 
   return (
     <ApolloProvider client={client}>
@@ -43,12 +38,10 @@ const Content = ({ apiUri }: ContentProps) => {
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const router = useRouter();
-  const updateApiUri = useAuthStore((state) => state.updateApiUri);
-  const updateUsername = useAuthStore((state) => state.updateUsername);
+  const updateAuth = useAuthStore((state) => state.updateAuth);
 
   const onLogOut = () => {
-    updateApiUri(null);
-    updateUsername(null);
+    updateAuth(null);
   };
 
   const navigate = (...args: Parameters<typeof router['navigate']>) => {

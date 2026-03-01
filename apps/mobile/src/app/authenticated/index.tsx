@@ -2,8 +2,7 @@ import { useAuthStore } from '$/stores/authStore';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function Me() {
-
-  const username = useAuthStore((state) => state.username);
+  const username = useAuthStore((state) => state.auth?.username);
 
   if (!username) {
     return null;

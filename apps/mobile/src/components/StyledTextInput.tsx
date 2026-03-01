@@ -9,6 +9,7 @@ type StyledTextInputProps = ComponentProps<typeof TextInput>;
 export const StyledTextInput = (props: StyledTextInputProps) => {
   return (
     <TextInput
+      placeholderTextColor="grey"
       {...props}
       style={[styles.textInput, props.style]}
     />
