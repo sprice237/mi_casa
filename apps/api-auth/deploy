@@ -8,6 +8,8 @@ PLATFORM=linux/arm64
 
 IMAGE_URI="$ECR_URL/$IMAGE_NAME:$IMAGE_TAG"
 
+set -e
+
 pushd $(dirname "$0")/../..
 docker rmi -f "$IMAGE_URI" || true
 docker buildx build -f "$DOCKER_FILE" --platform "$PLATFORM" --provenance=false -t "$IMAGE_URI" .
