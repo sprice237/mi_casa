@@ -33,6 +33,11 @@ export const AuthSettingsForm = () => {
     }
   });
 
+  const prefillWithAws = () => {
+    form.setFieldValue('apiUri', 'https://rctrnsnrimtuuomvpnfrp7tedm0zjicv.lambda-url.us-east-1.on.aws/graphql');
+    form.setFieldValue('authApiUri', 'https://qywunyqcsyvqhbv3l5e6fpfkci0frmsz.lambda-url.us-east-1.on.aws/');
+  }
+
   return (
     <View style={styles.background}>
       <View style={styles.container}>
@@ -72,6 +77,7 @@ export const AuthSettingsForm = () => {
             />
           </View>
         </View>
+        <StyledButton text="Use AWS" onPress={prefillWithAws} />
         <StyledButton text="Submit" onPress={form.handleSubmit} />
       </View>
     </View>
