@@ -30,3 +30,11 @@ export const RecurringTaskRuleSchema = z.discriminatedUnion('type', [
 ]);
 
 export type RecurringTaskRule = z.infer<typeof RecurringTaskRuleSchema>;
+
+export const AppJwtSchema = z.object({
+  jti: z.string(),
+  sub: z.string(),
+  casaId: z.string()
+});
+
+export type AppJwt = z.infer<typeof AppJwtSchema>;

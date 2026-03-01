@@ -14,6 +14,7 @@ export type CreateRecurringTaskInput = {
   startDate: Date;
   equipmentId: string | null;
   projectId: string | null;
+  casaId: string;
 }
 
 export type UpdateRecurringTaskInput = {

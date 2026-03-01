@@ -4,13 +4,13 @@ export const projectTypeResolver: AppResolvers['Project'] = {
   id: (root) => root.id,
   name: (root) => root.name,
 
-  recurringTasks: async (root, _, { services }) => {
-    const recurringTasks = await services.recurringTasks.findMany({ where: { projectId: root.id } });
+  recurringTasks: async (root, _, { services, casaId }) => {
+    const recurringTasks = await services.recurringTasks.findMany({ where: { projectId: root.id, casaId } });
     return recurringTasks;
   },
 
-  tasks: async (root, _, { db }) => {
-    const tasks = await db.task.findMany({ where: { projectId: root.id } });
+  tasks: async (root, _, { db, casaId }) => {
+    const tasks = await db.task.findMany({ where: { projectId: root.id, casaId } });
     return tasks;
   }
 

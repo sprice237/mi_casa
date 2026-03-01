@@ -1,22 +1,23 @@
 import { RecurringTaskRuleSchema } from "@mi_casa/common";
 import { AppResolvers } from "../types.js";
 
-export const createRecurringTaskMutationResolver: AppResolvers['Mutation']['createRecurringTask'] = async (_, { input }, { services }) => {
+export const createRecurringTaskMutationResolver: AppResolvers['Mutation']['createRecurringTask'] = async (_, { input }, { services, casaId }) => {
   const rule = RecurringTaskRuleSchema.parse(input.rule);
   const recurringTasks = await services.recurringTasks.create({
     data: {
       ...input,
-      rule
+      rule,
+      casaId
     }
   });
   return recurringTasks;
 };
 
-export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['updateRecurringTask'] = async (_, { recurringTaskId, input }, { services }) => {
+export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['updateRecurringTask'] = async (_, { recurringTaskId, input }, { services, casaId }) => {
   const rule = input.rule ? RecurringTaskRuleSchema.parse(input.rule) : undefined;
 
   const recurringTask = await services.recurringTasks.update({
-    where: { id: recurringTaskId },
+    where: { id: recurringTaskId, casaId },
     data: {
       name: input.name ?? undefined,
       rule,
@@ -29,9 +30,9 @@ export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['upda
   return recurringTask;
 };
 
-export const deleteRecurringTaskMutationResolver: AppResolvers['Mutation']['deleteRecurringTask'] = async (_, { recurringTaskId }, { services }) => {
+export const deleteRecurringTaskMutationResolver: AppResolvers['Mutation']['deleteRecurringTask'] = async (_, { recurringTaskId }, { services, casaId }) => {
   await services.recurringTasks.delete({
-    where: { id: recurringTaskId },
+    where: { id: recurringTaskId, casaId },
   });
 
   return true;

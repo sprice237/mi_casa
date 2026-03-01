@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { db } from './db.js';
 import { compare, hash } from 'bcrypt';
 import { Prisma } from '@mi_casa/db/client';
+import { randomUUID } from 'node:crypto';
+import { AppJwt } from '@mi_casa/common';
 
 export function init() {
   const app = fastify({
@@ -33,11 +35,20 @@ export function init() {
       const user = await db.user.create({
         data: {
           username,
-          password: passwordHash
+          password: passwordHash,
+          casa: {
+            create: {
+              name: `${username}'s Casa`
+            }
+          }
         }
       });
 
-      const payload = { sub: user.id };
+      const payload: AppJwt = {
+        jti: randomUUID(),
+        sub: user.id,
+        casaId: user.casaId,
+      };
 
       const token = jwt.sign(payload, config.JWT_SECRET);
 
@@ -91,7 +102,11 @@ export function init() {
       return;
     }
 
-    const payload = { sub: user.id };
+    const payload: AppJwt = {
+      jti: randomUUID(),
+      sub: user.id,
+      casaId: user.casaId
+    };
 
     const token = jwt.sign(payload, config.JWT_SECRET);
 

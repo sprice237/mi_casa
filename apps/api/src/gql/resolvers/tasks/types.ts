@@ -5,15 +5,15 @@ export const taskTypeResolver: AppResolvers['Task'] = {
   name: (root) => root.name,
   status: (root) => root.status,
 
-  equipment: async (root, _, { db }) => {
+  equipment: async (root, _, { db, casaId }) => {
     if (!root.equipmentId) return null;
-    const equipment = await db.equipment.findUnique({ where: { id: root.equipmentId } });
+    const equipment = await db.equipment.findUnique({ where: { id: root.equipmentId, casaId } });
     return equipment;
   },
 
-  project: async (root, _, { db }) => {
+  project: async (root, _, { db, casaId }) => {
     if (!root.projectId) return null;
-    const project = await db.project.findUnique({ where: { id: root.projectId } });
+    const project = await db.project.findUnique({ where: { id: root.projectId, casaId } });
     return project;
   },
 }

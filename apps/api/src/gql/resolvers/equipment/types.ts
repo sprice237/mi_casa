@@ -7,18 +7,18 @@ export const equipmentTypeResolver: AppResolvers['Equipment'] = {
   id: (root) => root.id,
   name: (root) => root.name,
 
-  equipmentNotes: async (root, _, { db }) => {
-    const equipmentNotes = await db.equipmentNote.findMany({ where: { equipmentId: root.id } });
+  equipmentNotes: async (root, _, { db, casaId }) => {
+    const equipmentNotes = await db.equipmentNote.findMany({ where: { equipmentId: root.id, casaId } });
     return equipmentNotes;
   },
 
-  recurringTasks: async (root, _, { services }) => {
-    const recurringTasks = await services.recurringTasks.findMany({ where: { equipmentId: root.id } });
+  recurringTasks: async (root, _, { services, casaId }) => {
+    const recurringTasks = await services.recurringTasks.findMany({ where: { equipmentId: root.id, casaId } });
     return recurringTasks;
   },
 
-  tasks: async (root, _, { db }) => {
-    const tasks = await db.task.findMany({ where: { equipmentId: root.id } });
+  tasks: async (root, _, { db, casaId }) => {
+    const tasks = await db.task.findMany({ where: { equipmentId: root.id, casaId } });
     return tasks;
   }
 }
@@ -28,8 +28,8 @@ export const equipmentNoteTypeResolver: AppResolvers['EquipmentNote'] = {
   content: (root) => root.content,
   createdAt: (root) => root.createdAt,
 
-  equipment: async (root, _, { db }) => {
-    const equipment = await db.equipment.findUniqueOrThrow({ where: { id: root.equipmentId } });
+  equipment: async (root, _, { db, casaId }) => {
+    const equipment = await db.equipment.findUniqueOrThrow({ where: { id: root.equipmentId, casaId } });
     return equipment;
   },
 }

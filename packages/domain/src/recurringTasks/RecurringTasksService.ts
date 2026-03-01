@@ -58,7 +58,7 @@ export class RecurringTasksService {
     return recurringTask
   }
 
-  async getProjections({ where, startDate, endDate, limit }: { where?: { id?: string | { in: readonly string[] } }, startDate: Date; endDate?: Date; limit: number }) {
+  async getProjections({ where, startDate, endDate, limit }: { where: { id?: string | { in: readonly string[] }; casaId: string }, startDate: Date; endDate?: Date; limit: number }) {
     // this approach iterates numerically through each instance of a recurring task
     // at each instance, the date of that instance is calculated using the rule 
     // execution ends when the calculated date exceeds the end date

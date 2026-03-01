@@ -14,8 +14,25 @@ enum TaskStatus {
   READY_TO_BEGIN
 }
 
+model Casa {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  equipment            Equipment[]
+  equipmentAttachments EquipmentAttachment[]
+  equipmentNotes       EquipmentNote[]
+  projects             Project[]
+  recurringTasks       RecurringTask[]
+  tasks                Task[]
+  users                User[]
+}
+
 model Equipment {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
   name      String
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
@@ -28,6 +45,8 @@ model Equipment {
 
 model EquipmentAttachment {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
   bucketKey String
   isReady   Boolean
   createdAt DateTime @default(now()) @db.Timestamptz
@@ -41,6 +60,8 @@ model EquipmentAttachment {
 
 model EquipmentNote {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
   content   String
   createdAt DateTime @default(now()) @db.Timestamptz
 
@@ -52,6 +73,8 @@ model EquipmentNote {
 
 model Project {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
   name      String
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
@@ -62,6 +85,8 @@ model Project {
 
 model RecurringTask {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
   name      String
   rule      Json
   startDate DateTime @db.Date
@@ -87,6 +112,8 @@ model RecurringTask {
 
 model Task {
   id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String     @db.Uuid
+  casa      Casa       @relation(fields: [casaId], references: [id])
   name      String
   status    TaskStatus
   createdAt DateTime   @default(now()) @db.Timestamptz
@@ -107,4 +134,7 @@ model User {
   id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   username String @unique @db.Citext
   password String
+
+  casaId String @db.Uuid
+  casa   Casa   @relation(fields: [casaId], references: [id])
 }
