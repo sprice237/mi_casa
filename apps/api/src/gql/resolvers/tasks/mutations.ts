@@ -1,37 +1,41 @@
-import { Prisma } from "@mi_casa/db/client";
 import { AppResolvers } from "../types.js";
 
-export const createTaskMutationResolver: AppResolvers['Mutation']['createTask'] = async (_, { input }, { db, casaId }) => {
-  const task = await db.task.create({
+export const createTaskMutationResolver: AppResolvers['Mutation']['createTask'] = async (_, { input }, { services, casaId }) => {
+  const task = await services.tasks.create({
     data: {
       name: input.name,
       status: 'READY_TO_BEGIN',
       equipmentId: input.equipmentId,
       projectId: input.projectId,
-      casaId,
+    },
+    tenant: {
+      casaId
     }
   });
 
   return task;
 };
 
-export const updateTaskMutationResolver: AppResolvers['Mutation']['updateTask'] = async (_, { taskId, input }, { db, casaId }) => {
-  const task = await db.task.update({
-    where: { id: taskId, casaId },
+export const updateTaskMutationResolver: AppResolvers['Mutation']['updateTask'] = async (_, { taskId, input }, { services, casaId, jwt }) => {
+  const task = await services.tasks.update({
+    where: { id: taskId },
     data: {
-      name: input.name !== null ? input.name : Prisma.skip,
-      status: input.status !== null ? input.status : Prisma.skip,
-      equipmentId: input.equipmentId ? input.equipmentId.id : Prisma.skip,
-      projectId: input.projectId ? input.projectId.id : Prisma.skip,
-    }
+      name: input.name ?? undefined,
+      status: input.status ?? undefined,
+      equipmentId: input.equipmentId ? (input.equipmentId.id ?? null) : undefined,
+      projectId: input.projectId ? (input.projectId.id ?? null) : undefined,
+      userId: jwt.sub
+    },
+    tenant: { casaId }
   });
 
   return task;
 };
 
-export const deleteTaskMutationResolver: AppResolvers['Mutation']['deleteTask'] = async (_, { taskId }, { db, casaId }) => {
-  await db.task.delete({
-    where: { id: taskId, casaId },
+export const deleteTaskMutationResolver: AppResolvers['Mutation']['deleteTask'] = async (_, { taskId }, { services, casaId }) => {
+  await services.tasks.delete({
+    where: { id: taskId },
+    tenant: { casaId }
   });
 
   return true;

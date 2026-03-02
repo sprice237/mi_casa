@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@mi_casa/db/client';
-import { RecurringTasksService } from '@mi_casa/domain';
+import { RecurringTasksService, TasksService } from '@mi_casa/domain';
 import { config } from "../config.js";
 import { S3Client } from '@aws-sdk/client-s3';
 import { AppJwt, AppJwtSchema } from '@mi_casa/common';
@@ -7,6 +7,7 @@ import { GraphQLError } from 'graphql';
 
 export type Services = {
   recurringTasks: RecurringTasksService
+  tasks: TasksService
 }
 
 export interface AppContext {
@@ -39,7 +40,8 @@ export const createContext = ({ db, _jwt }: { db: PrismaClient, _jwt: any }): Ap
     version: config.VERSION ?? 'unknown',
     db,
     services: {
-      recurringTasks: new RecurringTasksService(db)
+      recurringTasks: new RecurringTasksService(db),
+      tasks: new TasksService(db)
     },
     s3: new S3Client(),
     _jwt,

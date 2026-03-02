@@ -27,6 +27,7 @@ model Casa {
   recurringTasks       RecurringTask[]
   tasks                Task[]
   users                User[]
+  taskTransitions      TaskTransition[]
 }
 
 model Equipment {
@@ -127,7 +128,23 @@ model Task {
   projectId   String?    @db.Uuid
   project     Project?   @relation(fields: [projectId], references: [id])
 
+  taskTransitions TaskTransition[]
+
   @@index([recurringTaskId, createdAt(sort: Desc)])
+}
+
+model TaskTransition {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
+  taskId    String   @db.Uuid
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId    String?  @db.Uuid
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  prevStatus TaskStatus?
+  nextStatus TaskStatus
 }
 
 model User {
@@ -135,6 +152,7 @@ model User {
   username String @unique @db.Citext
   password String
 
-  casaId String @db.Uuid
-  casa   Casa   @relation(fields: [casaId], references: [id])
+  casaId          String           @db.Uuid
+  casa            Casa             @relation(fields: [casaId], references: [id])
+  taskTransitions TaskTransition[]
 }
