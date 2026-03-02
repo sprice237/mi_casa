@@ -23,12 +23,17 @@ export async function generateTasksForRecurringTasks({ db }: { db: PrismaClient 
       nextProjectionEndDate
     })
 
-    const [nextProjection] = await recurringTasksService.getProjections({ where: { id: recurringTask.id }, startDate: nextProjectionStartDate, endDate: nextProjectionEndDate, limit: 1 });
+    const [nextProjection] = await recurringTasksService.getProjections({
+      where: { id: recurringTask.id, casaId: recurringTask.casaId },
+      startDate: nextProjectionStartDate,
+      endDate: nextProjectionEndDate, limit: 1
+    });
 
     if (nextProjection) {
       console.log('creating task');
       await db.task.create({
         data: {
+          casaId: recurringTask.casaId,
           recurringTaskId: recurringTask.id,
           name: recurringTask.name,
           status: 'READY_TO_BEGIN',
