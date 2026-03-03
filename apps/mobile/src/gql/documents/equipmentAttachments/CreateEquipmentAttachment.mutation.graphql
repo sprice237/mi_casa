@@ -1,7 +1,0 @@
-mutation CreateEquipmentAttachment($input: CreateEquipmentAttachmentInput!) {
-  createEquipmentAttachment(input: $input) {
-    id
-    presignedPostUrl
-    presignedPostFields
-  }
-}

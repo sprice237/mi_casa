@@ -1,0 +1,5 @@
+fragment AttachmentWithUrl on Attachment {
+  id
+  createdAt
+  url
+}

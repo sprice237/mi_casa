@@ -1,0 +1,9 @@
+input CreateAttachmentInput {
+  name: String!
+  contentType: String!
+}
+
+input UpdateAttachmentInput {
+  attachmentId: ID!
+  isReady: Boolean!
+}

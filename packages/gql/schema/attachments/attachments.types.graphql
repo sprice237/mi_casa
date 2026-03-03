@@ -1,0 +1,11 @@
+type CreateAttachmentPayload {
+  id: ID!
+  presignedPostUrl: String!
+  presignedPostFields: Json!
+}
+
+type Attachment {
+  id: ID!
+  url: String!
+  createdAt: DateTime!
+}

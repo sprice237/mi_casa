@@ -2,12 +2,4 @@ extend type Mutation {
   createEquipment(input: CreateEquipmentInput!): Equipment!
   updateEquipment(equipmentId: ID!, input: UpdateEquipmentInput!): Equipment!
   deleteEquipment(equipmentId: ID!): Boolean!
-
-  createEquipmentNote(input: CreateEquipmentNoteInput!): EquipmentNote!
-  updateEquipmentNote(equipmentNoteId: ID!, input: UpdateEquipmentNoteInput!): EquipmentNote!
-  deleteEquipmentNote(equipmentNoteId: ID!): Boolean!
-
-  createEquipmentAttachment(input: CreateEquipmentAttachmentInput!): CreateEquipmentAttachmentPayload!
-  updateEquipmentAttachment(input: UpdateEquipmentAttachmentInput!): EquipmentAttachment!
-  deleteEquipmentAttachment(equipmentAttachmentId: ID!): Boolean!
 }

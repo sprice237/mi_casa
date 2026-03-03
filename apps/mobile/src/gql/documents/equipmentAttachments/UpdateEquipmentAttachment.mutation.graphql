@@ -1,5 +1,0 @@
-mutation UpdateEquipmentAttachment($input: UpdateEquipmentAttachmentInput!) {
-  updateEquipmentAttachment(input: $input) {
-    id
-  }
-}

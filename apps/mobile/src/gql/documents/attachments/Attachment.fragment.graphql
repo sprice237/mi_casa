@@ -1,0 +1,4 @@
+fragment Attachment on Attachment {
+  id
+  createdAt
+}

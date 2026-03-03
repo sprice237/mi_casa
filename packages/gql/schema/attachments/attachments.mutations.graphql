@@ -1,0 +1,5 @@
+extend type Mutation {
+  createAttachment(input: CreateAttachmentInput!): CreateAttachmentPayload!
+  updateAttachment(input: UpdateAttachmentInput!): Attachment!
+  deleteAttachment(attachmentId: ID!): Boolean!
+}

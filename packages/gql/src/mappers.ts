@@ -5,19 +5,6 @@ export type EquipmentMapper = {
   name: string;
 }
 
-export type EquipmentAttachmentMapper = {
-  id: string;
-  bucketKey: string;
-  createdAt: Date;
-}
-
-export type EquipmentNoteMapper = {
-  id: string;
-  content: string;
-  createdAt: Date;
-  equipmentId: string;
-}
-
 export type ProjectMapper = {
   id: string;
   name: string;

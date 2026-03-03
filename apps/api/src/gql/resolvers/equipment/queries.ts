@@ -16,23 +16,3 @@ export const equipmentQueryResolver: AppResolvers['Query']['equipment'] = async 
 
   return equipment;
 };
-
-export const equipmentAttachmentsQueryResolver: AppResolvers['Query']['equipmentAttachments'] = async (_, { equipmentId }, { db, casaId }) => {
-  return await db.equipmentAttachment.findMany({
-    where: {
-      equipmentId,
-      isReady: true,
-      casaId,
-    },
-  })
-};
-
-export const equipmentAttachmentQueryResolver: AppResolvers['Query']['equipmentAttachment'] = async (_, { equipmentAttachmentId }, { db, casaId }) => {
-  return await db.equipmentAttachment.findUniqueOrThrow({
-    where: {
-      id: equipmentAttachmentId,
-      isReady: true,
-      casaId,
-    },
-  })
-};

@@ -1,4 +1,10 @@
 fragment Equipment on Equipment {
   id
   name
+  attachments {
+    ...Attachment
+  }
+  notes {
+    ...Note
+  }
 }

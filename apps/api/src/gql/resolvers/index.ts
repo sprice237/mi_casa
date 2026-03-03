@@ -3,16 +3,17 @@ import { createTaskMutationResolver, deleteTaskMutationResolver, taskQueryResolv
 import { AppResolvers } from './types.js';
 import { createRecurringTaskMutationResolver, deleteRecurringTaskMutationResolver, recurringTaskProjectionsQueryResolver, recurringTaskProjectionTypeResolver, recurringTaskQueryResolver, recurringTasksQueryResolver, recurringTaskTypeResolver, updateRecurringTaskMutationResolver } from "./recurringTasks/index.js";
 import { scalars } from "@mi_casa/gql";
-import { createEquipmentAttachmentMutationResolver, createEquipmentAttachmentTypeResolver, createEquipmentMutationResolver, createEquipmentNoteMutationResolver, deleteEquipmentAttachmentMutationResolver, deleteEquipmentMutationResolver, deleteEquipmentNoteMutationResolver, equipmentAttachmentQueryResolver, equipmentAttachmentsQueryResolver, equipmentAttachmentTypeResolver, equipmentNoteTypeResolver, equipmentQueryResolver, equipmentsQueryResolver, equipmentTypeResolver, updateEquipmentAttachmentMutationResolver, updateEquipmentMutationResolver, updateEquipmentNoteMutationResolver } from "./equipment/index.js";
+import { createEquipmentMutationResolver, deleteEquipmentMutationResolver, equipmentQueryResolver, equipmentsQueryResolver, equipmentTypeResolver, updateEquipmentMutationResolver } from "./equipment/index.js";
 import { createProjectMutationResolver, deleteProjectMutationResolver, projectQueryResolver, projectsQueryResolver, projectTypeResolver, updateProjectMutationResolver } from "./projects/index.js";
+import { attachmentQueryResolver, attachmentTypeResolver, createAttachmentMutationResolver, createAttachmentTypeResolver, deleteAttachmentMutationResolver, updateAttachmentMutationResolver } from "./attachments/index.js";
+import { createNoteMutationResolver, deleteNoteMutationResolver, noteTypeResolver, updateNoteMutationResolver } from "./notes/index.js";
 
 
 export const resolvers: AppResolvers = {
   Query: {
+    attachment: attachmentQueryResolver,
     equipments: equipmentsQueryResolver,
     equipment: equipmentQueryResolver,
-    equipmentAttachments: equipmentAttachmentsQueryResolver,
-    equipmentAttachment: equipmentAttachmentQueryResolver,
     projects: projectsQueryResolver,
     project: projectQueryResolver,
     recurringTasks: recurringTasksQueryResolver,
@@ -23,15 +24,15 @@ export const resolvers: AppResolvers = {
     status: statusQueryResolver,
   },
   Mutation: {
+    createAttachment: createAttachmentMutationResolver,
+    updateAttachment: updateAttachmentMutationResolver,
+    deleteAttachment: deleteAttachmentMutationResolver,
     createEquipment: createEquipmentMutationResolver,
     updateEquipment: updateEquipmentMutationResolver,
     deleteEquipment: deleteEquipmentMutationResolver,
-    createEquipmentNote: createEquipmentNoteMutationResolver,
-    updateEquipmentNote: updateEquipmentNoteMutationResolver,
-    deleteEquipmentNote: deleteEquipmentNoteMutationResolver,
-    createEquipmentAttachment: createEquipmentAttachmentMutationResolver,
-    updateEquipmentAttachment: updateEquipmentAttachmentMutationResolver,
-    deleteEquipmentAttachment: deleteEquipmentAttachmentMutationResolver,
+    createNote: createNoteMutationResolver,
+    updateNote: updateNoteMutationResolver,
+    deleteNote: deleteNoteMutationResolver,
     createProject: createProjectMutationResolver,
     updateProject: updateProjectMutationResolver,
     deleteProject: deleteProjectMutationResolver,
@@ -43,10 +44,10 @@ export const resolvers: AppResolvers = {
     deleteTask: deleteTaskMutationResolver,
   },
 
-  CreateEquipmentAttachmentPayload: createEquipmentAttachmentTypeResolver,
+  Attachment: attachmentTypeResolver,
+  CreateAttachmentPayload: createAttachmentTypeResolver,
   Equipment: equipmentTypeResolver,
-  EquipmentAttachment: equipmentAttachmentTypeResolver,
-  EquipmentNote: equipmentNoteTypeResolver,
+  Note: noteTypeResolver,
   Status: statusTypeResolver,
   Project: projectTypeResolver,
   RecurringTask: recurringTaskTypeResolver,

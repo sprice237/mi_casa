@@ -14,20 +14,34 @@ enum TaskStatus {
   READY_TO_BEGIN
 }
 
+model Attachment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
+  bucketKey String
+  isReady   Boolean
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  equipments Equipment[]
+
+  @@index([casaId])
+}
+
 model Casa {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 
-  equipment            Equipment[]
-  equipmentAttachments EquipmentAttachment[]
-  equipmentNotes       EquipmentNote[]
-  projects             Project[]
-  recurringTasks       RecurringTask[]
-  tasks                Task[]
-  users                User[]
-  taskTransitions      TaskTransition[]
+  attachments     Attachment[]
+  equipment       Equipment[]
+  notes           Note[]
+  projects        Project[]
+  recurringTasks  RecurringTask[]
+  tasks           Task[]
+  users           User[]
+  taskTransitions TaskTransition[]
 }
 
 model Equipment {
@@ -38,38 +52,20 @@ model Equipment {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
-  recurringTasks       RecurringTask[]
-  tasks                Task[]
-  equipmentNotes       EquipmentNote[]
-  equipmentAttachments EquipmentAttachment[]
+  attachments    Attachment[]
+  recurringTasks RecurringTask[]
+  tasks          Task[]
+  notes          Note[]
 }
 
-model EquipmentAttachment {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  casaId    String   @db.Uuid
-  casa      Casa     @relation(fields: [casaId], references: [id])
-  bucketKey String
-  isReady   Boolean
-  createdAt DateTime @default(now()) @db.Timestamptz
-  updatedAt DateTime @updatedAt @db.Timestamptz
-
-  equipmentId String    @db.Uuid
-  equipment   Equipment @relation(fields: [equipmentId], references: [id])
-
-  @@index([equipmentId, createdAt(sort: Desc)])
-}
-
-model EquipmentNote {
+model Note {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   casaId    String   @db.Uuid
   casa      Casa     @relation(fields: [casaId], references: [id])
   content   String
   createdAt DateTime @default(now()) @db.Timestamptz
 
-  equipmentId String    @db.Uuid
-  equipment   Equipment @relation(fields: [equipmentId], references: [id])
-
-  @@index([equipmentId, createdAt(sort: Desc)])
+  equipments Equipment[]
 }
 
 model Project {

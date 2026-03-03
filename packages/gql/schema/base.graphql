@@ -4,3 +4,8 @@ type Mutation
 input NullableIdInput {
   id: ID
 }
+
+input UpdateIdListInput {
+  attach: [ID!]
+  detach: [ID!]
+}

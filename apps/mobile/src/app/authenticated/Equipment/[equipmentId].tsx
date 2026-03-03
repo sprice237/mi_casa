@@ -6,11 +6,11 @@ import { EquipmentDocument, EquipmentFragmentDoc, getFragmentData, UpdateEquipme
 import { useFormAutoSubmitEffect } from '$/util';
 import { TabRow } from '$/components/TabRow';
 import { useState } from 'react';
-import { EquipmentNotesList } from '$/components/EquipmentsNotesList';
+import { EquipmentNotesList } from '$/components/equipment/EquipmentNotesList';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { TasksList } from '$/components/TasksList';
 import { RecurringTasksList } from '$/components/RecurringTasksList';
-import { EquipmentAttachmentsList } from '$/components/EquipmentAttachmentsList/EquipmentAttachmentsList';
+import { EquipmentAttachmentsList } from '$/components/equipment/EquipmentAttachmentsList';
 
 interface EquipmentFormValues {
   name: string;
@@ -46,7 +46,9 @@ export default function Equipment() {
         variables: {
           equipmentId,
           input: {
-            name: value.name
+            name: value.name,
+            attachmentIds: null,
+            noteIds: null,
           }
         }
       })

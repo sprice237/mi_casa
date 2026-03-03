@@ -1,0 +1,5 @@
+mutation UpdateAttachment($input: UpdateAttachmentInput!) {
+  updateAttachment(input: $input) {
+    id
+  }
+}

@@ -4,24 +4,6 @@ input CreateEquipmentInput {
 
 input UpdateEquipmentInput {
   name: String
-}
-
-input CreateEquipmentNoteInput {
-  equipmentId: ID!
-  content: String!
-}
-
-input UpdateEquipmentNoteInput {
-  content: String
-}
-
-input CreateEquipmentAttachmentInput {
-  equipmentId: ID!
-  name: String!
-  contentType: String!
-}
-
-input UpdateEquipmentAttachmentInput {
-  equipmentAttachmentId: ID!
-  isReady: Boolean!
+  attachmentIds: UpdateIdListInput
+  noteIds: UpdateIdListInput
 }

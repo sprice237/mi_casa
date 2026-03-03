@@ -1,5 +1,0 @@
-fragment EquipmentAttachmentWithUrl on EquipmentAttachment {
-  id
-  createdAt
-  url
-}

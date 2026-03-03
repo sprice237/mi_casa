@@ -2,26 +2,8 @@ type Equipment {
   id: ID!
   name: String!
 
+  attachments: [Attachment!]!
   recurringTasks: [RecurringTask!]!
+  notes: [Note!]!
   tasks: [Task!]!
-  equipmentNotes: [EquipmentNote!]!
-}
-
-type EquipmentNote {
-  id: ID!
-  createdAt: DateTime!
-  content: String!
-  equipment: Equipment!
-}
-
-type CreateEquipmentAttachmentPayload {
-  id: ID!
-  presignedPostUrl: String!
-  presignedPostFields: Json!
-}
-
-type EquipmentAttachment {
-  id: ID!
-  url: String!
-  createdAt: DateTime!
 }
