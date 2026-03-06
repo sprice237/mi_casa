@@ -15,7 +15,7 @@ export const equipmentTypeResolver: AppResolvers['Equipment'] = {
   },
 
   recurringTasks: async (root, _, { services, casaId }) => {
-    const recurringTasks = await services.recurringTasks.findMany({ where: { equipmentId: root.id, casaId } });
+    const recurringTasks = await services.recurringTasks.findMany({ where: { equipmentId: root.id }, tenant: { casaId } });
     return recurringTasks;
   },
 

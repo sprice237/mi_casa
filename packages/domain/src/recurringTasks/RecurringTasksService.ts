@@ -1,28 +1,41 @@
 import { Prisma, PrismaClient, RecurringTask as DbRecurringTask } from '@mi_casa/db/client';
 import { shimRecurringTask, shimRecurringTaskProjection } from './shims.js';
-import { CreateRecurringTaskInput, UpdateRecurringTaskInput } from './types.js';
+import { CreateRecurringTaskInput, RecurringTasksFindManyFilter, RecurringTasksFindUniqueFilter, UpdateRecurringTaskInput } from './types.js';
+import { Tenant } from '../common/types.js';
 
 
 export class RecurringTasksService {
 
   constructor(private db: PrismaClient) { }
 
-  async findMany(args?: Pick<NonNullable<Parameters<PrismaClient['recurringTask']['findMany']>[0]>, 'where' | 'orderBy' | 'skip' | 'take'>) {
-    const dbRecurringTasks = await this.db.recurringTask.findMany(args);
+  async findMany({ where, tenant }: { where?: RecurringTasksFindManyFilter, tenant: Tenant }) {
+    const dbRecurringTasks = await this.db.recurringTask.findMany({
+      where: {
+        equipmentId: where?.equipmentId ?? Prisma.skip,
+        projectId: where?.projectId ?? Prisma.skip,
+        casaId: tenant.casaId,
+      }
+    });
     const recurringTasks = dbRecurringTasks.map(shimRecurringTask);
     return recurringTasks
   }
 
-  async findUniqueOrThrow(args: Pick<NonNullable<Parameters<PrismaClient['recurringTask']['findUniqueOrThrow']>[0]>, 'where'>) {
-    const dbRecurringTask = await this.db.recurringTask.findUniqueOrThrow(args);
+  async findUniqueOrThrow({ where, tenant }: { where: RecurringTasksFindUniqueFilter, tenant: Tenant }) {
+    const dbRecurringTask = await this.db.recurringTask.findUniqueOrThrow({
+      where: {
+        id: where.id,
+        casaId: tenant.casaId
+      }
+    });
     const recurringTask = shimRecurringTask(dbRecurringTask);
     return recurringTask
   }
 
-  async findLatestTask({ where: { recurringTaskId } }: { where: { recurringTaskId: string } }) {
+  async findLatestTask({ where, tenant }: { where: RecurringTasksFindUniqueFilter, tenant: Tenant }) {
     const latestTask = await this.db.task.findFirst({
       where: {
-        recurringTaskId
+        recurringTaskId: where.id,
+        casaId: tenant.casaId
       },
       orderBy: {
         createdAt: 'desc'
@@ -32,15 +45,19 @@ export class RecurringTasksService {
     return latestTask;
   }
 
-  async create({ data }: { data: CreateRecurringTaskInput }) {
-    const dbRecurringTask = await this.db.recurringTask.create({ data });
+  async create({ data, tenant }: { data: CreateRecurringTaskInput, tenant: Tenant }) {
+    const dbRecurringTask = await this.db.recurringTask.create({ data: { ...data, casaId: tenant.casaId } });
     const recurringTask = shimRecurringTask(dbRecurringTask);
     return recurringTask
   }
 
-  async update({ where, data }: Pick<Parameters<typeof this.db.recurringTask.update>[0], 'where'> & { data: UpdateRecurringTaskInput }) {
+  async update({ where, data, tenant }: { where: RecurringTasksFindUniqueFilter, data: UpdateRecurringTaskInput, tenant: Tenant }) {
     const dbRecurringTask = await this.db.recurringTask.update({
-      where, data: {
+      where: {
+        ...where,
+        casaId: tenant.casaId,
+      },
+      data: {
         name: data.name ?? Prisma.skip,
         rule: data.rule ?? Prisma.skip,
         startDate: data.startDate ?? Prisma.skip,
@@ -50,15 +67,18 @@ export class RecurringTasksService {
     return recurringTask
   }
 
-  async delete({ where }: Pick<Parameters<typeof this.db.recurringTask.delete>[0], 'where'>) {
+  async delete({ where, tenant }: { where: RecurringTasksFindUniqueFilter, tenant: Tenant }) {
     const dbRecurringTask = await this.db.recurringTask.delete({
-      where
+      where: {
+        ...where,
+        casaId: tenant.casaId
+      }
     });
     const recurringTask = shimRecurringTask(dbRecurringTask);
     return recurringTask
   }
 
-  async getProjections({ where, startDate, endDate, limit }: { where: { id?: string | { in: readonly string[] }; casaId: string }, startDate: Date; endDate?: Date; limit: number }) {
+  async getProjections({ where, startDate, endDate, limit, tenant }: { where: { id?: string | { in: readonly string[] }; }, startDate: Date; endDate?: Date; limit: number, tenant: Tenant }) {
     // this approach iterates numerically through each instance of a recurring task
     // at each instance, the date of that instance is calculated using the rule 
     // execution ends when the calculated date exceeds the end date
@@ -239,6 +259,7 @@ export class RecurringTasksService {
         limit ${limit}
       ) p on true
       where
+        "RecurringTask"."casaId" = ${tenant.casaId}::uuid and
         ${where?.id && typeof where.id === 'object' && 'in' in where.id ? Prisma.sql`"RecurringTask".id = any (${where.id.in}::uuid[])` : Prisma.sql`true`} and
         ${where?.id && typeof where.id === 'string' ? Prisma.sql`"RecurringTask".id = ${where.id}::uuid` : Prisma.sql`true`}
     `;

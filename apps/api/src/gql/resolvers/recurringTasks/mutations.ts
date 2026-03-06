@@ -7,8 +7,8 @@ export const createRecurringTaskMutationResolver: AppResolvers['Mutation']['crea
     data: {
       ...input,
       rule,
-      casaId
-    }
+    },
+    tenant: { casaId }
   });
   return recurringTasks;
 };
@@ -17,14 +17,15 @@ export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['upda
   const rule = input.rule ? RecurringTaskRuleSchema.parse(input.rule) : undefined;
 
   const recurringTask = await services.recurringTasks.update({
-    where: { id: recurringTaskId, casaId },
+    where: { id: recurringTaskId },
     data: {
       name: input.name ?? undefined,
       rule,
       startDate: input.startDate ?? undefined,
       equipmentId: input.equipmentId ? input.equipmentId.id : undefined,
       projectId: input.projectId ? input.projectId.id : undefined,
-    }
+    },
+    tenant: { casaId }
   });
 
   return recurringTask;
@@ -32,7 +33,8 @@ export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['upda
 
 export const deleteRecurringTaskMutationResolver: AppResolvers['Mutation']['deleteRecurringTask'] = async (_, { recurringTaskId }, { services, casaId }) => {
   await services.recurringTasks.delete({
-    where: { id: recurringTaskId, casaId },
+    where: { id: recurringTaskId },
+    tenant: { casaId }
   });
 
   return true;

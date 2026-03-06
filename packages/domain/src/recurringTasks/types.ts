@@ -1,6 +1,16 @@
 import { RecurringTask as DbRecurringTask } from '@mi_casa/db/client'
 import { RecurringTaskRule } from '@mi_casa/common';
 
+export type RecurringTasksFindManyFilter = {
+  equipmentId?: string;
+  projectId?: string;
+}
+
+export type RecurringTasksFindUniqueFilter = {
+  id: string;
+}
+
+
 export type RecurringTask = Omit<DbRecurringTask, 'rule'> & {
   rule: RecurringTaskRule
   equipmentId: string | null;
@@ -14,7 +24,6 @@ export type CreateRecurringTaskInput = {
   startDate: Date;
   equipmentId: string | null;
   projectId: string | null;
-  casaId: string;
 }
 
 export type UpdateRecurringTaskInput = {
