@@ -61,7 +61,7 @@ export class TasksService {
         }
       });
 
-      const newTask = await tx.task.update({
+      const updatedTask = await tx.task.update({
         where: {
           id: where.id,
           casaId: tenant.casaId,
@@ -71,22 +71,53 @@ export class TasksService {
           status: data.status !== undefined ? data.status : Prisma.skip,
           equipmentId: data.equipmentId !== undefined ? data.equipmentId : Prisma.skip,
           projectId: data.projectId !== undefined ? data.projectId : Prisma.skip,
+          ...(data.attachmentIds && {
+            attachments: {
+              ...(data.attachmentIds.attach && {
+                connect: data.attachmentIds.attach.map(attachmentId => ({
+                  id: attachmentId
+                }))
+              }),
+              ...(data.attachmentIds.detach && {
+                disconnect: data.attachmentIds.detach.map(attachmentId => ({
+                  id: attachmentId
+                }))
+              })
+
+            }
+          }),
+          ...(data.noteIds && {
+            notes: {
+              ...(data.noteIds.attach && {
+                connect: data.noteIds.attach.map(noteId => ({
+                  id: noteId
+                }))
+              }),
+              ...(data.noteIds.detach && {
+                disconnect: data.noteIds.detach.map(noteId => ({
+                  id: noteId
+                }))
+              })
+
+            }
+          })
+
         }
       });
 
-      if (prevTask.status !== newTask.status) {
+      if (prevTask.status !== updatedTask.status) {
         await tx.taskTransition.create({
           data: {
             taskId: where.id,
             casaId: tenant.casaId,
             userId: data.userId ?? Prisma.skip,
             prevStatus: prevTask.status,
-            nextStatus: newTask.status
+            nextStatus: updatedTask.status
           }
         })
       }
 
-      return newTask;
+      return updatedTask;
     })
   }
 

@@ -5,6 +5,12 @@ export type EquipmentMapper = {
   name: string;
 }
 
+export type AttachmentMapper = {
+  id: string;
+  bucketKey: string;
+  createdAt: Date;
+}
+
 export type ProjectMapper = {
   id: string;
   name: string;

@@ -57,7 +57,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       />
       <DrawerItem
         label="Tasks"
-        onPress={() => navigate('/authenticated/Tasks/todoTasks')}
+        onPress={() => navigate('/authenticated/Tasks/list/todoTasks')}
       />
       <DrawerItem
         label="Categories"

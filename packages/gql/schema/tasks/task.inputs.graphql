@@ -14,4 +14,6 @@ input UpdateTaskInput {
   status: TaskStatus
   equipmentId: NullableIdInput
   projectId: NullableIdInput
+  attachmentIds: UpdateIdListInput
+  noteIds: UpdateIdListInput
 }

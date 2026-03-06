@@ -1,6 +1,6 @@
-import { getFragmentData, TaskFragmentDoc, TasksDocument, TaskStatus } from '$/gql';
-import { ComponentProps } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { FragmentType, getFragmentData, TaskFragmentDoc, TasksDocument, TaskStatus } from '$/gql';
+import { ComponentProps, Dispatch } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useQuery } from '@apollo/client/react';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { TaskListItem } from './TasksListItem';
@@ -16,9 +16,10 @@ type EntriesListProps = ComponentProps<typeof View> & {
   status?: TaskStatus;
   showAddTaskButton?: boolean;
   equipmentId?: string;
+  onTaskPress?: Dispatch<FragmentType<typeof TaskFragmentDoc>>;
 };
 
-export const TasksList = ({ status, showAddTaskButton, equipmentId, ...props }: EntriesListProps) => {
+export const TasksList = ({ status, showAddTaskButton, equipmentId, onTaskPress, ...props }: EntriesListProps) => {
   const { value: isCreateModalVisible, setTrue: showCreateModal, setFalse: hideCreateModal } = useFlagState();
   const { data, refetch, loading } = useQuery(TasksDocument, { variables: { filter: { status: status ?? null, equipmentId: equipmentId ?? null } } });
   const tasks = data?.tasks;
@@ -35,9 +36,13 @@ export const TasksList = ({ status, showAddTaskButton, equipmentId, ...props }: 
           data={tasks}
           keyExtractor={(taskFragment) => getFragmentData(TaskFragmentDoc, taskFragment).id}
           ItemSeparatorComponent={Border}
-          renderItem={({ item: task }) => (
-            <TaskListItem task={task} rowHeight={ROW_HEIGHT} />
-          )}
+          renderItem={({ item: task }) => onTaskPress ?
+            (
+              <Pressable onPress={() => onTaskPress(task)}>
+                <TaskListItem task={task} rowHeight={ROW_HEIGHT} />
+              </Pressable>
+            ) : <TaskListItem task={task} rowHeight={ROW_HEIGHT} />
+          }
           renderHiddenItem={({ item: task }, rowMap) => (
             <TaskListItemActions itemWidth={ROW_HEIGHT} task={task}
               onPress={() => rowMap[getFragmentData(TaskFragmentDoc, task).id].closeRow()}

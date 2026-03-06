@@ -16,4 +16,14 @@ export const taskTypeResolver: AppResolvers['Task'] = {
     const project = await db.project.findUnique({ where: { id: root.projectId, casaId } });
     return project;
   },
+
+  attachments: async (root, _, { db, casaId }) => {
+    const attachments = await db.task.findUniqueOrThrow({ where: { id: root.id, casaId } }).attachments();
+    return attachments;
+  },
+
+  notes: async (root, _, { db, casaId }) => {
+    const notes = await db.task.findUniqueOrThrow({ where: { id: root.id, casaId } }).notes();
+    return notes;
+  },
 }

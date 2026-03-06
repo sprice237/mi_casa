@@ -24,6 +24,7 @@ model Attachment {
   updatedAt DateTime @updatedAt @db.Timestamptz
 
   equipments Equipment[]
+  tasks      Task[]
 
   @@index([casaId])
 }
@@ -66,6 +67,7 @@ model Note {
   createdAt DateTime @default(now()) @db.Timestamptz
 
   equipments Equipment[]
+  tasks      Task[]
 }
 
 model Project {
@@ -124,6 +126,8 @@ model Task {
   projectId   String?    @db.Uuid
   project     Project?   @relation(fields: [projectId], references: [id])
 
+  attachments     Attachment[]
+  notes           Note[]
   taskTransitions TaskTransition[]
 
   @@index([recurringTaskId, createdAt(sort: Desc)])

@@ -4,4 +4,6 @@ type Task {
   status: TaskStatus!
   equipment: Equipment
   project: Project
+  attachments: [Attachment!]!
+  notes: [Note!]!
 }
