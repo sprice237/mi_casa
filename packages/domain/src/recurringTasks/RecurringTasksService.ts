@@ -61,6 +61,36 @@ export class RecurringTasksService {
         name: data.name ?? Prisma.skip,
         rule: data.rule ?? Prisma.skip,
         startDate: data.startDate ?? Prisma.skip,
+        ...(data.attachmentIds && {
+          attachments: {
+            ...(data.attachmentIds.attach && {
+              connect: data.attachmentIds.attach.map(attachmentId => ({
+                id: attachmentId
+              }))
+            }),
+            ...(data.attachmentIds.detach && {
+              disconnect: data.attachmentIds.detach.map(attachmentId => ({
+                id: attachmentId
+              }))
+            })
+
+          }
+        }),
+        ...(data.noteIds && {
+          notes: {
+            ...(data.noteIds.attach && {
+              connect: data.noteIds.attach.map(noteId => ({
+                id: noteId
+              }))
+            }),
+            ...(data.noteIds.detach && {
+              disconnect: data.noteIds.detach.map(noteId => ({
+                id: noteId
+              }))
+            })
+
+          }
+        })
       }
     });
     const recurringTask = shimRecurringTask(dbRecurringTask);

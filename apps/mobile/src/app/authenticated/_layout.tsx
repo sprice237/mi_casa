@@ -73,7 +73,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       />
       <DrawerItem
         label="Recurring tasks"
-        onPress={() => navigate('/authenticated/RecurringTasks/List')}
+        onPress={() => navigate('/authenticated/RecurringTasks/list/List')}
       />
       <DrawerItem
         label="Log out"

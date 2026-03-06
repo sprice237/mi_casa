@@ -10,4 +10,10 @@ fragment RecurringTask on RecurringTask {
     id
     name
   }
+  attachments {
+    ...Attachment
+  }
+  notes {
+    ...Note
+  }
 }

@@ -15,7 +15,17 @@ export const recurringTaskTypeResolver: AppResolvers['RecurringTask'] = {
     if (!root.projectId) return null;
     const project = await db.project.findUnique({ where: { id: root.projectId, casaId } });
     return project;
-  }
+  },
+
+  attachments: async (root, _, { db, casaId }) => {
+    const attachments = await db.recurringTask.findUniqueOrThrow({ where: { id: root.id, casaId } }).attachments();
+    return attachments;
+  },
+
+  notes: async (root, _, { db, casaId }) => {
+    const notes = await db.recurringTask.findUniqueOrThrow({ where: { id: root.id, casaId } }).notes();
+    return notes;
+  },
 }
 
 export const recurringTaskProjectionTypeResolver: AppResolvers['RecurringTaskProjection'] = {

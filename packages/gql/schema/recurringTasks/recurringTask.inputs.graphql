@@ -16,6 +16,8 @@ input UpdateRecurringTaskInput {
   startDate: Date
   equipmentId: NullableIdInput
   projectId: NullableIdInput
+  attachmentIds: UpdateIdListInput
+  noteIds: UpdateIdListInput
 }
 
 input RecurringTaskProjectionsFilterInput {

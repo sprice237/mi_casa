@@ -1,6 +1,6 @@
-import { getFragmentData, RecurringTaskFragmentDoc, RecurringTasksDocument } from '$/gql';
-import { ComponentProps } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { FragmentType, getFragmentData, RecurringTaskFragmentDoc, RecurringTasksDocument } from '$/gql';
+import { ComponentProps, Dispatch } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useQuery } from '@apollo/client/react';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { RecurringTasksListItem } from './RecurringTasksListItem';
@@ -14,9 +14,10 @@ const ROW_HEIGHT = 60;
 
 type RecurringTasksListProps = ComponentProps<typeof View> & {
   equipmentId?: string;
+  onRecurringTaskPress?: Dispatch<FragmentType<typeof RecurringTaskFragmentDoc>>;
 }
 
-export const RecurringTasksList = ({ equipmentId, ...props }: RecurringTasksListProps) => {
+export const RecurringTasksList = ({ equipmentId, onRecurringTaskPress, ...props }: RecurringTasksListProps) => {
   const { value: isCreateModalVisible, setTrue: showCreateModal, setFalse: hideCreateModal } = useFlagState();
   const { data, refetch, loading } = useQuery(RecurringTasksDocument, { variables: { filter: { equipmentId: equipmentId ?? null } } });
   const recurringTasks = data?.recurringTasks;
@@ -34,9 +35,13 @@ export const RecurringTasksList = ({ equipmentId, ...props }: RecurringTasksList
           data={recurringTasks}
           keyExtractor={(recurringTaskFragment) => getFragmentData(RecurringTaskFragmentDoc, recurringTaskFragment).id}
           ItemSeparatorComponent={Border}
-          renderItem={({ item: task }) => (
-            <RecurringTasksListItem recurringTask={task} rowHeight={ROW_HEIGHT} />
-          )}
+          renderItem={({ item: recurringTask }) => onRecurringTaskPress ?
+            (
+              <Pressable onPress={() => onRecurringTaskPress(recurringTask)}>
+                <RecurringTasksListItem recurringTask={recurringTask} rowHeight={ROW_HEIGHT} />
+              </Pressable>
+            ) : <RecurringTasksListItem recurringTask={recurringTask} rowHeight={ROW_HEIGHT} />
+          }
           renderHiddenItem={({ item: recurringTask }, rowMap) => (
             <RecurringTasksListItemActions itemWidth={ROW_HEIGHT} recurringTask={recurringTask}
               onPress={() => rowMap[getFragmentData(RecurringTaskFragmentDoc, recurringTask).id].closeRow()}

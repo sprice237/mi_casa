@@ -23,8 +23,9 @@ model Attachment {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
-  equipments Equipment[]
-  tasks      Task[]
+  equipments     Equipment[]
+  recurringTasks RecurringTask[]
+  tasks          Task[]
 
   @@index([casaId])
 }
@@ -66,8 +67,9 @@ model Note {
   content   String
   createdAt DateTime @default(now()) @db.Timestamptz
 
-  equipments Equipment[]
-  tasks      Task[]
+  equipments     Equipment[]
+  recurringTasks RecurringTask[]
+  tasks          Task[]
 }
 
 model Project {
@@ -97,7 +99,9 @@ model RecurringTask {
   projectId   String?    @db.Uuid
   project     Project?   @relation(fields: [projectId], references: [id])
 
-  tasks Task[]
+  attachments Attachment[]
+  notes       Note[]
+  tasks       Task[]
 
   /**
    * rule

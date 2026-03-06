@@ -1,0 +1,5 @@
+query RecurringTask($recurringTaskId: ID!) {
+  recurringTask(recurringTaskId: $recurringTaskId) {
+    ...RecurringTask
+  }
+}
