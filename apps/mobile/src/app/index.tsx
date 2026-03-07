@@ -5,11 +5,11 @@ import { LogBox } from "react-native";
 // LogBox.ignoreAllLogs();
 LogBox.ignoreLogs(['Failed prop type: Invalid prop `textStyle` of type `array` supplied to `Cell`, expected `object`.'])
 
-export default function Index() {
-  const username = useAuthStore((state) => state.username);
-  const apiUri = useAuthStore((state) => state.apiUri);
 
-  return !!username && !!apiUri ? (
+export default function Index() {
+  const auth = useAuthStore((state) => state.auth);
+
+  return !!auth ? (
     <Redirect href="/authenticated" />
   ) : (
     <Redirect href="/unauthenticated" />
