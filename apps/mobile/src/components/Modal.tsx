@@ -2,7 +2,7 @@ import { DispatchWithoutAction, ReactNode } from 'react';
 import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import RNModal from 'react-native-modal'
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { DismissKeyboardAvoidingView } from '$/util';
+import { DismissKeyboardAvoidingView } from '$/util/util';
 
 type ModalProps = {
   title?: string;

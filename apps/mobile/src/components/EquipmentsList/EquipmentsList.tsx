@@ -7,7 +7,7 @@ import { EquipmentsListItem } from './EquipmentsListItem';
 import { Border } from './Border';
 import { EquipmentsListItemActions } from './EquipmentsListItemActions';
 import { AddTaskButton } from '../AddTaskButton';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { EquipmentEditModal } from '../EquipmentEditModal';
 
 const ROW_HEIGHT = 60;

@@ -7,7 +7,7 @@ import { ProjectsListItem } from './ProjectsListItem';
 import { Border } from './Border';
 import { ProjectsListItemActions } from './ProjectsListItemActions';
 import { AddTaskButton } from '../AddTaskButton';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { ProjectEditModal } from '../ProjectEditModal';
 
 const ROW_HEIGHT = 60;

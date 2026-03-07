@@ -7,7 +7,7 @@ import { TaskListItem } from './TasksListItem';
 import { Border } from './Border';
 import { TaskListItemActions } from './TasksListItemActions';
 import { AddTaskButton } from '../AddTaskButton';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { CreateOrUpdateTaskModal } from '../CreateOrUpdateTaskModal';
 
 const ROW_HEIGHT = 60;

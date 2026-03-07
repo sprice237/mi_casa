@@ -1,6 +1,6 @@
 import { Dispatch, useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { Modal } from './Modal';
 import { StyledTextInput } from './StyledTextInput';
 import { StyledButton } from './StyledButton';

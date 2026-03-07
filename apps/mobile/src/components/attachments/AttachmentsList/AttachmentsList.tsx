@@ -4,7 +4,7 @@ import { Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native'
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { Border } from './Border';
 import { AddTaskButton } from '../../AddTaskButton';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { AttachmentCreateModal } from '../AttachmentCreateModal';
 import { AttachmentsListItem } from './AttachmentsListItem';
 import { AttachmentsListItemActions } from './AttachmentsListItemActions';

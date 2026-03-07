@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client/react';
 import { DispatchWithoutAction } from 'react';
 import { EditButton } from '../../EditButton';
 import { NoteEditModal } from '../NoteEditModal';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 
 type NotesListItemActionsProps = {
   itemWidth: number;

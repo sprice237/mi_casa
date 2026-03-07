@@ -4,7 +4,7 @@ import { EditButton } from '../EditButton';
 import { FragmentType, getFragmentData, DeleteProjectDocument, ProjectFragmentDoc } from '$/gql';
 import { useMutation } from '@apollo/client/react';
 import { Dispatch } from 'react';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { ProjectEditModal } from '../ProjectEditModal';
 
 type ProjectsListItemActionsProps = {

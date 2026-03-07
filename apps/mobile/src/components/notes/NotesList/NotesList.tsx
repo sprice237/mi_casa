@@ -6,7 +6,7 @@ import { NotesListItem } from './NotesListItem';
 import { Border } from './Border';
 import { NotesListItemActions } from './NotesListItemActions';
 import { AddTaskButton } from '../../AddTaskButton';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { NoteEditModal } from '../NoteEditModal';
 
 const ROW_HEIGHT = 60;

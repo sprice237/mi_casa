@@ -7,7 +7,7 @@ import { RecurringTasksListItem } from './RecurringTasksListItem';
 import { Border } from './Border';
 import { RecurringTasksListItemActions } from './RecurringTasksListItemActions';
 import { AddTaskButton } from '../AddTaskButton';
-import { useFlagState } from '$/util';
+import { useFlagState } from '$/util/util';
 import { RecurringTaskEditModal } from '../RecurringTaskEditModal';
 
 const ROW_HEIGHT = 60;

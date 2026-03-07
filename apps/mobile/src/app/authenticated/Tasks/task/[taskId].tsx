@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 import { getFragmentData, TaskDocument, TaskFragmentDoc, UpdateTaskDocument } from '$/gql';
 import { useForm } from '@tanstack/react-form';
-import { useFormAutoSubmitEffect } from '$/util';
+import { useFormAutoSubmitEffect } from '$/util/util';
 import { useState } from 'react';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { TabRow } from '$/components/TabRow';
