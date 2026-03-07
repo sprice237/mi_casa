@@ -17,7 +17,7 @@ So I think the way to go is to create a private repo and we'll just need to reme
 To retrieve an auth token and authenticate the docker client:
 
 ```
-aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 038462757834.dkr.ecr.us-east-2.amazonaws.com
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 038462757834.dkr.ecr.us-east-1.amazonaws.com
 ```
 
 When building the container, make sure to tag it with the path we named the ECR repository:

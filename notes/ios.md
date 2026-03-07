@@ -39,3 +39,9 @@ Can use EAS submit, but this still seems to use their cloud build service, which
 Trying Transporter instead: https://apps.apple.com/us/app/transporter/id1450874784
 
 WAY faster. It's a GUI app though, so I'll still need a CLI solution. Apparently you can use fastlane for this.
+
+`fastlane pilot upload --ipa /path/to/ipa`
+
+This triggers an error. Apparently you need an app specific password. At first I thought by "app-specific" they meant my app, but I actually think they mean fastlane.
+
+`FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=ztjw-ewqo-nfma-zzmi fastlane pilot upload --ipa /path/to/ipa`
