@@ -1,5 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 import { usePushNotifications } from "$/util/notifications";
+import { FullScreenLoader } from '$/components/FullScreenLoader';
 
 type AppNotificationsProviderProps = {
   children?: ReactNode
@@ -15,7 +16,7 @@ export const AppNotificationsProvider = ({ children }: AppNotificationsProviderP
   }, [pushNotificationsError])
 
   if (!pushNotificationsLoaded) {
-    return null;
+    return <FullScreenLoader message="Loading AppNotificationsProvider..." />;
   }
 
   return children;

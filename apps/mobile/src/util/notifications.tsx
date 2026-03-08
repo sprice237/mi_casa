@@ -62,11 +62,10 @@ export const usePushNotifications = () => {
   const [error, setError] = useState<Error | unknown>();
   const [expoPushToken, setExpoPushToken] = useState<string>();
 
-  if (!deviceStore.isLoaded) {
-    throw new Error('Device store is not available');
-  }
-
   useEffect(() => {
+    if (!deviceStore.isLoaded) {
+      console.warn('deviceStore is not available')
+    }
     const abortController = new AbortController();
     const abortSignal = abortController.signal;
 
@@ -151,7 +150,7 @@ export const usePushNotifications = () => {
       notificationListener.remove();
       responseListener.remove();
     };
-  }, []);
+  }, [deviceStore.isLoaded, deviceStore.deviceId]);
 
   return { loaded, error, expoPushToken };
 }

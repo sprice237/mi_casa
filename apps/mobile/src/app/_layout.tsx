@@ -5,8 +5,9 @@ import { useDeviceStore } from '$/stores/deviceStore';
 
 export default function RootLayout() {
   const deviceStoreLoaded = useDeviceStore(x => x.isLoaded);
+  const authStoreLoaded = useDeviceStore(x => x.isLoaded);
 
-  const loaded = deviceStoreLoaded;
+  const loaded = deviceStoreLoaded && authStoreLoaded;
 
   return (
     <SplashGuard loaded={loaded}>

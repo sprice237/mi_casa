@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware"
 import * as SecureStore from 'expo-secure-store';
 
 type State = {
+  isLoaded: boolean;
   auth: {
     token: string;
     username: string;
@@ -16,6 +17,7 @@ type Action = {
 
 export const useAuthStore = create<State & Action>()(persist(
   (set) => ({
+    isLoaded: false,
     auth: null,
     updateAuth: (auth) => set(() => ({ auth })),
   }),
@@ -28,7 +30,7 @@ export const useAuthStore = create<State & Action>()(persist(
       getItem: async (name) => {
         const authRaw = await SecureStore.getItemAsync(`${name}.auth`);
         const auth = authRaw && authRaw.length ? JSON.parse(authRaw) : null
-        return { state: { auth } };
+        return { state: { auth, isLoaded: true } };
       },
       setItem: async (name, value) => {
         const authRaw = value.state.auth ? JSON.stringify(value.state.auth) : ''
