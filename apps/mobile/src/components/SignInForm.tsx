@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react-native'
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { StyledButton } from '$/components/StyledButton';
@@ -51,7 +52,7 @@ export const SignInForm = () => {
             return;
           }
 
-          console.error(`Received HTTP error: ${res.status}`);
+          Sentry.captureException(new Error(`Received HTTP error: ${res.status}`))
           Alert.alert('Login error', `Received HTTP error: ${res.status}`);
           return;
         }
@@ -67,7 +68,7 @@ export const SignInForm = () => {
           username: value.username
         });
       } catch (e) {
-        console.error(e);
+        Sentry.captureException(e);
         if (e instanceof Error) {
           Alert.alert('Login error', `${e.name}: ${e.message}`);
         } else {

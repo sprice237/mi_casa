@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react-native';
 import { useEffect, useState } from 'react';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -17,14 +18,6 @@ Notifications.setNotificationHandler({
 });
 
 async function getExpoPushToken() {
-  if (!Device.isDevice) {
-    throw new Error('Must use physical device for push notifications');
-  }
-
-  if (Constants.executionEnvironment === ExecutionEnvironment.StoreClient) {
-    throw new Error('Cannot use notifications with ExpoGo');
-  }
-
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
 
@@ -125,6 +118,7 @@ export const usePushNotifications = () => {
           return;
         }
 
+        Sentry.captureException(error);
         setError(error);
       } finally {
         if (abortSignal.aborted) {

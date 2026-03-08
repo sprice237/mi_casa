@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react-native';
 import { Dispatch, DispatchWithoutAction, useState } from 'react';
 import { Alert, Button, StyleSheet, View } from 'react-native';
 import { Modal } from '../Modal';
@@ -43,12 +44,13 @@ export const AttachmentCreateModal = ({ onClose, onCreate }: AttachmentCreateMod
 
       if (asset.mimeType !== 'image/jpeg') {
         Alert.alert('Error', `Cannot handle file of type ${asset.mimeType}`);
+        Sentry.captureException(new Error(`Cannot handle file of type ${asset.mimeType}`));
         return;
       }
 
       setImagePickerAsset(asset);
     } catch (e) {
-      console.error(e);
+      Sentry.captureException(new Error(`Could not open camera`));
       Alert.alert('Error', 'Could not open camera');
     }
   };
@@ -78,6 +80,7 @@ export const AttachmentCreateModal = ({ onClose, onCreate }: AttachmentCreateMod
 
     if (asset.mimeType !== 'image/jpeg') {
       Alert.alert('Error', `Cannot handle file of type ${asset.mimeType}`);
+      Sentry.captureException(new Error(`Cannot handle file of type ${asset.mimeType}`));
       return;
     }
 
@@ -113,6 +116,7 @@ export const AttachmentCreateModal = ({ onClose, onCreate }: AttachmentCreateMod
 
     if (!res.ok) {
       Alert.alert('Error', 'The attachment was not added');
+      Sentry.captureException(new Error(`Got ${res.status} when attempting to upload attachment`));
       return;
     }
 

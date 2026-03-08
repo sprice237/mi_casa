@@ -38,7 +38,15 @@
       "expo-router",
       "expo-secure-store",
       "expo-image-picker",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "mi-casa-mobile",
+          "organization": "seanpriceio"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

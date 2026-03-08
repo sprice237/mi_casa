@@ -16,8 +16,8 @@ type Action = {
 export const useEndpointsStore = create<State & Action>()(
   persist(
     (set) => ({
-      apiUri: process.env.EXPO_PUBLIC_DEFAULT_API_URI ?? 'https://rctrnsnrimtuuomvpnfrp7tedm0zjicv.lambda-url.us-east-1.on.aws/',
-      authApiUri: process.env.EXPO_PUBLIC_DEFAULT_AUTH_API_URI ?? 'https://qywunyqcsyvqhbv3l5e6fpfkci0frmsz.lambda-url.us-east-1.on.aws/',
+      apiUri: process.env.EXPO_PUBLIC_DEFAULT_API_URI ?? '',
+      authApiUri: process.env.EXPO_PUBLIC_DEFAULT_AUTH_API_URI ?? '',
       updateApiUri: (apiUri) => set(() => ({ apiUri })),
       updateAuthApiUri: (authApiUri) => set(() => ({ authApiUri })),
     }),

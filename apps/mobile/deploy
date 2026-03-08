@@ -2,6 +2,7 @@
 set -e
 
 export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=ztjw-ewqo-nfma-zzmi 
+export SENTRY_AUTH_TOKEN=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
 
 TMP_DIR=$(mktemp -d)
 IPA_PATH="$TMP_DIR/mi_casa.ipa"
@@ -16,7 +17,7 @@ trap 'rm -rf "$TMP_DIR"' EXIT SIGINT SIGTERM
 pushd $(dirname "$0")
 
 echo "Running expo prebuild..."
-npx expo prebuild
+npx expo prebuild --clean
 
 echo "Running eas build..."
 npx eas build -p ios --local --profile production --output "$IPA_PATH"
