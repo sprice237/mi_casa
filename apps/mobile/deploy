@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=ztjw-ewqo-nfma-zzmi 
+
+TMP_DIR=$(mktemp -d)
+IPA_PATH="$TMP_DIR/mi_casa.ipa"
+
+if [ "$?" -ne 0 ]; then
+    echo "Failed to create temporary file" >&2
+    exit 1
+fi
+trap 'rm -rf "$TMP_DIR"' EXIT SIGINT SIGTERM
+
+
+pushd $(dirname "$0")
+
+echo "Running expo prebuild..."
+npx expo prebuild
+
+echo "Running eas build..."
+npx eas build -p ios --local --profile production --output "$IPA_PATH"
+
+echo "Running fastlane..."
+fastlane pilot upload --ipa "$IPA_PATH"
