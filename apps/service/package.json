@@ -15,7 +15,9 @@
     "@mi_casa/domain": "*",
     "@mi_casa/gql": "*",
     "@types/node": "20.17.10",
+    "commander": "^7.2.0",
     "date-fns": "4.1.0",
+    "expo-server-sdk": "^6.0.0",
     "lodash": "4.17.21",
     "zod": "3.23.8"
   },

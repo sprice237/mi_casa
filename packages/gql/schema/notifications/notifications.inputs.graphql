@@ -1,0 +1,5 @@
+input ReportExpoNotificationTokenInput {
+  expoPushTokenToken: String!
+  deviceId: ID!
+  platform: ExpoNotificationPlatform!
+}

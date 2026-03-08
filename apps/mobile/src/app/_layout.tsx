@@ -1,10 +1,12 @@
 import { Stack } from 'expo-router';
-import { useState } from 'react';
 import 'react-native-reanimated';
 import { SplashGuard } from '../components/SplashGuard';
+import { useDeviceStore } from '$/stores/deviceStore';
 
 export default function RootLayout() {
-  const [loaded] = useState(true);
+  const deviceStoreLoaded = useDeviceStore(x => x.isLoaded);
+
+  const loaded = deviceStoreLoaded;
 
   return (
     <SplashGuard loaded={loaded}>

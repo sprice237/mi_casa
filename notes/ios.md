@@ -1,4 +1,8 @@
 # iOS
+## When in doubt
+
+Run: `npx expo prebuild --clean`
+
 ## Running on physical device
 
 `npm run ios -- --device` or `npx expo run:ios --device`

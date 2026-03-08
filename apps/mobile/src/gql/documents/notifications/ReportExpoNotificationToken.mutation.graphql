@@ -1,0 +1,3 @@
+mutation ReportExpoNotificationToken($input: ReportExpoNotificationTokenInput!) {
+  reportExpoNotificationToken(input: $input) 
+}

@@ -8,6 +8,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ExpoNotificationPlatform {
+  ANDROID
+  IOS
+}
+
 enum TaskStatus {
   COMPLETE
   IN_PROGRESS
@@ -36,14 +41,15 @@ model Casa {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 
-  attachments     Attachment[]
-  equipment       Equipment[]
-  notes           Note[]
-  projects        Project[]
-  recurringTasks  RecurringTask[]
-  tasks           Task[]
-  users           User[]
-  taskTransitions TaskTransition[]
+  attachments            Attachment[]
+  equipment              Equipment[]
+  notes                  Note[]
+  projects               Project[]
+  recurringTasks         RecurringTask[]
+  tasks                  Task[]
+  users                  User[]
+  taskTransitions        TaskTransition[]
+  expoNotificationTokens ExpoNotificationToken[]
 }
 
 model Equipment {
@@ -58,6 +64,26 @@ model Equipment {
   recurringTasks RecurringTask[]
   tasks          Task[]
   notes          Note[]
+}
+
+model ExpoNotificationToken {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  userId   String @db.Uuid
+  user     User   @relation(fields: [userId], references: [id])
+  deviceId String
+
+  casaId String @db.Uuid
+  casa   Casa   @relation(fields: [casaId], references: [id])
+
+  platform      ExpoNotificationPlatform
+  expoPushToken String
+  createdAt     DateTime                 @default(now()) @db.Timestamptz
+
+  @@unique([deviceId])
+  @@unique([expoPushToken])
+  @@index([userId])
+  @@index([casaId])
 }
 
 model Note {
@@ -156,7 +182,9 @@ model User {
   username String @unique @db.Citext
   password String
 
-  casaId          String           @db.Uuid
-  casa            Casa             @relation(fields: [casaId], references: [id])
-  taskTransitions TaskTransition[]
+  casaId String @db.Uuid
+  casa   Casa   @relation(fields: [casaId], references: [id])
+
+  taskTransitions        TaskTransition[]
+  expoNotificationTokens ExpoNotificationToken[]
 }

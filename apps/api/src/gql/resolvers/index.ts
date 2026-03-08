@@ -7,6 +7,7 @@ import { createEquipmentMutationResolver, deleteEquipmentMutationResolver, equip
 import { createProjectMutationResolver, deleteProjectMutationResolver, projectQueryResolver, projectsQueryResolver, projectTypeResolver, updateProjectMutationResolver } from "./projects/index.js";
 import { attachmentQueryResolver, attachmentTypeResolver, createAttachmentMutationResolver, createAttachmentTypeResolver, deleteAttachmentMutationResolver, updateAttachmentMutationResolver } from "./attachments/index.js";
 import { createNoteMutationResolver, deleteNoteMutationResolver, noteTypeResolver, updateNoteMutationResolver } from "./notes/index.js";
+import { reportExpoNotificationTokenResolver } from "./notifications/index.js";
 
 
 export const resolvers: AppResolvers = {
@@ -33,6 +34,7 @@ export const resolvers: AppResolvers = {
     createNote: createNoteMutationResolver,
     updateNote: updateNoteMutationResolver,
     deleteNote: deleteNoteMutationResolver,
+    reportExpoNotificationToken: reportExpoNotificationTokenResolver,
     createProject: createProjectMutationResolver,
     updateProject: updateProjectMutationResolver,
     deleteProject: deleteProjectMutationResolver,
