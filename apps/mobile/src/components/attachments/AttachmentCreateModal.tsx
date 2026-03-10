@@ -29,7 +29,6 @@ export const AttachmentCreateModal = ({ onClose, onCreate }: AttachmentCreateMod
     try {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: 'images',
-        allowsEditing: true,
       });
 
       if (result.canceled) {
