@@ -46,7 +46,22 @@ export class RecurringTasksService {
   }
 
   async create({ data, tenant }: { data: CreateRecurringTaskInput, tenant: Tenant }) {
-    const dbRecurringTask = await this.db.recurringTask.create({ data: { ...data, casaId: tenant.casaId } });
+    const dbRecurringTask = await this.db.recurringTask.create({
+      data: {
+        id: data.id,
+        casa: { connect: { id: tenant.casaId } },
+        name: data.name,
+        rule: data.rule,
+        startDate: data.startDate,
+        equipment: data.equipmentId ? { connect: { id: data.equipmentId } } : Prisma.skip,
+        project: data.projectId ? { connect: { id: data.projectId } } : Prisma.skip,
+        activityFeed: {
+          create: {
+            casaId: tenant.casaId
+          }
+        }
+      }
+    });
     const recurringTask = shimRecurringTask(dbRecurringTask);
     return recurringTask
   }
@@ -61,36 +76,8 @@ export class RecurringTasksService {
         name: data.name ?? Prisma.skip,
         rule: data.rule ?? Prisma.skip,
         startDate: data.startDate ?? Prisma.skip,
-        ...(data.attachmentIds && {
-          attachments: {
-            ...(data.attachmentIds.attach && {
-              connect: data.attachmentIds.attach.map(attachmentId => ({
-                id: attachmentId
-              }))
-            }),
-            ...(data.attachmentIds.detach && {
-              disconnect: data.attachmentIds.detach.map(attachmentId => ({
-                id: attachmentId
-              }))
-            })
-
-          }
-        }),
-        ...(data.noteIds && {
-          notes: {
-            ...(data.noteIds.attach && {
-              connect: data.noteIds.attach.map(noteId => ({
-                id: noteId
-              }))
-            }),
-            ...(data.noteIds.detach && {
-              disconnect: data.noteIds.detach.map(noteId => ({
-                id: noteId
-              }))
-            })
-
-          }
-        })
+        equipmentId: data.equipmentId ?? Prisma.skip,
+        projectId: data.projectId ?? Prisma.skip,
       }
     });
     const recurringTask = shimRecurringTask(dbRecurringTask);

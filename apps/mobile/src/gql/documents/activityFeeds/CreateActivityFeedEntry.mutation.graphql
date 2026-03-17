@@ -1,0 +1,5 @@
+mutation CreateActivityFeedEntry($input: CreateActivityFeedEntryInput!) {
+  createActivityFeedEntry(input: $input) {
+    ...ActivityFeedEntry
+  }
+}

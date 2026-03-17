@@ -32,8 +32,6 @@ export type UpdateRecurringTaskInput = {
   startDate?: Date;
   equipmentId?: string | null;
   projectId?: string | null;
-  attachmentIds?: { attach?: readonly string[], detach?: readonly string[] };
-  noteIds?: { attach?: readonly string[], detach?: readonly string[] };
 }
 
 export type RecurringTaskProjection = {

@@ -4,6 +4,4 @@ input CreateEquipmentInput {
 
 input UpdateEquipmentInput {
   name: String
-  attachmentIds: UpdateIdListInput
-  noteIds: UpdateIdListInput
 }

@@ -1,5 +1,0 @@
-type Note {
-  id: ID!
-  createdAt: DateTime!
-  content: String!
-}

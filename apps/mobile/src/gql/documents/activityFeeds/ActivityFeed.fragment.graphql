@@ -1,0 +1,6 @@
+fragment ActivityFeed on ActivityFeed {
+  id
+  entries {
+    ...ActivityFeedEntry
+  }
+}

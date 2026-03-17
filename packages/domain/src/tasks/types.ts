@@ -22,7 +22,5 @@ export type TaskUpdateData = {
   status?: TaskStatus;
   equipmentId?: string | null;
   projectId?: string | null;
-  attachmentIds?: { attach?: readonly string[], detach?: readonly string[] };
-  noteIds?: { attach?: readonly string[], detach?: readonly string[] };
   userId?: string;
 }

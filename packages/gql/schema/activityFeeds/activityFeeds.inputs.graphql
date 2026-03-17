@@ -1,0 +1,5 @@
+input CreateActivityFeedEntryInput {
+  activityFeedId: ID!
+  note: String
+  attachmentIds: [ID!]
+}

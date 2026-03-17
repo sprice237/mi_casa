@@ -1,0 +1,8 @@
+fragment ActivityFeedEntry on ActivityFeedEntry {
+  id
+  createdAt
+  note
+  attachments {
+    ...Attachment
+  }
+}

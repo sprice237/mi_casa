@@ -1,0 +1,11 @@
+type ActivityFeed {
+  id: ID!
+  entries: [ActivityFeedEntry!]!
+}
+
+type ActivityFeedEntry {
+  id: ID!
+  createdAt: DateTime!
+  note: String
+  attachments: [Attachment!]!
+}

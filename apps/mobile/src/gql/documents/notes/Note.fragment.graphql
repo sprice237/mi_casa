@@ -1,5 +1,0 @@
-fragment Note on Note {
-  id
-  createdAt
-  content
-}

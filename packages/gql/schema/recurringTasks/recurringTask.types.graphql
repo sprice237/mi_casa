@@ -4,8 +4,7 @@ type RecurringTask {
   rule: Json!
   equipment: Equipment
   project: Project
-  attachments: [Attachment!]!
-  notes: [Note!]!
+  activityFeedId: ID!
 }
 
 type RecurringTaskProjection {

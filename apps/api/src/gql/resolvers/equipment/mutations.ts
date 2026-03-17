@@ -5,7 +5,14 @@ export const createEquipmentMutationResolver: AppResolvers['Mutation']['createEq
   const equipment = await db.equipment.create({
     data: {
       name: input.name,
-      casaId,
+      casa: {
+        connect: { id: casaId }
+      },
+      activityFeed: {
+        create: {
+          casaId
+        }
+      }
     }
   });
   return equipment;
@@ -16,37 +23,6 @@ export const updateEquipmentMutationResolver: AppResolvers['Mutation']['updateEq
     where: { id: equipmentId, casaId },
     data: {
       name: input.name ?? Prisma.skip,
-      ...(input.attachmentIds && {
-        attachments: {
-          ...(input.attachmentIds.attach && {
-            connect: input.attachmentIds.attach.map(attachmentId => ({
-              id: attachmentId
-            }))
-          }),
-          ...(input.attachmentIds.detach && {
-            disconnect: input.attachmentIds.detach.map(attachmentId => ({
-              id: attachmentId
-            }))
-          })
-
-        }
-      }),
-      ...(input.noteIds && {
-        notes: {
-          ...(input.noteIds.attach && {
-            connect: input.noteIds.attach.map(noteId => ({
-              id: noteId
-            }))
-          }),
-          ...(input.noteIds.detach && {
-            disconnect: input.noteIds.detach.map(noteId => ({
-              id: noteId
-            }))
-          })
-
-        }
-      })
-
     }
   });
 

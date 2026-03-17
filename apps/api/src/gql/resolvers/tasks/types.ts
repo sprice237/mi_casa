@@ -4,6 +4,7 @@ export const taskTypeResolver: AppResolvers['Task'] = {
   id: (root) => root.id,
   name: (root) => root.name,
   status: (root) => root.status,
+  activityFeedId: (root) => root.activityFeedId,
 
   equipment: async (root, _, { db, casaId }) => {
     if (!root.equipmentId) return null;
@@ -15,15 +16,5 @@ export const taskTypeResolver: AppResolvers['Task'] = {
     if (!root.projectId) return null;
     const project = await db.project.findUnique({ where: { id: root.projectId, casaId } });
     return project;
-  },
-
-  attachments: async (root, _, { db, casaId }) => {
-    const attachments = await db.task.findUniqueOrThrow({ where: { id: root.id, casaId } }).attachments();
-    return attachments;
-  },
-
-  notes: async (root, _, { db, casaId }) => {
-    const notes = await db.task.findUniqueOrThrow({ where: { id: root.id, casaId } }).notes();
-    return notes;
   },
 }

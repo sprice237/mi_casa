@@ -7,8 +7,7 @@ import { useFormAutoSubmitEffect } from '$/util/util';
 import { useState } from 'react';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { TabRow } from '$/components/TabRow';
-import { RecurringTaskAttachmentsList } from '$/components/recurringTasks/RecurringTaskAttachmentsList';
-import { RecurringTaskNotesList } from '$/components/recurringTasks/RecurringTaskNotesList';
+import { ActivityFeed } from '$/components/activityFeed/ActivityFeed';
 
 interface RecurringTaskFormValues {
   name: string;
@@ -16,8 +15,7 @@ interface RecurringTaskFormValues {
 
 const tabs = [
   { key: 'details', label: 'Details' },
-  { key: 'notes', label: 'Notes' },
-  { key: 'attachments', label: 'Attachments' }
+  { key: 'activity', label: 'Activity' },
 ] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
@@ -68,11 +66,8 @@ export default function RecurringTask() {
         {tab === 'details' && (
           <View />
         )}
-        {tab === 'notes' && (
-          <RecurringTaskNotesList style={styles.flexOne} recurringTaskId={recurringTask.id} />
-        )}
-        {tab === 'attachments' && (
-          <RecurringTaskAttachmentsList style={styles.flexOne} recurringTaskId={recurringTask.id} />
+        {tab === 'activity' && (
+          <ActivityFeed style={styles.flexOne} activityFeedId={recurringTask.activityFeedId} />
         )}
       </View>
     </View>

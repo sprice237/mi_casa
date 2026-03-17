@@ -2,8 +2,7 @@ type Equipment {
   id: ID!
   name: String!
 
-  attachments: [Attachment!]!
+  activityFeedId: ID!
   recurringTasks: [RecurringTask!]!
-  notes: [Note!]!
   tasks: [Task!]!
 }

@@ -20,7 +20,8 @@ export const createAttachmentMutationResolver: AppResolvers['Mutation']['createA
       id,
       bucketKey: key,
       isReady: false,
-      casaId
+      casaId,
+      mimeType: input.contentType,
     }
   })
 

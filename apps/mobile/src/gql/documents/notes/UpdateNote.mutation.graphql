@@ -1,5 +1,0 @@
-mutation UpdateNote($noteId: ID!, $input: UpdateNoteInput!) {
-  updateNote(noteId: $noteId, input: $input) {
-    ...Note
-  }
-}

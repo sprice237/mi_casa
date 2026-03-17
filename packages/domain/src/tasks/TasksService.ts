@@ -30,11 +30,16 @@ export class TasksService {
     return await this.db.$transaction(async tx => {
       const task = await tx.task.create({
         data: {
+          casa: { connect: { id: tenant.casaId } },
           name: data.name,
           status: data.status,
-          equipmentId: data.equipmentId,
-          projectId: data.projectId,
-          casaId: tenant.casaId
+          equipment: data.equipmentId ? { connect: { id: data.equipmentId } } : Prisma.skip,
+          project: data.projectId ? { connect: { id: data.projectId } } : Prisma.skip,
+          activityFeed: {
+            create: {
+              casaId: tenant.casaId
+            }
+          }
         }
       });
 
@@ -71,37 +76,6 @@ export class TasksService {
           status: data.status !== undefined ? data.status : Prisma.skip,
           equipmentId: data.equipmentId !== undefined ? data.equipmentId : Prisma.skip,
           projectId: data.projectId !== undefined ? data.projectId : Prisma.skip,
-          ...(data.attachmentIds && {
-            attachments: {
-              ...(data.attachmentIds.attach && {
-                connect: data.attachmentIds.attach.map(attachmentId => ({
-                  id: attachmentId
-                }))
-              }),
-              ...(data.attachmentIds.detach && {
-                disconnect: data.attachmentIds.detach.map(attachmentId => ({
-                  id: attachmentId
-                }))
-              })
-
-            }
-          }),
-          ...(data.noteIds && {
-            notes: {
-              ...(data.noteIds.attach && {
-                connect: data.noteIds.attach.map(noteId => ({
-                  id: noteId
-                }))
-              }),
-              ...(data.noteIds.detach && {
-                disconnect: data.noteIds.detach.map(noteId => ({
-                  id: noteId
-                }))
-              })
-
-            }
-          })
-
         }
       });
 

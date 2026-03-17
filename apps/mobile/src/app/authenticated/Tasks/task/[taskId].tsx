@@ -7,8 +7,7 @@ import { useFormAutoSubmitEffect } from '$/util/util';
 import { useState } from 'react';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { TabRow } from '$/components/TabRow';
-import { TaskAttachmentsList } from '$/components/tasks/TaskAttachmentsList';
-import { TaskNotesList } from '$/components/tasks/TaskNotesList';
+import { ActivityFeed } from '$/components/activityFeed/ActivityFeed';
 
 interface TaskFormValues {
   name: string;
@@ -16,8 +15,7 @@ interface TaskFormValues {
 
 const tabs = [
   { key: 'details', label: 'Details' },
-  { key: 'notes', label: 'Notes' },
-  { key: 'attachments', label: 'Attachments' }
+  { key: 'activity', label: 'Activity' },
 ] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
@@ -43,11 +41,6 @@ export default function Task() {
           taskId,
           input: {
             name: value.name,
-            status: null,
-            equipmentId: null,
-            projectId: null,
-            attachmentIds: null,
-            noteIds: null,
           }
         }
       })
@@ -73,11 +66,8 @@ export default function Task() {
         {tab === 'details' && (
           <View />
         )}
-        {tab === 'notes' && (
-          <TaskNotesList style={styles.flexOne} taskId={task.id} />
-        )}
-        {tab === 'attachments' && (
-          <TaskAttachmentsList style={styles.flexOne} taskId={task.id} />
+        {tab === 'activity' && (
+          <ActivityFeed style={styles.flexOne} activityFeedId={task.activityFeedId} />
         )}
       </View>
     </View>

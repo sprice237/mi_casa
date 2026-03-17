@@ -1,3 +1,3 @@
 export interface NoteFormValues {
-  content: string;
+  note: string;
 }

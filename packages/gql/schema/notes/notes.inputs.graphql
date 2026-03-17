@@ -1,7 +1,0 @@
-input CreateNoteInput {
-  content: String!
-}
-
-input UpdateNoteInput {
-  content: String
-}

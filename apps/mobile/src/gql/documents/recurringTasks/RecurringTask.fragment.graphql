@@ -2,6 +2,7 @@ fragment RecurringTask on RecurringTask {
   id
   name
   rule
+  activityFeedId
   equipment {
     id
     name
@@ -9,11 +10,5 @@ fragment RecurringTask on RecurringTask {
   project {
     id
     name
-  }
-  attachments {
-    ...Attachment
-  }
-  notes {
-    ...Note
   }
 }

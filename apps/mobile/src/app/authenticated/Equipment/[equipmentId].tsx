@@ -6,11 +6,9 @@ import { EquipmentDocument, EquipmentFragmentDoc, getFragmentData, UpdateEquipme
 import { useFormAutoSubmitEffect } from '$/util/util';
 import { TabRow } from '$/components/TabRow';
 import { useState } from 'react';
-import { EquipmentNotesList } from '$/components/equipment/EquipmentNotesList';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
-import { TasksList } from '$/components/TasksList';
 import { RecurringTasksList } from '$/components/RecurringTasksList';
-import { EquipmentAttachmentsList } from '$/components/equipment/EquipmentAttachmentsList';
+import { ActivityFeed } from '$/components/activityFeed/ActivityFeed';
 
 interface EquipmentFormValues {
   name: string;
@@ -18,10 +16,8 @@ interface EquipmentFormValues {
 
 const tabs = [
   { key: 'details', label: 'Details' },
-  { key: 'notes', label: 'Notes' },
-  { key: 'tasks', label: 'Tasks' },
+  { key: 'activity', label: 'Activity' },
   { key: 'recurring-tasks', label: 'Recurring Tasks' },
-  { key: 'attachments', label: 'Attachments' }
 ] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
@@ -47,8 +43,6 @@ export default function Equipment() {
           equipmentId,
           input: {
             name: value.name,
-            attachmentIds: null,
-            noteIds: null,
           }
         }
       })
@@ -74,17 +68,11 @@ export default function Equipment() {
         {tab === 'details' && (
           <View />
         )}
-        {tab === 'notes' && (
-          <EquipmentNotesList style={styles.flexOne} equipmentId={equipment.id} />
-        )}
-        {tab === 'tasks' && (
-          <TasksList style={styles.flexOne} equipmentId={equipment.id} showAddTaskButton />
+        {tab === 'activity' && (
+          <ActivityFeed style={styles.flexOne} activityFeedId={equipment.activityFeedId} />
         )}
         {tab === 'recurring-tasks' && (
           <RecurringTasksList style={styles.flexOne} equipmentId={equipment.id} />
-        )}
-        {tab === 'attachments' && (
-          <EquipmentAttachmentsList style={styles.flexOne} equipmentId={equipment.id} />
         )}
       </View>
     </View>

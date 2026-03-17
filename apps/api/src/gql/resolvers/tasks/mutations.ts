@@ -24,14 +24,6 @@ export const updateTaskMutationResolver: AppResolvers['Mutation']['updateTask'] 
       status: input.status ?? undefined,
       equipmentId: input.equipmentId ? (input.equipmentId.id ?? null) : undefined,
       projectId: input.projectId ? (input.projectId.id ?? null) : undefined,
-      attachmentIds: input.attachmentIds ? {
-        attach: input.attachmentIds.attach ?? undefined,
-        detach: input.attachmentIds.detach ?? undefined
-      } : undefined,
-      noteIds: input.noteIds ? {
-        attach: input.noteIds.attach ?? undefined,
-        detach: input.noteIds.detach ?? undefined
-      } : undefined,
       userId: jwt.sub
     },
     tenant: { casaId }

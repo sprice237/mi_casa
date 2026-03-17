@@ -24,14 +24,6 @@ export const updateRecurringTaskMutationResolver: AppResolvers['Mutation']['upda
       startDate: input.startDate ?? undefined,
       equipmentId: input.equipmentId ? input.equipmentId.id : undefined,
       projectId: input.projectId ? input.projectId.id : undefined,
-      attachmentIds: input.attachmentIds ? {
-        attach: input.attachmentIds.attach ?? undefined,
-        detach: input.attachmentIds.detach ?? undefined
-      } : undefined,
-      noteIds: input.noteIds ? {
-        attach: input.noteIds.attach ?? undefined,
-        detach: input.noteIds.detach ?? undefined
-      } : undefined,
     },
     tenant: { casaId }
   });

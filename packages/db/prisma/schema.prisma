@@ -19,18 +19,43 @@ enum TaskStatus {
   READY_TO_BEGIN
 }
 
+model ActivityFeed {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId    String   @db.Uuid
+  casa      Casa     @relation(fields: [casaId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  entries        ActivityFeedEntry[]
+  equipment      Equipment[]
+  recurringTasks RecurringTask[]
+  tasks          Task[]
+}
+
+model ActivityFeedEntry {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId         String       @db.Uuid
+  casa           Casa         @relation(fields: [casaId], references: [id])
+  activityFeedId String       @db.Uuid
+  activityFeed   ActivityFeed @relation(fields: [activityFeedId], references: [id])
+  createdAt      DateTime     @default(now()) @db.Timestamptz
+  userId         String?      @db.Uuid
+  user           User?        @relation(fields: [userId], references: [id])
+
+  note        String?
+  attachments Attachment[]
+}
+
 model Attachment {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   casaId    String   @db.Uuid
   casa      Casa     @relation(fields: [casaId], references: [id])
   bucketKey String
   isReady   Boolean
+  mimeType  String
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
-  equipments     Equipment[]
-  recurringTasks RecurringTask[]
-  tasks          Task[]
+  activityFeedEntries ActivityFeedEntry[]
 
   @@index([casaId])
 }
@@ -41,9 +66,10 @@ model Casa {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 
+  activityFeeds          ActivityFeed[]
+  activityFeedEntries    ActivityFeedEntry[]
   attachments            Attachment[]
   equipment              Equipment[]
-  notes                  Note[]
   projects               Project[]
   recurringTasks         RecurringTask[]
   tasks                  Task[]
@@ -53,17 +79,17 @@ model Casa {
 }
 
 model Equipment {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  casaId    String   @db.Uuid
-  casa      Casa     @relation(fields: [casaId], references: [id])
-  name      String
-  createdAt DateTime @default(now()) @db.Timestamptz
-  updatedAt DateTime @updatedAt @db.Timestamptz
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId         String       @db.Uuid
+  casa           Casa         @relation(fields: [casaId], references: [id])
+  activityFeedId String       @db.Uuid
+  activityFeed   ActivityFeed @relation(fields: [activityFeedId], references: [id])
+  name           String
+  createdAt      DateTime     @default(now()) @db.Timestamptz
+  updatedAt      DateTime     @updatedAt @db.Timestamptz
 
-  attachments    Attachment[]
   recurringTasks RecurringTask[]
   tasks          Task[]
-  notes          Note[]
 }
 
 model ExpoNotificationToken {
@@ -86,18 +112,6 @@ model ExpoNotificationToken {
   @@index([casaId])
 }
 
-model Note {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  casaId    String   @db.Uuid
-  casa      Casa     @relation(fields: [casaId], references: [id])
-  content   String
-  createdAt DateTime @default(now()) @db.Timestamptz
-
-  equipments     Equipment[]
-  recurringTasks RecurringTask[]
-  tasks          Task[]
-}
-
 model Project {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   casaId    String   @db.Uuid
@@ -111,23 +125,23 @@ model Project {
 }
 
 model RecurringTask {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  casaId    String   @db.Uuid
-  casa      Casa     @relation(fields: [casaId], references: [id])
-  name      String
-  rule      Json
-  startDate DateTime @db.Date
-  createdAt DateTime @default(now()) @db.Timestamptz
-  updatedAt DateTime @updatedAt @db.Timestamptz
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId         String       @db.Uuid
+  casa           Casa         @relation(fields: [casaId], references: [id])
+  activityFeedId String       @db.Uuid
+  activityFeed   ActivityFeed @relation(fields: [activityFeedId], references: [id])
+  name           String
+  rule           Json
+  startDate      DateTime     @db.Date
+  createdAt      DateTime     @default(now()) @db.Timestamptz
+  updatedAt      DateTime     @updatedAt @db.Timestamptz
 
   equipmentId String?    @db.Uuid
   equipment   Equipment? @relation(fields: [equipmentId], references: [id])
   projectId   String?    @db.Uuid
   project     Project?   @relation(fields: [projectId], references: [id])
 
-  attachments Attachment[]
-  notes       Note[]
-  tasks       Task[]
+  tasks Task[]
 
   /**
    * rule
@@ -140,13 +154,15 @@ model RecurringTask {
 }
 
 model Task {
-  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  casaId    String     @db.Uuid
-  casa      Casa       @relation(fields: [casaId], references: [id])
-  name      String
-  status    TaskStatus
-  createdAt DateTime   @default(now()) @db.Timestamptz
-  updatedAt DateTime   @updatedAt @db.Timestamptz
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId         String       @db.Uuid
+  casa           Casa         @relation(fields: [casaId], references: [id])
+  activityFeedId String       @db.Uuid
+  activityFeed   ActivityFeed @relation(fields: [activityFeedId], references: [id])
+  name           String
+  status         TaskStatus
+  createdAt      DateTime     @default(now()) @db.Timestamptz
+  updatedAt      DateTime     @updatedAt @db.Timestamptz
 
   recurringTaskId String?        @db.Uuid
   recurringTask   RecurringTask? @relation(fields: [recurringTaskId], references: [id])
@@ -156,8 +172,6 @@ model Task {
   projectId   String?    @db.Uuid
   project     Project?   @relation(fields: [projectId], references: [id])
 
-  attachments     Attachment[]
-  notes           Note[]
   taskTransitions TaskTransition[]
 
   @@index([recurringTaskId, createdAt(sort: Desc)])
@@ -187,4 +201,5 @@ model User {
 
   taskTransitions        TaskTransition[]
   expoNotificationTokens ExpoNotificationToken[]
+  activityFeedEntries    ActivityFeedEntry[]
 }

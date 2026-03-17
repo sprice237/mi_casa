@@ -20,8 +20,9 @@ const config: CodegenConfig = {
           //   Time: 'Date',
         },
         mappers: {
-          Equipment: '../mappers.js#EquipmentMapper',
+          ActivityFeedEntry: '../mappers.js#ActivityFeedEntryMapper',
           Attachment: '../mappers.js#AttachmentMapper',
+          Equipment: '../mappers.js#EquipmentMapper',
           Project: '../mappers.js#ProjectMapper',
           RecurringTask: '../mappers.js#RecurringTaskMapper',
           Task: '../mappers.js#TaskMapper',

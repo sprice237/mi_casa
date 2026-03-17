@@ -1,0 +1,5 @@
+query ActivityFeed($activityFeedId: ID!) {
+  activityFeed(activityFeedId: $activityFeedId) {
+    ...ActivityFeed
+  }
+}
