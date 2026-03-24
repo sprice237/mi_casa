@@ -40,12 +40,25 @@ export async function generateTasksForRecurringTasks({ db }: { db: PrismaClient 
         console.log('creating task');
         await db.task.create({
           data: {
-            casaId: recurringTask.casaId,
-            recurringTaskId: recurringTask.id,
+            casa: {
+              connect: { id: recurringTask.casaId }
+            },
+            recurringTask: {
+              connect: { id: recurringTask.id }
+            },
+            equipment: recurringTask.equipmentId ? {
+              connect: { id: recurringTask.equipmentId }
+            } : undefined,
+            project: recurringTask.projectId ? {
+              connect: { id: recurringTask.projectId }
+            } : undefined,
+            activityFeed: {
+              create: {
+                casaId: recurringTask.casaId,
+              }
+            },
             name: recurringTask.name,
             status: 'READY_TO_BEGIN',
-            equipmentId: recurringTask.equipmentId,
-            projectId: recurringTask.projectId
           }
         })
       } else {
