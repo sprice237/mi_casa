@@ -9,11 +9,12 @@ import { config } from "../config.js";
 
 const require = createRequire(import.meta.url);
 
-export function buildGqlServer({ db }: { db: PrismaClient }) {
+export function buildGqlServer({ url, db }: { url: string, db: PrismaClient }) {
   const typeDefs = readFileSync(require.resolve('@mi_casa/gql/schema.graphql'), 'utf8');
   const schema = createSchema<AppContext>({ typeDefs, resolvers });
 
   const yoga = createYoga<AppContext>({
+    graphqlEndpoint: url,
     schema,
     context: (context) => ({
       ...context,
