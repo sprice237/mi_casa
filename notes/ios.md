@@ -49,3 +49,9 @@ WAY faster. It's a GUI app though, so I'll still need a CLI solution. Apparently
 This triggers an error. Apparently you need an app specific password. At first I thought by "app-specific" they meant my app, but I actually think they mean fastlane.
 
 `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=ztjw-ewqo-nfma-zzmi fastlane pilot upload --ipa /path/to/ipa`
+
+## Troubleshooting: New splash screen not appearing on iOS
+
+For SDK 52 and earlier, in iOS development builds, launch screens can sometimes remain cached between builds, making it harder to test new images. Apple recommends clearing the derived data directory before rebuilding, this can be done with Expo CLI by running:
+
+npx expo run:ios --no-build-cache
