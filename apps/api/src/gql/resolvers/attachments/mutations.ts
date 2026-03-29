@@ -1,11 +1,7 @@
 import { AppResolvers } from "../types.js";
-import { Prisma } from "@mi_casa/db/client";
-import { createPresignedPost } from "@aws-sdk/s3-presigned-post"
 import { randomUUID } from "node:crypto";
-import { config } from "../../../config.js";
 
-
-export const createAttachmentMutationResolver: AppResolvers['Mutation']['createAttachment'] = async (_, { input }, { db, s3, casaId }) => {
+export const createAttachmentMutationResolver: AppResolvers['Mutation']['createAttachment'] = async (_, { input }, { db, services: { resourceService }, casaId }) => {
   const acceptableContentTypes = new Set(['image/jpeg'] as const);
 
   if (!acceptableContentTypes.has(input.contentType as never)) {
@@ -25,17 +21,7 @@ export const createAttachmentMutationResolver: AppResolvers['Mutation']['createA
     }
   })
 
-  const { url, fields } = await createPresignedPost(s3, {
-    Bucket: config.AWS_BUCKET,
-    Key: key,
-    Conditions: [
-      ['eq', '$Content-Type', input.contentType],
-      ['content-length-range', 1, 10 * 1024 * 1024],
-    ],
-    Fields: {
-      'Content-Type': input.contentType
-    }
-  });
+  const { url, fields } = await resourceService.createPresignedPost(key, { contentType: input.contentType });
 
   return {
     id,

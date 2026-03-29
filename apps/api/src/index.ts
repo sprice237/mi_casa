@@ -2,20 +2,29 @@ import { config } from './config.js';
 import { db } from './db.js';
 import { buildGqlServer } from './gql/index.js';
 import fastify from 'fastify';
+import multipart from '@fastify/multipart';
 import { authPlugin } from './auth/index.js';
+import { resourcesPlugin } from './resources/index.js';
 
 async function main() {
   const yoga = buildGqlServer({ url: '/graphql', db })
 
   const app = fastify({
-    logger: true
+    logger: true,
+    bodyLimit: 10_485_760 // 10mb
   });
+
+  app.register(multipart);
 
   app.route({
     url: yoga.graphqlEndpoint,
     method: ['GET', 'POST', 'OPTIONS'],
     handler: (req, reply) => yoga.handleNodeRequestAndResponse(req, reply)
   });
+
+  if (config.STORAGE_TYPE === 'local') {
+    app.register(resourcesPlugin, { prefix: '/resources' });
+  }
 
   app.register(authPlugin, { prefix: '/auth' });
 

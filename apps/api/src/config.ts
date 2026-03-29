@@ -1,11 +1,23 @@
 import { z } from 'zod';
 
 export const config = z
-  .object({
-    PORT: z.coerce.number().default(8080),
-    DATABASE_URL: z.string(),
-    VERSION: z.string().optional(),
-    AWS_BUCKET: z.string(),
-    JWT_SECRET: z.string(),
-  })
+  .intersection(
+    z.object({
+      PORT: z.coerce.number().default(8080),
+      DATABASE_URL: z.string(),
+      VERSION: z.string().optional(),
+      JWT_SECRET: z.string(),
+    }),
+    z.discriminatedUnion('STORAGE_TYPE', [
+      z.object({
+        STORAGE_TYPE: z.literal('s3'),
+        STORAGE_S3_BUCKET: z.string(),
+      }),
+      z.object({
+        STORAGE_TYPE: z.literal('local'),
+        STORAGE_LOCAL_DIR: z.string(),
+        STORAGE_RESOURCE_BASE_URL: z.string(),
+      })
+    ])
+  )
   .parse(process.env);
