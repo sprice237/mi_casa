@@ -7,46 +7,73 @@ services:
       dockerfile: ./apps/api/Dockerfile.dev
     depends_on:
       - db
-      - localstack
     restart: unless-stopped
     working_dir: /app
     command: sh -c "npm i && npm run build -w packages --if-present && cd apps/api && npm start"
     volumes:
       - .:/app
-      - /app/node_modules
+      - npm:/app/node_modules
       - "${AWS_CRED_DIR:-/dev/null}:/root/.aws:ro"
       - "${STORAGE_LOCAL_DIR:-/dev/null}:/opt/storage"
-    ports:
-      - "${HOST_API_PORT}:8080"
     environment:
       - "DATABASE_URL=postgres://postgres:password@db/app"
       - "PORT=8080"
+    networks:
+      - api
+      - db
+
+  api-relay:
+    image: alpine/socat
+    command: "TCP-LISTEN:8080,fork,reuseaddr TCP:api:8080"
+    restart: unless-stopped
+    expose:
+      - "8080"
+    depends_on:
+      - api
+    ports:
+      - "${HOST_API_PORT}:8080"
+    networks:
+      - api
 
   db:
     image: postgres:17.7-alpine
     restart: unless-stopped
+    expose:
+      - "5432"
     environment:
       - "POSTGRES_PASSWORD=password"
       - "POSTGRES_DB=app"
-    ports:
-      - "127.0.0.1:5432:5432"
+    networks:
+      - db
     volumes:
       - db-data:/var/lib/postgresql/data
 
-  localstack:
-    image: localstack/localstack:latest
+  db-relay:
+    image: alpine/socat
+    command: "TCP-LISTEN:5432,fork,reuseaddr TCP:db:5432"
+    restart: unless-stopped
+    expose:
+      - "5432"
+    depends_on:
+      - db
     ports:
-      - "127.0.0.1:4566:4566"
+      - "127.0.0.1:5432:5432"
+    networks:
+      - db
+
+  cloudflare:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
     environment:
-      # - SERVICES=s3,sqs,lambda
-      - SERVICES=s3
-      # Set your Auth Token here for the Pro image (optional for Community)
-      # - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN} 
-    # volumes:
-      # Required for services like Lambda that need Docker features
-      # - "/var/run/docker.sock:/var/run/docker.sock" 
-      # Optional: for data persistence (Pro only)
-      # - "./volume:/var/lib/localstack" 
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - api
+
+networks:
+  api:
+  db:
       
 volumes:
+  npm:
   db-data:
