@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { RecurringTasksList } from '$/components/RecurringTasksList';
 import { ActivityFeed } from '$/components/activityFeed/ActivityFeed';
+import { TasksList } from '$/components/TasksList';
 
 interface EquipmentFormValues {
   name: string;
@@ -18,6 +19,7 @@ const tabs = [
   { key: 'details', label: 'Details' },
   { key: 'activity', label: 'Activity' },
   { key: 'recurring-tasks', label: 'Recurring Tasks' },
+  { key: 'tasks', label: 'Tasks' },
 ] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
@@ -73,6 +75,9 @@ export default function Equipment() {
         )}
         {tab === 'recurring-tasks' && (
           <RecurringTasksList style={styles.flexOne} equipmentId={equipment.id} />
+        )}
+        {tab === 'tasks' && (
+          <TasksList style={styles.flexOne} equipmentId={equipment.id} navigateOnTaskPress />
         )}
       </View>
     </View>

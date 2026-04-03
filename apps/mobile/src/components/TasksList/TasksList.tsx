@@ -9,6 +9,7 @@ import { TaskListItemActions } from './TasksListItemActions';
 import { AddTaskButton } from '../AddTaskButton';
 import { useFlagState } from '$/util/util';
 import { CreateOrUpdateTaskModal } from '../CreateOrUpdateTaskModal';
+import { useRouter } from 'expo-router';
 
 const ROW_HEIGHT = 60;
 
@@ -16,13 +17,20 @@ type EntriesListProps = ComponentProps<typeof View> & {
   status?: TaskStatus;
   showAddTaskButton?: boolean;
   equipmentId?: string;
-  onTaskPress?: Dispatch<FragmentType<typeof TaskFragmentDoc>>;
+  navigateOnTaskPress?: boolean;
 };
 
-export const TasksList = ({ status, showAddTaskButton, equipmentId, onTaskPress, ...props }: EntriesListProps) => {
+export const TasksList = ({ status, showAddTaskButton, navigateOnTaskPress, equipmentId, ...props }: EntriesListProps) => {
+  const navigation = useRouter();
+
   const { value: isCreateModalVisible, setTrue: showCreateModal, setFalse: hideCreateModal } = useFlagState();
   const { data, refetch, loading } = useQuery(TasksDocument, { variables: { filter: { status: status ?? null, equipmentId: equipmentId ?? null } } });
   const tasks = data?.tasks;
+
+  const doTaskPress = navigateOnTaskPress ? (taskFragment: FragmentType<typeof TaskFragmentDoc>) => {
+    const task = getFragmentData(TaskFragmentDoc, taskFragment);
+    navigation.navigate(`/authenticated/Tasks/task/${task.id}`)
+  } : undefined;
 
   return (
     <>
@@ -36,9 +44,9 @@ export const TasksList = ({ status, showAddTaskButton, equipmentId, onTaskPress,
           data={tasks}
           keyExtractor={(taskFragment) => getFragmentData(TaskFragmentDoc, taskFragment).id}
           ItemSeparatorComponent={Border}
-          renderItem={({ item: task }) => onTaskPress ?
+          renderItem={({ item: task }) => doTaskPress ?
             (
-              <Pressable onPress={() => onTaskPress(task)}>
+              <Pressable onPress={() => doTaskPress(task)}>
                 <TaskListItem task={task} rowHeight={ROW_HEIGHT} />
               </Pressable>
             ) : <TaskListItem task={task} rowHeight={ROW_HEIGHT} />
