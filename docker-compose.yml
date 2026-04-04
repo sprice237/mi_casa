@@ -22,6 +22,26 @@ services:
       - api
       - db
 
+  service:
+    build:
+      context: .
+      dockerfile: ./apps/service/Dockerfile.dev
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm i && npm run build -w packages --if-present && cd apps/service && npm start"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - "DATABASE_URL=postgres://postgres:password@db/app"
+      - "REDIS_URL=redis://redis:6379"
+    networks:
+      - db
+      - redis
+
   api-relay:
     image: alpine/socat
     command: "TCP-LISTEN:8080,fork,reuseaddr TCP:api:8080"
@@ -61,6 +81,54 @@ services:
     networks:
       - db
 
+  redis:
+    image: redis:7.4-alpine
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    command: redis-server --appendonly yes
+    networks:
+      - redis
+    volumes:
+      - redis_data:/data
+
+  redis-relay:
+    image: alpine/socat
+    command: "TCP-LISTEN:6379,fork,reuseaddr TCP:redis:6379"
+    restart: unless-stopped
+    expose:
+      - "6379"
+    depends_on:
+      - redis
+    ports:
+      - "6379:6379"
+
+  durabull:
+    image: ghcr.io/durabullhq/durabull:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DURABULL_AUTHLESS: "true"
+      DURABULL_ENV_CONNECTIONS: "true"
+      DURABULL_REDIS_URL_ENCRYPTION_KEY: "0207d5223113b2b2bf3d41b8d36d20cf2c6636e9843a17ab582a2fa9f30cb8b0"
+      DURABULL_REDIS_URL_MAIN: redis://redis:6379
+      DURABULL_REDIS_URL_MAIN_ENVIRONMENT: development
+      DURABULL_REDIS_URL_DEFAULT: MAIN
+      APP_BASE_URL: http://localhost:3000
+      VITE_PUBLIC_APP_URL: http://localhost:3000
+    networks:
+      - redis
+    volumes:
+      - durabull_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+
   cloudflare:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
@@ -73,7 +141,10 @@ services:
 networks:
   api:
   db:
+  redis:
       
 volumes:
   npm:
   db-data:
+  durabull_data:
+  redis_data:
