@@ -16,7 +16,8 @@ export default function Calendar() {
       input: {
         startDate: calendarDate,
         endDate: new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0),
-        recurringTaskIds: null
+        recurringTaskIds: null,
+        limit: 100,
       }
     }
   });
