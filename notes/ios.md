@@ -2,6 +2,7 @@
 ## When in doubt
 
 Run: `npx expo prebuild --clean`
+Also: `npx expo-doctor`
 
 ## Running on physical device
 
@@ -13,7 +14,12 @@ Need to sign https://github.com/expo/fyi/blob/main/setup-xcode-signing.md
 
 Can use Expo's cloud build service, or can do it locally
 
-`npx eas build --platform ios --local`
+`npx eas build --platform ios --local --clear-cache`
+
+I had to downgrade @sentry/react-native, and now it needs `SENTRY_DISABLE_AUTO_UPLOAD=true` to disable automatic uploading of sourcemaps, which I haven't configured
+For SOME REASON I can't just add this environment variable to any of the .env files. It has to be passed into the commandline like
+
+`SENTRY_DISABLE_AUTO_UPLOAD=true npx eas build --platform ios --local --clear-cache`
 
 https://docs.expo.dev/build-reference/local-builds/
 
