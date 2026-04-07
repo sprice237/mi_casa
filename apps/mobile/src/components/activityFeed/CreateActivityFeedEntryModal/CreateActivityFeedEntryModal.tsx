@@ -7,10 +7,9 @@ import { FragmentType, ActivityFeedEntryFragmentDoc, CreateActivityFeedEntryDocu
 import { useMutation } from '@apollo/client/react';
 import { useForm } from '@tanstack/react-form';
 import { NoteFormValues } from './form';
-import { ImagePickerAsset } from 'expo-image-picker';
 import { Image } from 'expo-image';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { launchCamera, useUploadImage } from './util';
+import { launchCamera, pickImage, useUploadImage } from './util';
 import { useFlagState } from '$/util/util';
 import { FullScreenLoader } from '$/components/FullScreenLoader';
 
@@ -25,7 +24,7 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
 
   const [createActivityFeedEntry] = useMutation(CreateActivityFeedEntryDocument);
   const uploadImage = useUploadImage();
-  const [imagePickerAssets, setImagePickerAssets] = useState<ImagePickerAsset[]>([]);
+  const [imagePickerAssets, setImagePickerAssets] = useState<{ mimeType: string, uri: string }[]>([]);
 
   const defaultValues: NoteFormValues = { note: '' };
   const form = useForm({
@@ -87,7 +86,17 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
     setImagePickerAssets([...imagePickerAssets, imagePickerAsset])
   }
 
-  const removeAsset = (imagePickerAssetToRemove: ImagePickerAsset) => {
+  const doPickImage = async () => {
+    const imagePickerAsset = await pickImage();
+
+    if (!imagePickerAsset) {
+      return;
+    }
+
+    setImagePickerAssets([...imagePickerAssets, imagePickerAsset])
+  }
+
+  const removeAsset = (imagePickerAssetToRemove: typeof imagePickerAssets[number]) => {
     setImagePickerAssets(prev => prev.filter(x => x !== imagePickerAssetToRemove));
   }
 
@@ -108,6 +117,7 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
           </View>
         ))}
         <Button onPress={doLaunchCamera} title="Launch Camera" />
+        <Button onPress={doPickImage} title="Pick image" />
         <Button onPress={form.handleSubmit} title="Submit" />
       </View>
     )} />
