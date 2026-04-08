@@ -1,3 +1,11 @@
+type TaskTransition {
+  id: ID!
+  createdAt: DateTime!
+  prevStatus: TaskStatus
+  nextStatus: TaskStatus!
+  performedBy: User
+}
+
 type Task {
   id: ID!
   name: String!
@@ -5,4 +13,5 @@ type Task {
   equipment: Equipment
   project: Project
   activityFeedId: ID!
+  transitions: [TaskTransition!]!
 }

@@ -11,4 +11,7 @@ fragment Task on Task {
     id
     name
   }
+  transitions {
+    ...TaskTransition
+  }
 }

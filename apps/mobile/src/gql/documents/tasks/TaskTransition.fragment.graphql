@@ -1,0 +1,9 @@
+fragment TaskTransition on TaskTransition {
+  id
+  createdAt
+  prevStatus
+  nextStatus
+  performedBy {
+    ...User
+  }
+}

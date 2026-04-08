@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
 import { TabRow } from '$/components/TabRow';
 import { ActivityFeed } from '$/components/activityFeed/ActivityFeed';
+import { TaskTransitionHistory } from '$/components/tasks/TaskTransitionHistory';
 
 interface TaskFormValues {
   name: string;
@@ -16,6 +17,7 @@ interface TaskFormValues {
 const tabs = [
   { key: 'details', label: 'Details' },
   { key: 'activity', label: 'Activity' },
+  { key: 'history', label: 'History' },
 ] as const;
 type Tab = typeof tabs[number];
 const getTabKey = (tab: Tab) => tab.key;
@@ -68,6 +70,9 @@ export default function Task() {
         )}
         {tab === 'activity' && (
           <ActivityFeed style={styles.flexOne} activityFeedId={task.activityFeedId} />
+        )}
+        {tab === 'history' && (
+          <TaskTransitionHistory style={styles.flexOne} transitions={task.transitions} />
         )}
       </View>
     </View>

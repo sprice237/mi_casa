@@ -17,4 +17,22 @@ export const taskTypeResolver: AppResolvers['Task'] = {
     const project = await db.project.findUnique({ where: { id: root.projectId, casaId } });
     return project;
   },
+
+  transitions: async (root, _, { db, casaId }) => {
+    return await db.taskTransition.findMany({
+      where: { taskId: root.id, casaId },
+      orderBy: { createdAt: 'asc' },
+    });
+  },
+}
+
+export const taskTransitionTypeResolver: AppResolvers['TaskTransition'] = {
+  id: (root) => root.id,
+  createdAt: (root) => root.createdAt,
+  prevStatus: (root) => root.prevStatus,
+  nextStatus: (root) => root.nextStatus,
+  performedBy: async (root, _, { db }) => {
+    if (!root.userId) return null;
+    return await db.user.findUnique({ where: { id: root.userId } });
+  },
 }

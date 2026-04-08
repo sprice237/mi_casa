@@ -26,6 +26,7 @@ const config: CodegenConfig = {
           Project: '../mappers.js#ProjectMapper',
           RecurringTask: '../mappers.js#RecurringTaskMapper',
           Task: '../mappers.js#TaskMapper',
+          TaskTransition: '../mappers.js#TaskTransitionMapper',
         }
       },
       plugins: [
