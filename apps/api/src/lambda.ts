@@ -3,7 +3,7 @@ import { buildGqlServer } from './gql/index.js';
 import type { LambdaFunctionURLEvent } from 'aws-lambda'
 import { pipeline } from 'stream/promises';
 
-const yoga = buildGqlServer({ db })
+const yoga = buildGqlServer({ db, url: '/graphql' })
 
 export const handler = awslambda.streamifyResponse(async function handler(
   event: LambdaFunctionURLEvent,

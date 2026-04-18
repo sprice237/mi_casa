@@ -23,11 +23,11 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 When building the container, make sure to tag it with the path we named the ECR repository:
 
 ```
-docker build -f apps/api/Dockerfile -t 038462757834.dkr.ecr.us-east-2.amazonaws.com/mi-casa/api:latest .
+docker buildx build -f apps/api/Dockerfile.awslambda --platform linux/arm64 --provenance=false -t 038462757834.dkr.ecr.us-east-1.amazonaws.com/mi-casa/api:latest .
 ```
 
 Push the container:
 
 ```
-docker push 038462757834.dkr.ecr.us-east-2.amazonaws.com/mi-casa/api:latest
+docker push 038462757834.dkr.ecr.us-east-1.amazonaws.com/mi-casa/api:latest
 ```
