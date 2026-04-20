@@ -1,0 +1,5 @@
+fragment AttachmentWithThumbnailUrl on Attachment {
+  id
+  createdAt
+  thumbnailUrl
+}

@@ -46,14 +46,17 @@ model ActivityFeedEntry {
 }
 
 model Attachment {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  casaId    String   @db.Uuid
-  casa      Casa     @relation(fields: [casaId], references: [id])
-  bucketKey String
-  isReady   Boolean
-  mimeType  String
-  createdAt DateTime @default(now()) @db.Timestamptz
-  updatedAt DateTime @updatedAt @db.Timestamptz
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  casaId             String   @db.Uuid
+  casa               Casa     @relation(fields: [casaId], references: [id])
+  bucketKey          String
+  isReady            Boolean
+  mimeType           String
+  thumbnailBucketKey String?
+  thumbnailIsReady   Boolean?
+  thumbnailMimeType  String?
+  createdAt          DateTime @default(now()) @db.Timestamptz
+  updatedAt          DateTime @updatedAt @db.Timestamptz
 
   activityFeedEntries ActivityFeedEntry[]
 

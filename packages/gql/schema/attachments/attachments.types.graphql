@@ -7,5 +7,6 @@ type CreateAttachmentPayload {
 type Attachment {
   id: ID!
   url: String!
+  thumbnailUrl: String
   createdAt: DateTime!
 }

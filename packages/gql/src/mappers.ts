@@ -30,6 +30,10 @@ export type EquipmentMapper = {
 export type AttachmentMapper = {
   id: string;
   bucketKey: string;
+  mimeType: string;
+  thumbnailBucketKey: string | null;
+  thumbnailMimeType: string | null;
+  thumbnailIsReady: boolean | null;
   createdAt: Date;
 }
 

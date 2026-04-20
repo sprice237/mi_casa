@@ -1,4 +1,4 @@
-query Attachment($attachmentId: ID!) {
+query AttachmentWithUrl($attachmentId: ID!) {
   attachment(attachmentId: $attachmentId) {
     ...AttachmentWithUrl
   }

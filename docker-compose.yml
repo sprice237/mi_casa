@@ -16,7 +16,7 @@ services:
       - "${AWS_CRED_DIR:-/dev/null}:/root/.aws:ro"
       - "${STORAGE_LOCAL_DIR:-/dev/null}:/opt/storage"
     environment:
-      - "DATABASE_URL=postgres://postgres:password@db/app"
+      # - "DATABASE_URL=postgres://postgres:password@db/app"
       - "PORT=8080"
     networks:
       - api

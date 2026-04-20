@@ -22,6 +22,7 @@ export const resourcesPlugin: FastifyPluginAsync = async (app) => {
 
     try {
       const fileBuffer = await fs.readFile(localPath);
+      reply.type('image/jpeg');
       reply.send(fileBuffer);
     } catch (err) {
       console.error(err);

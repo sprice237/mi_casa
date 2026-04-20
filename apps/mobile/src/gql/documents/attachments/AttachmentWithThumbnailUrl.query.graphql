@@ -1,0 +1,5 @@
+query AttachmentWithThumbnailUrl($attachmentId: ID!) {
+  attachment(attachmentId: $attachmentId) {
+    ...AttachmentWithThumbnailUrl
+  }
+}

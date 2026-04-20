@@ -1,8 +1,12 @@
+import { create } from 'zustand';
 import path from 'node:path';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost as awsCreatePresignedPost } from "@aws-sdk/s3-presigned-post";
 import { config } from "../config.js";
+import { getImageInfo, resizeImage } from '@mi_casa/domain';
+import fs from 'fs/promises';
+import { Readable } from 'node:stream';
 
 export type PresignedPost = {
   url: string;
@@ -12,6 +16,7 @@ export type PresignedPost = {
 export interface ResourceService {
   getResourceUrl(key: string): Promise<string>;
   createPresignedPost(key: string, params: { contentType: string }): Promise<PresignedPost>;
+  createThumbnail(key: string): Promise<{ thumbnailKey: string; mimeType: string }>;
 }
 
 export class S3ResourceService implements ResourceService {
@@ -26,7 +31,7 @@ export class S3ResourceService implements ResourceService {
   async getResourceUrl(key: string): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: this.bucket,
-      Key: key
+      Key: key,
     });
     const url = await getSignedUrl(this.s3, command);
     return url;
@@ -46,6 +51,44 @@ export class S3ResourceService implements ResourceService {
     });
 
     return { url, fields }
+  }
+
+  async createThumbnail(key: string): Promise<{ thumbnailKey: string; mimeType: string }> {
+    console.log(`retrieving object from s3 from bucket ${this.bucket} with key ${key} to create thumbnail`);
+    const downloadCommand = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key
+    })
+
+    const response = await this.s3.send(downloadCommand);
+
+    if (!response.Body) {
+      throw new Error('unable to get image from s3');
+    }
+
+    const imageBuffer = Buffer.from(await response.Body.transformToByteArray());
+
+    const { width, height } = await getImageInfo(imageBuffer);
+
+    const thumbnailWidth = 540;
+    const thumbnailHeight = Math.ceil((thumbnailWidth / width) * height);
+    const thumbnailImageBuffer = await resizeImage({ imageBuffer, width: thumbnailWidth, height: thumbnailHeight, format: 'webp' });
+
+    const thumbnailKey = `${key}_thumbnail`;
+
+    console.log(`uploading thumbnail to s3 bucket ${this.bucket} with key ${thumbnailKey}`);
+    const uploadCommand = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: thumbnailKey,
+      Body: Readable.from(thumbnailImageBuffer.data),
+      ContentType: thumbnailImageBuffer.mimeType,
+      ContentLength: thumbnailImageBuffer.data.length,
+    });
+
+    await this.s3.send(uploadCommand);
+
+    return { thumbnailKey, mimeType: thumbnailImageBuffer.mimeType }
+
   }
 }
 
@@ -68,6 +111,21 @@ export class LocalResourceService implements ResourceService {
     const url = `${this.resourceServerUrl}${urlRoute}`;
 
     return { url, fields: {} }
+  }
+
+  async createThumbnail(key: string): Promise<{ thumbnailKey: string; mimeType: string }> {
+    const localPath = path.join(this.localDir, path.normalize(`/${key}`));
+    const imageBuffer = await fs.readFile(localPath);
+    const { width, height } = await getImageInfo(imageBuffer);
+
+    const thumbnailWidth = 540;
+    const thumbnailHeight = Math.ceil((thumbnailWidth / width) * height);
+    const thumbnailImageBuffer = await resizeImage({ imageBuffer, width: thumbnailWidth, height: thumbnailHeight, format: 'webp' });
+
+    const thumbnailKey = `${key}_thumbnail`;
+
+    await fs.writeFile(path.join(this.localDir, path.normalize(`/${thumbnailKey}`)), thumbnailImageBuffer.data);
+    return { thumbnailKey, mimeType: thumbnailImageBuffer.mimeType };
   }
 }
 
