@@ -1,36 +1,25 @@
 import { db } from './db.js';
 import { buildGqlServer } from './gql/index.js';
-import type { LambdaFunctionURLEvent } from 'aws-lambda'
-import { pipeline } from 'stream/promises';
+import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
 const yoga = buildGqlServer({ db, url: '/graphql' })
 
-export const handler = awslambda.streamifyResponse(async function handler(
-  event: LambdaFunctionURLEvent,
-  responseStream,
-) {
+export const handler = async function (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const response = await yoga.fetch(
-    // Construct the URL
-    new URL(`https://${event.requestContext.domainName}${event.requestContext.http.path}?${event.rawQueryString}`),
+    new URL(`https://${event.requestContext.domainName}${event.path}`),
     {
-      method: event.requestContext.http.method,
+      method: event.httpMethod,
       headers: event.headers as HeadersInit,
-      // Parse the body if needed
-      body: event.body && event.isBase64Encoded ? Buffer.from(event.body, 'base64') : event.body
+      body: event.body
     },
   )
 
-  // Attach the metadata to the response stream
-  const httpResponseStream = awslambda.HttpResponseStream.from(responseStream, {
+  const responseObject = {
     statusCode: response.status,
-    headers: Object.fromEntries(response.headers.entries())
-  })
+    headers: Object.fromEntries(response.headers.entries()),
+    body: await response.text(),
+    isBase64Encoded: false
+  };
 
-  // Pipe the response body to the response stream
-  if (response.body) {
-    await pipeline(response.body, httpResponseStream)
-  }
-
-  // End the response stream
-  httpResponseStream.end()
-})
+  return responseObject
+}
