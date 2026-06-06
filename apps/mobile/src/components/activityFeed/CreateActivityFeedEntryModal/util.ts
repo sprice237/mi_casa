@@ -86,6 +86,11 @@ const handleImagePickerResult = async (result: ImagePickerResult): Promise<{ mim
         uri: asset.uri,
         mimeType: 'image/jpeg',
       };
+    case 'image/png':
+      return {
+        uri: asset.uri,
+        mimeType: 'image/png',
+      };
     default:
       Alert.alert('Error', `Cannot handle file of type ${asset.mimeType}`);
       Sentry.captureException(new Error(`Cannot handle file of type ${asset.mimeType}`));
