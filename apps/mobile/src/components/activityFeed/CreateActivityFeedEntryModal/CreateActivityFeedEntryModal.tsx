@@ -12,6 +12,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { launchCamera, pickImage, useUploadImage } from './util';
 import { useFlagState } from '$/util/util';
 import { FullScreenLoader } from '$/components/FullScreenLoader';
+import { ImageMarkupEditor } from '../../markup/ImageMarkupEditor';
 
 type CreateActivityFeedEntryModalProps = {
   activityFeedId: string;
@@ -25,6 +26,7 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
   const [createActivityFeedEntry] = useMutation(CreateActivityFeedEntryDocument);
   const uploadImage = useUploadImage();
   const [imagePickerAssets, setImagePickerAssets] = useState<{ mimeType: string, uri: string }[]>([]);
+  const [pendingMarkupAsset, setPendingMarkupAsset] = useState<{ mimeType: string; uri: string } | null>(null);
 
   const defaultValues: NoteFormValues = { note: '' };
   const form = useForm({
@@ -83,7 +85,7 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
       return;
     }
 
-    setImagePickerAssets([...imagePickerAssets, imagePickerAsset])
+    setPendingMarkupAsset(imagePickerAsset);
   }
 
   const doPickImage = async () => {
@@ -93,33 +95,48 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
       return;
     }
 
-    setImagePickerAssets([...imagePickerAssets, imagePickerAsset])
+    setPendingMarkupAsset(imagePickerAsset);
   }
 
   const removeAsset = (imagePickerAssetToRemove: typeof imagePickerAssets[number]) => {
     setImagePickerAssets(prev => prev.filter(x => x !== imagePickerAssetToRemove));
   }
 
+  console.log('pendingMarkupAsset', pendingMarkupAsset);
+
   return (
     <Modal backdropClose title="Add entry" onClose={onClose} content={(
-      <View style={styles.container}>
-        {isLoading && <FullScreenLoader />}
-        <Text>Notes</Text>
-        <form.Field name="note">
-          {field => <StyledTextInput value={field.state.value} onChangeText={e => field.setValue(e)} multiline numberOfLines={4} style={{ height: 80 }} />}
-        </form.Field>
-        <Text>Attachments</Text>
-        {imagePickerAssets.map((imagePickerAsset) => (
-          <View key={imagePickerAsset.uri} style={{ display: 'flex', flexDirection: 'row', width: '100%', gap: 4 }}>
-            <Image source={imagePickerAsset} style={{ height: 50, width: 50 }} />
-            <Text style={{ flex: 1 }}>{imagePickerAsset.uri.split('/').at(-1)}</Text>
-            <Pressable onPress={() => removeAsset(imagePickerAsset)}><AntDesign name="delete" size={24} color="black" /></Pressable>
-          </View>
-        ))}
-        <Button onPress={doLaunchCamera} title="Launch Camera" />
-        <Button onPress={doPickImage} title="Pick image" />
-        <Button onPress={form.handleSubmit} title="Submit" />
-      </View>
+      <>
+        {pendingMarkupAsset && (
+          <ImageMarkupEditor
+            imageUri={pendingMarkupAsset.uri}
+            imageMimeType={pendingMarkupAsset.mimeType}
+            onConfirm={result => {
+              setImagePickerAssets(prev => [...prev, result]);
+              setPendingMarkupAsset(null);
+            }}
+            onCancel={() => setPendingMarkupAsset(null)}
+          />
+        )}
+        <View style={styles.container}>
+          {isLoading && <FullScreenLoader />}
+          <Text>Notes</Text>
+          <form.Field name="note">
+            {field => <StyledTextInput value={field.state.value} onChangeText={e => field.setValue(e)} multiline numberOfLines={4} style={{ height: 80 }} />}
+          </form.Field>
+          <Text>Attachments</Text>
+          {imagePickerAssets.map((imagePickerAsset) => (
+            <View key={imagePickerAsset.uri} style={{ display: 'flex', flexDirection: 'row', width: '100%', gap: 4 }}>
+              <Image source={imagePickerAsset} style={{ height: 50, width: 50 }} />
+              <Text style={{ flex: 1 }}>{imagePickerAsset.uri.split('/').at(-1)}</Text>
+              <Pressable onPress={() => removeAsset(imagePickerAsset)}><AntDesign name="delete" size={24} color="black" /></Pressable>
+            </View>
+          ))}
+          <Button onPress={doLaunchCamera} title="Launch Camera" />
+          <Button onPress={doPickImage} title="Pick image" />
+          <Button onPress={form.handleSubmit} title="Submit" />
+        </View>
+      </>
     )} />
   );
 }

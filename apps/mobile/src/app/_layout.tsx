@@ -4,6 +4,7 @@ import { SplashGuard } from '../components/SplashGuard';
 import { useDeviceStore } from '$/stores/deviceStore';
 
 import * as Sentry from '@sentry/react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -28,9 +29,11 @@ function RootLayout() {
   const loaded = deviceStoreLoaded && authStoreLoaded;
 
   return (
-    <SplashGuard loaded={loaded}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </SplashGuard>
+    <SafeAreaProvider>
+      <SplashGuard loaded={loaded}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </SplashGuard>
+    </SafeAreaProvider>
   );
 }
 
