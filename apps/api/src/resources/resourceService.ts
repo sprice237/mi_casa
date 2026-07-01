@@ -43,7 +43,7 @@ export class S3ResourceService implements ResourceService {
       Key: key,
       Conditions: [
         ['eq', '$Content-Type', params.contentType],
-        ['content-length-range', 1, 10 * 1024 * 1024],
+        ['content-length-range', 1, config.MAX_ATTACHMENT_SIZE_BYTES],
       ],
       Fields: {
         'Content-Type': params.contentType

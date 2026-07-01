@@ -7,6 +7,7 @@ export const config = z
       DATABASE_URL: z.string(),
       VERSION: z.string().optional(),
       JWT_SECRET: z.string(),
+      MAX_ATTACHMENT_SIZE_BYTES: z.coerce.number().default(15 * 1024 * 1024),
     }),
     z.discriminatedUnion('STORAGE_TYPE', [
       z.object({

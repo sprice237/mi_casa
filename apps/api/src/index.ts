@@ -11,7 +11,7 @@ async function main() {
 
   const app = fastify({
     logger: true,
-    bodyLimit: 10_485_760 // 10mb
+    bodyLimit: config.MAX_ATTACHMENT_SIZE_BYTES,
   });
 
   app.register(multipart);
