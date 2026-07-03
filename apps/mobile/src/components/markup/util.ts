@@ -1,4 +1,4 @@
-import { Skia, PaintStyle, StrokeCap, StrokeJoin, SkCanvas } from '@shopify/react-native-skia';
+import { Skia, PaintStyle, StrokeCap, StrokeJoin, SkCanvas, ImageFormat } from '@shopify/react-native-skia';
 import * as FileSystem from 'expo-file-system/legacy';
 import type { MarkupItem } from './useMarkupContext';
 import { font } from './font';
@@ -36,7 +36,7 @@ export const flattenMarkup = async (
   }
 
   const snapshot = surface.makeImageSnapshot();
-  const encoded = snapshot.encodeToBase64();
+  const encoded = snapshot.encodeToBase64(ImageFormat.JPEG, 90);
   const outputUri = `${FileSystem.cacheDirectory}markup_${Date.now()}.jpg`;
 
   await FileSystem.writeAsStringAsync(outputUri, encoded, { encoding: FileSystem.EncodingType.Base64 });
@@ -69,7 +69,7 @@ function applyMarkupItemToCanvas(canvas: SkCanvas, item: MarkupItem, scaleX: num
     case 'text': {
       const paint = Skia.Paint();
       paint.setColor(Skia.Color(item.color));
-      canvas.drawText(item.text, item.x * scaleX, item.y * scaleY, paint, font);
+      canvas.drawText(item.text, item.point.x * scaleX, item.point.y * scaleY, paint, font);
     }
   }
 }

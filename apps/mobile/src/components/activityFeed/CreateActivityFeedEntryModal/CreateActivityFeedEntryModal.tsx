@@ -102,8 +102,6 @@ export const CreateActivityFeedEntryModal = ({ activityFeedId, onClose, onCreate
     setImagePickerAssets(prev => prev.filter(x => x !== imagePickerAssetToRemove));
   }
 
-  console.log('pendingMarkupAsset', pendingMarkupAsset);
-
   return (
     <Modal backdropClose title="Add entry" onClose={onClose} content={(
       <>

@@ -31,7 +31,7 @@ export function ImageMarkupEditor(props: ImageMarkupEditorProps) {
   )
 }
 
-export function ImageMarkupEditorInner({ imageUri, onConfirm, onCancel }: ImageMarkupEditorProps) {
+export function ImageMarkupEditorInner({ imageUri, imageMimeType, onConfirm, onCancel }: ImageMarkupEditorProps) {
   const [canvasSize, setCanvasSize] = useState<CanvasSize | null>(null);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isFlattening, setIsFlattening] = useState(false);
@@ -56,6 +56,12 @@ export function ImageMarkupEditorInner({ imageUri, onConfirm, onCancel }: ImageM
   const handleDone = async () => {
     if (!canvasSize) return;
     commitDraftText();
+
+    if (!items.length) {
+      onConfirm({ uri: imageUri, mimeType: imageMimeType });
+      return;
+    }
+
     setIsFlattening(true);
     try {
       const result = await flattenMarkup(imageUri, items, canvasSize.width, canvasSize.height);
@@ -70,46 +76,46 @@ export function ImageMarkupEditorInner({ imageUri, onConfirm, onCancel }: ImageM
   return (
     <Modal animationType="slide" transparent={false} onRequestClose={onCancel}>
       <SafeAreaProvider>
-      <SafeAreaView style={styles.root}>
-        {/* Top bar */}
-        <View style={styles.topBar}>
-          <Pressable onPress={onCancel} style={styles.topBarButton}>
-            <Text style={styles.topBarButtonText}>Cancel</Text>
-          </Pressable>
-          <Pressable onPress={handleDone} style={[styles.topBarButton, styles.doneButton]} disabled={isFlattening}>
-            <Text style={[styles.topBarButtonText, styles.doneButtonText]}>
-              {isFlattening ? 'Processing…' : 'Done'}
-            </Text>
-          </Pressable>
-        </View>
+        <SafeAreaView style={styles.root}>
+          {/* Top bar */}
+          <View style={styles.topBar}>
+            <Pressable onPress={onCancel} style={styles.topBarButton}>
+              <Text style={styles.topBarButtonText}>Cancel</Text>
+            </Pressable>
+            <Pressable onPress={handleDone} style={[styles.topBarButton, styles.doneButton]} disabled={isFlattening}>
+              <Text style={[styles.topBarButtonText, styles.doneButtonText]}>
+                {isFlattening ? 'Processing…' : 'Done'}
+              </Text>
+            </Pressable>
+          </View>
 
-        <MarkupEditorCanvas imageUri={imageUri} canvasSize={canvasSize} onCanvasSizeChange={setCanvasSize} />
+          <MarkupEditorCanvas imageUri={imageUri} canvasSize={canvasSize} onCanvasSizeChange={setCanvasSize} />
 
-        {/* Toolbar */}
-        <MarkupToolbar
-          tool={tool}
-          color={color}
-          strokeWidth={strokeWidth}
-          canUndo={canUndo}
-          canRedo={canRedo}
-          onToolChange={setTool}
-          onColorChange={setColor}
-          onStrokeWidthChange={setStrokeWidth}
-          onUndo={undo}
-          onRedo={redo}
-          onOpenColorPicker={() => setShowColorPicker(true)}
-        />
-      </SafeAreaView>
+          {/* Toolbar */}
+          <MarkupToolbar
+            tool={tool}
+            color={color}
+            strokeWidth={strokeWidth}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onToolChange={setTool}
+            onColorChange={setColor}
+            onStrokeWidthChange={setStrokeWidth}
+            onUndo={undo}
+            onRedo={redo}
+            onOpenColorPicker={() => setShowColorPicker(true)}
+          />
+        </SafeAreaView>
 
-      {showColorPicker && (
-        <ColorPicker
-          onConfirm={hex => {
-            setColor(hex);
-            setShowColorPicker(false);
-          }}
-          onCancel={() => setShowColorPicker(false)}
-        />
-      )}
+        {showColorPicker && (
+          <ColorPicker
+            onConfirm={hex => {
+              setColor(hex);
+              setShowColorPicker(false);
+            }}
+            onCancel={() => setShowColorPicker(false)}
+          />
+        )}
       </SafeAreaProvider>
     </Modal>
   );
