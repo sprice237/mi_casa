@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+export SENTRY_DISABLE_AUTO_UPLOAD=true 
+export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=ztjw-ewqo-nfma-zzmi 
+
+set +x
+set -e
+
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+mobile_app_dir=$(realpath "$script_dir/../apps/mobile")
+
+export EAS_LOCAL_BUILD_ARTIFACTS_DIR="$mobile_app_dir/bin" 
+
+cd "$mobile_app_dir"
+rm -rf bin
+mkdir bin
+npx eas build --platform ios --local --clear-cache
+
+ipa_file=$(find "$mobile_app_dir/bin" -name "*.ipa" | head -n 1)
+fastlane pilot upload --ipa "$ipa_file"
