@@ -6,14 +6,17 @@ import { CreateTaskDocument, UpdateTaskDocument, FragmentType, getFragmentData, 
 import { useMutation } from '@apollo/client/react';
 import { EquipmentSelect } from './EquipmentSelect';
 import { ProjectSelect } from './ProjectSelect';
+import { useRouter } from 'expo-router';
 
 type CreateOrUpdateTaskModalProps = {
   task?: FragmentType<typeof TaskFragmentDoc>;
   defaultValues?: { name?: string, equipmentId?: string | null; projectId?: string | null };
+  navigateOnCreate?: boolean;
   onClose: DispatchWithoutAction;
 }
 
-export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, onClose }: CreateOrUpdateTaskModalProps) => {
+export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, navigateOnCreate, onClose }: CreateOrUpdateTaskModalProps) => {
+  const navigation = useRouter();
   const task = getFragmentData(TaskFragmentDoc, taskFragment);
 
   const [name, setName] = useState(task?.name ?? defaultValues?.name ?? '');
@@ -25,7 +28,6 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, onC
 
   const doAddTask = async () => {
     if (task) {
-
       await updateTask({
         variables: {
           taskId: task.id,
@@ -38,7 +40,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, onC
         },
       });
     } else {
-      await createTask({
+      const createTaskRes = await createTask({
         variables: {
           input: {
             name,
@@ -50,7 +52,10 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, onC
           cache.evict({ fieldName: 'tasks' })
         }
       });
-
+      if (navigateOnCreate && createTaskRes.data) {
+        const task = getFragmentData(TaskFragmentDoc, createTaskRes.data.createTask);
+        navigation.navigate(`/authenticated/Tasks/task/${task.id}`)
+      }
     }
   }
 

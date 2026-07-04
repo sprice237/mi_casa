@@ -34,7 +34,7 @@ export const TasksList = ({ status, showAddTaskButton, navigateOnTaskPress, equi
 
   return (
     <>
-      {isCreateModalVisible && <CreateOrUpdateTaskModal onClose={hideCreateModal} defaultValues={{ equipmentId }} />}
+      {isCreateModalVisible && <CreateOrUpdateTaskModal onClose={hideCreateModal} defaultValues={{ equipmentId }} navigateOnCreate />}
       <View {...props} style={[props.style, styles.container]}>
         <SwipeListView
           style={styles.list}
