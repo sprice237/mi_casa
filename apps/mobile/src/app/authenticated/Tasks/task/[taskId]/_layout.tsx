@@ -1,37 +1,25 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { Tabs, useLocalSearchParams } from 'expo-router';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 import { getFragmentData, TaskDocument, TaskFragmentDoc, UpdateTaskDocument } from '$/gql';
 import { useForm } from '@tanstack/react-form';
 import { useFormAutoSubmitEffect } from '$/util/util';
-import { useState } from 'react';
 import { FieldUpdateModal } from '$/components/FieldUpdateModal';
-import { TabRow } from '$/components/TabRow';
-import { ActivityFeed } from '$/components/activityFeed/ActivityFeed';
-import { TaskTransitionHistory } from '$/components/tasks/TaskTransitionHistory';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 interface TaskFormValues {
   name: string;
 }
 
-const tabs = [
-  { key: 'details', label: 'Details' },
-  { key: 'activity', label: 'Activity' },
-  { key: 'history', label: 'History' },
-] as const;
-type Tab = typeof tabs[number];
-const getTabKey = (tab: Tab) => tab.key;
-const getTabLabel = (tab: Tab) => tab.label;
-
 export default function Task() {
-  const { taskId } = useLocalSearchParams<'/authenticated/Tasks/task/[taskId]'>();
+  const { taskId } = useLocalSearchParams<{ taskId: string }>();
   if (!taskId) {
     throw new Error('must have taskId')
   }
 
   const [updateTask] = useMutation(UpdateTaskDocument);
 
-  const { data: { task: taskFragment }, refetch } = useSuspenseQuery(TaskDocument, { variables: { taskId } });
+  const { data: { task: taskFragment } } = useSuspenseQuery(TaskDocument, { variables: { taskId } });
   const task = getFragmentData(TaskFragmentDoc, taskFragment);
 
   const defaultValues: TaskFormValues = { name: task?.name };
@@ -51,8 +39,6 @@ export default function Task() {
 
   useFormAutoSubmitEffect(form);
 
-  const [tab, setTab] = useState<Tab['key']>('details')
-
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -63,17 +49,33 @@ export default function Task() {
           </form.Field>
         </View>
       </View>
-      <TabRow options={tabs} getKey={getTabKey} getLabel={getTabLabel} selected={tab} onSelect={setTab} />
       <View style={{ flex: 1 }}>
-        {tab === 'details' && (
-          <View />
-        )}
-        {tab === 'activity' && (
-          <ActivityFeed style={styles.flexOne} activityFeedId={task.activityFeedId} />
-        )}
-        {tab === 'history' && (
-          <TaskTransitionHistory style={styles.flexOne} transitions={task.transitions} />
-        )}
+        <Tabs screenOptions={{ tabBarActiveTintColor: 'blue', headerShown: false }}>
+          <Tabs.Screen
+            name="(tabs)/details"
+            initialParams={{ taskId }}
+            options={{
+              title: 'Details',
+              tabBarIcon: ({ focused }) => <FontAwesome6 name="circle-info" size={24} color={focused ? 'blue' : 'black'} />,
+            }}
+          />
+          <Tabs.Screen
+            name="(tabs)/activity"
+            initialParams={{ taskId }}
+            options={{
+              title: 'Activity',
+              tabBarIcon: ({ focused }) => <FontAwesome6 name="list" size={24} color={focused ? 'blue' : 'black'} />,
+            }}
+          />
+          <Tabs.Screen
+            name="(tabs)/history"
+            initialParams={{ taskId }}
+            options={{
+              title: 'History',
+              tabBarIcon: ({ focused }) => <FontAwesome6 name="clock" size={24} color={focused ? 'blue' : 'black'} />,
+            }}
+          />
+        </Tabs>
       </View>
     </View>
   );

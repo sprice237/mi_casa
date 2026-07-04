@@ -29,7 +29,7 @@ export const TasksList = ({ status, showAddTaskButton, navigateOnTaskPress, equi
 
   const doTaskPress = navigateOnTaskPress ? (taskFragment: FragmentType<typeof TaskFragmentDoc>) => {
     const task = getFragmentData(TaskFragmentDoc, taskFragment);
-    navigation.navigate(`/authenticated/Tasks/task/${task.id}`)
+    navigation.navigate(`/authenticated/Tasks/task/${task.id}/(tabs)/details`)
   } : undefined;
 
   return (

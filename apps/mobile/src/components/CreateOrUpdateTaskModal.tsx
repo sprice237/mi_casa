@@ -54,7 +54,7 @@ export const CreateOrUpdateTaskModal = ({ task: taskFragment, defaultValues, nav
       });
       if (navigateOnCreate && createTaskRes.data) {
         const task = getFragmentData(TaskFragmentDoc, createTaskRes.data.createTask);
-        navigation.navigate(`/authenticated/Tasks/task/${task.id}`)
+        navigation.navigate(`/authenticated/Tasks/task/${task.id}/(tabs)/details`)
       }
     }
   }
