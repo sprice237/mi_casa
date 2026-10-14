@@ -132,7 +132,15 @@ export class LocalResourceService implements ResourceService {
 export function getResourceService(): ResourceService {
   switch (config.STORAGE_TYPE) {
     case 's3':
-      return new S3ResourceService({ bucket: config.STORAGE_S3_BUCKET, s3: new S3Client() });
+      return new S3ResourceService({
+        bucket: config.STORAGE_S3_BUCKET, s3: new S3Client({
+          region: config.STORAGE_S3_AWS_REGION,
+          credentials: {
+            accessKeyId: config.STORAGE_S3_AWS_ACCESS_KEY_ID,
+            secretAccessKey: config.STORAGE_S3_AWS_SECRET_ACCESS_KEY
+          }
+        })
+      });
     case 'local':
       return new LocalResourceService({ localDir: config.STORAGE_LOCAL_DIR, resourceServerUrl: config.STORAGE_RESOURCE_BASE_URL });
   }

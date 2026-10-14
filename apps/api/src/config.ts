@@ -13,6 +13,9 @@ export const config = z
       z.object({
         STORAGE_TYPE: z.literal('s3'),
         STORAGE_S3_BUCKET: z.string(),
+        STORAGE_S3_AWS_REGION: z.string(),
+        STORAGE_S3_AWS_ACCESS_KEY_ID: z.string(),
+        STORAGE_S3_AWS_SECRET_ACCESS_KEY: z.string(),
       }),
       z.object({
         STORAGE_TYPE: z.literal('local'),
