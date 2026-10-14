@@ -1,0 +1,5 @@
+FROM ghcr.io/sprice237/mi_casa/base
+WORKDIR /app/apps/api
+RUN npm run build
+
+CMD ["node", "dist/index.js"]

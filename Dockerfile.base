@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1.7-labs
+FROM node:24.13.0-alpine AS installer
+WORKDIR /app
+
+COPY --parents **/package*.json ./
+RUN npm ci --loglevel verbose
+
+FROM node:24.13.0-alpine
+RUN apk add openssl
+WORKDIR /app
+
+COPY . .
+RUN find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+RUN find . -name 'dist' -type d -prune -exec rm -rf '{}' +
+RUN find . -name 'tsconfig.tsbuildinfo' -type f -exec rm -f '{}' +
+
+COPY --from=installer --parents /app/ /
+
+RUN npm run build -w packages --if-present

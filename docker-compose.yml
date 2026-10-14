@@ -1,46 +1,101 @@
 version: '3'
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile.dev
-    depends_on:
-      - db
+  base:
+    image: node:24.13.0-alpine
     restart: unless-stopped
     working_dir: /app
-    command: sh -c "npm i && npm run build -w packages --if-present && cd apps/api && npm start"
+    command: sh -c "echo 'running npm install' && npm i && echo 'building packages' && npm run build -w packages --if-present && echo 'going to sleep' && echo '0' > /exitcode && sleep infinity"
+    healthcheck:
+      test: ["CMD", "cat", "/exitcode"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
     volumes:
       - .:/app
-      - /app/node_modules
-      - "${AWS_CRED_DIR:-/dev/null}:/root/.aws:ro"
+    profiles:
+      - dev
+
+  api:
+    image: node:24.13.0-alpine
+    depends_on:
+      base:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    working_dir: /app/apps/api
+    command: npm start
+    volumes:
+      - .:/app
       - "${STORAGE_LOCAL_DIR:-/dev/null}:/opt/storage"
     environment:
-      - "DATABASE_URL=postgres://postgres:password@db/app"
-      - "PORT=8080"
+      DATABASE_URL: "postgres://postgres:password@db/app"
+      PORT: "8080"
+      JWT_SECRET: "secret"
+      STORAGE_TYPE: "local"
+      STORAGE_LOCAL_DIR: "/opt/storage"
+      STORAGE_RESOURCE_BASE_URL: "http://172.17.1.52:8080/resources"
     networks:
       - api
       - db
+    profiles:
+      - dev
+
+  api-prod:
+    image: ghcr.io/sprice237/mi_casa/api
+    pull_policy: always
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file:
+      - apps/api/.env
+    networks:
+      - api
+      - db
+    profiles:
+      - prod
 
   service:
-    build:
-      context: .
-      dockerfile: ./apps/service/Dockerfile.dev
+    image: node:24.13.0-alpine
     depends_on:
-      - db
-      - redis
+      base:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
-    working_dir: /app
-    command: sh -c "npm i && npm run build -w packages --if-present && cd apps/service && npm start"
+    working_dir: /app/apps/service
+    command: npm start
     volumes:
       - .:/app
-      - /app/node_modules
     environment:
-      - "DATABASE_URL=postgres://postgres:password@db/app"
-      - "REDIS_URL=redis://redis:6379"
+      DATABASE_URL: "postgres://postgres:password@db/app"
+      REDIS_URL: "redis://redis:6379"
     networks:
       - db
       - redis
+    profiles:
+      - dev
+
+  service-prod:
+    image: ghcr.io/sprice237/mi_casa/service
+    pull_policy: always
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file:
+      - apps/service/.env
+    networks:
+      - db
+      - redis
+    profiles:
+      - prod
 
   api-relay:
     image: alpine/socat
@@ -54,10 +109,18 @@ services:
       - "${HOST_API_PORT}:8080"
     networks:
       - api
+    profiles:
+      - dev
 
   db:
     image: postgres:17.7-alpine
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     expose:
       - "5432"
     environment:
@@ -67,6 +130,9 @@ services:
       - db
     volumes:
       - db-data:/var/lib/postgresql/data
+    profiles:
+      - dev
+      - prod
 
   db-relay:
     image: alpine/socat
@@ -80,6 +146,8 @@ services:
       - "127.0.0.1:5432:5432"
     networks:
       - db
+    profiles:
+      - dev
 
   redis:
     image: redis:7.4-alpine
@@ -95,6 +163,9 @@ services:
       - redis
     volumes:
       - redis_data:/data
+    profiles:
+      - dev
+      - prod
 
   redis-relay:
     image: alpine/socat
@@ -106,6 +177,8 @@ services:
       - redis
     ports:
       - "6379:6379"
+    profiles:
+      - dev
 
   durabull:
     image: ghcr.io/durabullhq/durabull:latest
@@ -128,6 +201,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    profiles:
+      - dev
 
   cloudflare:
     image: cloudflare/cloudflared:latest
@@ -137,6 +212,8 @@ services:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - api
+    profiles:
+      - prod
 
 networks:
   api:
